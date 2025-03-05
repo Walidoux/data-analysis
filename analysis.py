@@ -1,19 +1,14 @@
 from unicodedata import normalize as unicodedata_normalize
 from collections import Counter
 from csv import reader
-from enum import Enum
+from enum import Enum, auto
 
-import os
 import re
+import snakemd
 
-outputPath = "output.csv"
 
-
-# Nettoyage Pré-initialisation
-if os.path.exists(outputPath):
-    os.remove(outputPath)
-
-adjusted_data = open(outputPath, "w" if not os.path.exists(outputPath) else "r")
+adjusted_data = open("output.csv", "w")
+doc = snakemd.Document()
 
 
 class Listable(Enum):
@@ -37,28 +32,59 @@ def numeric_data(value: str):
 
 
 class StoreCollection:
-    def __init__(self, pos, dict=None):
+    def __init__(self, pos):
         self.pos = pos
         self.data = {}
 
+    def is_unknown(self, value: str) -> bool:
+        return value == "N.V" or not value.replace(" ", "").isalnum() or not value
+
     # extracts distinct values
-    def known_posibilities(self, value: str, print=True):
+    def known_posibilities(self, value: str, write=True):
         value = normalize(value).upper()
+
+        possible_values = self.in_depth(value)
+        if len(possible_values) > 1:
+            for possible_value in possible_values:
+                self.known_posibilities(possible_value, write)
+
+        # TODO : Handle unknown value
+        if self.is_unknown(value):
+            return
+
         if not self.data:
-            adjusted_data.write(f"{value}\n") if print else None
+            adjusted_data.write(f"{value}\n") if write else None
             self.data[len(self.data)] = value
             return
         for _, info in self.data.items():
             if info == value:
                 return
-        adjusted_data.write(f"{value}\n") if print else None
+        adjusted_data.write(f"{value}\n") if write else None
         self.data[len(self.data)] = value
 
-    def is_unknown(self, value: str) -> bool:
-        return not value.isalpha() or value == "N/V" or value == "" or value is None
+    def in_depth(self, value: str):
+        match = re.search(r"[;,/]| ET ", value)
+        matches = []
 
-    def subscribe(self, value: str, approx=False, exact=False):
-        value = normalize(value).upper()
+        if match:
+            for v in value.split(match.group()):
+                if not self.is_unknown(v):
+                    matches.append(v)
+            return [value]
+        return [value]
+
+    def subscribe(self, value: str, approx=False, exact=False, format=True):
+        value = normalize(value).upper() if format else value
+        possible_values = self.in_depth(value)
+
+        if len(possible_values) > 1:
+            for possible_value in possible_values:
+                self.subscribe(possible_value, approx, exact, format)
+
+        # TODO : Handle unknown value
+        if self.is_unknown(value):
+            return
+
         for key, info in self.data.items():
             if approx and does_match(value, info["name"]):
                 self.data[key]["count"] += 1
@@ -158,9 +184,9 @@ def predict_missing_value(data: list[int]) -> list[int]:
 
 
 class Option(Listable):
-    EXP = 0
-    MATH = 1
-    ECO = 2
+    EXP = auto()
+    MATH = auto()
+    ECO = auto()
 
     @classmethod
     def classify(self, filiere: str) -> Listable:
@@ -179,15 +205,31 @@ class Option(Listable):
             return Option.ECO
 
 
+class MDL(Listable):
+    SPSS = auto()
+    PYTHON = auto()
+    R = auto()
+    POWER_BI = auto()
+    AUTRE = auto()
+
+    @classmethod
+    def classify(self, logiciel: str) -> Listable:
+        for software in self.get():
+            if software.replace("_", " ") in logiciel:
+                return self[software].name
+        return self.AUTRE.name
+
+
 # Importation des données
 with open(file="data.csv", mode="r") as file:
     file = reader(file)
     headers = next(file)
-    seen_headers = Counter()
 
-    # Création de variables
-    # TODO: avoid ducpliate
-    for name, header in enumerate(headers):
+    # Création de variables / TODO : avoid duplicates
+    doc.add_heading("Variables")
+    doc_headers = []
+
+    for i, header in enumerate(headers):
         normalized_header = re.sub(r"\(.*?\)", "", normalize(header)).strip()
         words = normalized_header.split()
 
@@ -201,11 +243,15 @@ with open(file="data.csv", mode="r") as file:
         else:
             formatted_header = normalized_header.upper()
 
-        headers[name] = formatted_header
+        doc_headers.append(f"`{formatted_header}` -> {header}")
+        headers[i] = formatted_header
+
+    # Documenter les variables
+    doc.add_unordered_list(doc_headers)
 
     # Suppression des données sensibles et/ou inutiles
-    for name in ["ND", "AD", "HORODATEUR"]:
-        index = headers.index(name)
+    for i in ["ND", "AD", "HORODATEUR"]:
+        index = headers.index(i)
         headers.pop(index)
         file = [row[:index] + row[index + 1 :] for row in file]
 
@@ -220,15 +266,7 @@ with open(file="data.csv", mode="r") as file:
     optionbac_dict = StoreCollection(headers.index("OB"))
     mentions_dicts = [StoreCollection(headers.index(f"MS{i}")) for i in range(1, 6)]
     excel_dict = StoreCollection(headers.index("UD"))
-
-    class MDL(Listable):
-        SPSS = 0
-        PYTHON = 1
-        R = 2
-        POWER_BI = 3
-        AUTRE = 4
-
-    logiciels_dict = StoreCollection(headers.index("MDL"), MDL)
+    logiciels_dict = StoreCollection(headers.index("MDL"))
 
     valid_years = []
 
@@ -293,10 +331,12 @@ with open(file="data.csv", mode="r") as file:
         else:
             raise ValueError("L'âge n'est pas correctement formatté")
 
-        for dict in [sex_dict, studyfield_dict]:
-            dict.subscribe(row[dict.pos])
-
-        for dict in mentions_dicts:
+        for dict in [
+            sex_dict,
+            studyfield_dict,
+            excel_dict,
+            *mentions_dicts,
+        ]:
             dict.subscribe(row[dict.pos])
 
         city_dict.subscribe(row[city_dict.pos], approx=True)
@@ -306,47 +346,18 @@ with open(file="data.csv", mode="r") as file:
 
         match = re.search(r"(\d{4})[-/_\s]*(\d{4})?", row[annee_bac_index])
         if match:
-            row[annee_bac_index] = match.group(2) if match.group(2) else match.group(1)
-            valid_years.append(row[annee_bac_index])
+            valid_years.append(match.group(2) if match.group(2) else match.group(1))
         else:
-            most_common_year = Counter(valid_years).most_common(1)[0][0]
-            valid_years.append(most_common_year)
+            valid_years.append(Counter(valid_years).most_common(1)[0][0])
 
         branche = Option.classify(normalize(row[optionbac_dict.pos]).upper())
-        optionbac_dict.subscribe(branche.name, exact=True)
+        optionbac_dict.subscribe(branche.name, exact=True, format=False)
 
-        """
-        # TODO: Source principale de revenu
-
-        class SPDR(Enum):
-            BOURSE = 0
-            AIDE_FAMILIALE = 1
-            TRAVAIL = 2
-
-        # TODO: Type de logement
-
-        class TDL(Enum):
-            MAISON = 0
-            CHAMBRE = 1
-            APPARTEMENT = 2
-
-        # TODO: Moyen de voyage utilisé
-
-        class MDVU(Enum):
-            AVION = 0
-            AUTOCARE = 1
-            VOITURE = 2
-            TAXI = 3
-
-        # Utilisation Excel
-
-        excel_dict.subscribe_approx(normalize(row[excel_dict.pos].upper()))
-
-        # Maîtrise d'autres logiciels
-
-        logiciel = normalize(row[logiciels_dict.pos].upper())
-        logiciels_dict.subscribe_possibilities(logiciel) """
+        logiciel = normalize(row[logiciels_dict.pos]).upper()
+        possible_values = logiciels_dict.in_depth(logiciel)
+        for possible_value in possible_values:
+            logiciels_dict.subscribe(MDL.classify(possible_value), exact=True)
 
         i += 1
 
-    print(optionbac_dict.data)
+    doc.dump("README")  # Générer la documentation en markdown
