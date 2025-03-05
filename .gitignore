@@ -1,4 +1,5 @@
 data.csv
 output.csv
+env
 __pycache__
 .vscode
