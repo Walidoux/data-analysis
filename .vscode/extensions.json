@@ -1,0 +1,3 @@
+{
+    "recommendations": ["yzhang.markdown-all-in-one", "ms-python.black-formatter", "ms-python.vscode-pylance", "ms-python.python", "ms-python.debugpy", "mechatroner.rainbow-csv", "ms-vscode-remote.remote-wsl"]
+}

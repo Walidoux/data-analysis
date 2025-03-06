@@ -1,0 +1,9 @@
+{
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "standard",
+  
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+
+  "python.analysis.exclude": ["env/**/*"]
+}
