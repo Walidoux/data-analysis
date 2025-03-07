@@ -1,42 +1,28 @@
-# Variables
+# Hellow
 
-- `HORODATEUR` -> Horodateur
-- `ND` -> Nom d'utilisateur
-- `AGE` -> Âge
-- `GENRE` -> Genre
-- `FD` -> Filière d’étude
-- `AD` -> Année d’étude
-- `VD` -> Ville d’origine
-- `MB` -> Mention Bac
-- `ADDB` -> Année d’obtention du Bac
-- `OB` -> Option Bac
-- `MS1` -> Mentions S1
-- `MS2` -> Mentions S2
-- `MS3` -> Mentions S3
-- `MS4` -> Mentions S4
-- `MS5` -> Mentions S5
-- `UD` -> Utilisation d’Excel
-- `MDL` -> Maîtrise d’autres logiciels
-- `PADPA` -> Participation à des projets académiques/professionnels
-- `NDFELSCA` -> Nombre de formations en ligne suivies cette année
-- `NDDPS` -> Nombre d'heures d'étude par semaine
-- `MP` -> Matière préfère
-- `TPSLEPJ` -> Temps passé sur les écrans par jour
-- `NDPSYNPS` -> Nombre d’heures passées sur YouTube, Netflix par semaine
-- `FDDRSPJ` -> Fréquence d’utilisation des réseaux sociaux par jour
-- `TDLPU` -> Type d’application la plus utilisée
-- `PDMLDE` -> Pratique du multitâche lors des études
-- `AP` -> Activité physique (heures par semaine)
-- `LP` -> Loisir préféré
-- `TDSP` -> Type de sport pratiqué
-- `NDLLPA` -> •Nombre de livres lus par an
-- `QDS` -> Qualité du sommeil
-- `NMDDSPN` -> Nombre moyen d’heures de sommeil par nuit
-- `DMM` -> Dépenses mensuelles moyennes (en MAD)
-- `SPDR` -> Source principale de revenu
-- `TEPDE` -> •Travail en parallèle des études
-- `NDDTPS` -> Nombre d’heures de travail par semaine
-- `CAEPM` -> capacité à économiser par moins ( MAD)
-- `CDFVVPA` -> •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans
-- `MDVU` -> Moyen de voyage Utiliser
-- `TDL` -> Type de logement ( à Dakhla )
+Le rapport final est présenté sur [ce lien](https://walid-projects.notion.site/Projet-ADD-1a529a68f59c805a9e5fcb06292dff3e)
+
+Temps passé sur le projet : +50h
+
+IDE utilisé : Visual Studio Code
+EOL Sequence : LF
+
+## Installation
+
+```bash
+pip install snakemd
+```
+
+### Roadmap
+
+- [x] Codification de chaque variable + Documenter le processus
+- [ ] (Diapo 6 et 12) Afficher comme statistique les formats erronés/dupliqués/incohérentes/extrêmes
+- [ ] (Diapo 13) Générer un tabeleau "Vue des variables" comme partie de la documentation
+- [x] (Diapo 17) Identifier les données manquantes + Documenter en créant un tableau statistiques avec toutes les variables et un tableau avec tout ces détails pour chaque variable
+- [x] (Diapo 18) Par défaut, ignorer les valeurs manquantes. Si ces dernières constituent un taux entre 30% et 40%, il faudra supprimer la variable concernée si seulement le pourcentage des données manquantes est faible (15%) et réparti aléatoirement. Sinon si aucune de ces conditions ne sont satisfaites
+- [ ] (Diapo 22) Ajouter l'imputation multiple, médianne ou Mode
+- [ ] (Diapo 24) Ajouter un tableau "Variables de résultat" après remplaçage des données manquantes
+- [ ] (Diapo 26) Imputation avancée au niveau du traitement des données manquantes
+  - [ ] Régression linéaire
+  - [ ] Imputation multiple
+- [-] (Diapo 28) Transformation ou permutation des villes par division limitrophe du continent africain
