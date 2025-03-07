@@ -1,0 +1,41 @@
+# Analyse des données - Généré le 07/03/2025 07:31
+
+## Variables
+
+- Âge -> AGE
+- Genre -> GENRE
+- Filière d’étude -> FD
+- Ville d’origine -> VD
+- Mention Bac -> MB
+- Année d’obtention du Bac -> ADDB
+- Option Bac -> OB
+- Mentions S1 -> MS1
+- Mentions S2 -> MS2
+- Mentions S3 -> MS3
+- Mentions S4 -> MS4
+- Mentions S5 -> MS5
+- Utilisation d’Excel -> UD
+- Maîtrise d’autres logiciels -> MDL
+- Participation à des projets académiques/professionnels -> PADPA
+- Nombre de formations en ligne suivies cette année -> NDFELSCA
+- Nombre d'heures d'étude par semaine -> NDDPS
+- Matière préfère -> MP
+- Temps passé sur les écrans par jour -> TPSLEPJ
+- Nombre d’heures passées sur YouTube, Netflix par semaine -> NDPSYNPS
+- Fréquence d’utilisation des réseaux sociaux par jour -> FDDRSPJ
+- Type d’application la plus utilisée -> TDLPU
+- Pratique du multitâche lors des études -> PDMLDE
+- Activité physique (heures par semaine) -> AP
+- Loisir préféré -> LP
+- Type de sport pratiqué -> TDSP
+- •Nombre de livres lus par an -> NDLLPA
+- Qualité du sommeil -> QDS
+- Nombre moyen d’heures de sommeil par nuit -> NMDDSPN
+- Dépenses mensuelles moyennes (en MAD) -> DMM
+- Source principale de revenu -> SPDR
+- •Travail en parallèle des études -> TEPDE
+- Nombre d’heures de travail par semaine -> NDDTPS
+- capacité à économiser par moins ( MAD) -> CAEPM
+- •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans -> CDFVVPA
+- Moyen de voyage Utiliser -> MDVU
+- Type de logement ( à Dakhla ) -> TDL
