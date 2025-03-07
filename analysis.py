@@ -1,14 +1,20 @@
-from unicodedata import normalize as unicodedata_normalize
-from collections import Counter
+from typing import Callable
+from unicodedata import normalize as normalize_unicode
+from collections import deque
 from csv import reader
 from enum import Enum, auto
 
 import re
-import snakemd
+import snakemd  # type: ignore
+from datetime import datetime
 
-
-adjusted_data = open("output.csv", "w")
 doc = snakemd.Document()
+stats = snakemd.Document()
+time_generated = datetime.now().strftime("%d/%m/%Y %H:%M")
+for markdown in [doc, stats]:
+    markdown.add_heading(f"Analyse des données - Généré le {time_generated}")
+
+# TODO: doc.doc.add_table_of_contents()
 
 
 class Listable(Enum):
@@ -19,48 +25,153 @@ class Listable(Enum):
 
 def normalize(value: str) -> str:
     return (
-        unicodedata_normalize("NFKD", value)
+        normalize_unicode("NFKD", value)
         .encode("ascii", "ignore")
         .decode("ascii")
         .strip()
     )
 
 
-def numeric_data(value: str):
-    match = re.search(r"(\d+)", value)
-    return int(match.group(1)) if match else None
+class UnwantedDataType(Enum):
+    UNKNOWN = "Inconnu"
+    MISSING = "Manquant"
+    DUPLICATE = "Doublon"
+    OUT_OF_RANGE = "Hors de portée"
+    INVALID_FORMAT = "Format invalide"
 
 
-class StoreCollection:
+class DataManager:
+    def __init__(self):
+        self.name = None
+        self.TRESHOLD_CORRELATION = 0.5
+        self.invalid_subsets = []
+
+    def is_unknown(self, value) -> bool:
+        return value == "N.V" or not value
+
+    def is_applicable(self) -> bool:
+        total_values = sum(len(row) for row in file)
+        missing_data = (len(self.invalid_subsets) / total_values) * 100
+        return missing_data < 5
+
+    def removable(self, dict) -> bool:
+        percent = (len(self.invalid_subsets) / len(dict.data.values())) * 100
+        return self.is_applicable() and 30 <= percent <= 40
+
+    # TODO : imputation multiple (>10%)
+    def handle_missing_data(self, dict):
+        if isinstance(dict, StoreSet):
+            values = [subset["unresolved_value"] for subset in self.invalid_subsets]
+
+            # Hypothèse de linéarité pour appliquer la régression
+            if dict.correlation(values) > self.TRESHOLD_CORRELATION:
+                self.data = dict.estimate_missing_values(values)
+            else:  # Moyenne des valeurs connues
+                for k in range(len(dict.data)):
+                    if dict.data[k] is None:
+                        dict.data[k] = int(round(sum(values) / len(values)))
+        elif isinstance(dict, StoreCollection):
+            return NotImplemented
+
+    def generate_rapport(self, dict):
+        stats.add_heading(f"Données invalides pour : {dict.name}", level=3)
+        headers = [
+            "",
+            "",
+            "Fréquence",
+            "Pourcentage",
+            "Pourcentage valide",
+            "Pourcentage cumulé",
+        ]
+
+        valid_values = sum(set["count"] for set in dict.data.values())
+        missing_values = len(dict.invalid_subsets)
+        percent_missing_values = (
+            missing_values / (valid_values + missing_values)
+        ) * 100
+
+        row = deque(
+            [
+                # Données valides
+                [
+                    "",
+                    "Total",
+                    valid_values,
+                    "{filled}",
+                    "{filled}",
+                    "",
+                ],
+                # Données invalides
+                [
+                    "Manquant",
+                    "Système",
+                    missing_values,
+                    f"{percent_missing_values:.2f}%",
+                    "",
+                    "",
+                ],
+                # Total des données
+                [
+                    "Total",
+                    "",
+                    missing_values + valid_values,
+                    "{filled}",
+                    "",
+                    "",
+                ],
+            ]
+        )
+
+        cumul_percent = 0
+        cumul_percent_valid = 0
+        data_rows = []
+        for k, data in list(enumerate(dict.data.values())):
+            firs_row = k == min(dict.data.keys())
+            percent_basedon_valid = data["count"] / (valid_values)
+            percent_total = data["count"] / valid_values
+            cumul_percent += percent_total
+            cumul_percent_valid += percent_basedon_valid
+            data_rows.append(
+                [
+                    "Valide" if firs_row else "",
+                    data["name"],
+                    data["count"],
+                    f"{percent_total * 100:.2f}%",
+                    f"{percent_basedon_valid * 100:.2f}%",
+                    f"{cumul_percent * 100:.2f}%",
+                ]
+            )
+
+        for item in reversed(data_rows):
+            row.appendleft(item)
+
+        percent_valid_values = (cumul_percent * 100) - percent_missing_values
+        row[len(row) - 3][3] = f"{percent_valid_values:.2f}%"
+        row[len(row) - 1][3] = f"{percent_valid_values + percent_missing_values:.2f}%"
+
+        row[len(row) - 3][4] = f"{cumul_percent_valid * 100:.2f}%"
+
+        stats.add_table(headers, list(row))
+
+    def __handle_unresolved__(self, callback: Callable, value, type):
+        if type != UnwantedDataType.MISSING:
+            callback(value)
+
+        return self.invalid_subsets.append(
+            {"var_name": self.name, "unresolved_value": value, "type": type}
+        )
+
+
+class StoreCollection(DataManager):
     def __init__(self, pos):
         self.pos = pos
         self.data = {}
+        self.name = doc_headers[pos]["default"] + f" ({doc_headers[pos]['format']})"
+        self.invalid_subsets = []
 
-    def is_unknown(self, value: str) -> bool:
-        return value == "N.V" or not value.replace(" ", "").isalnum() or not value
-
-    # extracts distinct values
-    def known_posibilities(self, value: str, write=True):
-        value = normalize(value).upper()
-
-        possible_values = self.in_depth(value)
-        if len(possible_values) > 1:
-            for possible_value in possible_values:
-                self.known_posibilities(possible_value, write)
-
-        # TODO : Handle unknown value
-        if self.is_unknown(value):
-            return
-
-        if not self.data:
-            adjusted_data.write(f"{value}\n") if write else None
-            self.data[len(self.data)] = value
-            return
-        for _, info in self.data.items():
-            if info == value:
-                return
-        adjusted_data.write(f"{value}\n") if write else None
-        self.data[len(self.data)] = value
+    def is_unknown(self, value) -> bool:
+        alnum = bool(re.search(r"[a-zA-Z0-9]", value.replace(" ", "")))
+        return super().is_unknown(value) or not alnum
 
     def in_depth(self, value: str):
         match = re.search(r"[;,/]| ET ", value)
@@ -70,20 +181,29 @@ class StoreCollection:
             for v in value.split(match.group()):
                 if not self.is_unknown(v):
                     matches.append(v)
-            return [value]
-        return [value]
+            matches.append(value)
+            return matches
+        matches.append(value)
+        return matches
 
-    def subscribe(self, value: str, approx=False, exact=False, format=True):
-        value = normalize(value).upper() if format else value
-        possible_values = self.in_depth(value)
+    def subscribe(
+        self, value: str | None, approx=False, exact=False, format=True, depth=True
+    ):
+        value = normalize(value).upper() if format and value else value
+
+        def __subscribe__(v):
+            self.data[len(self.data)] = v
+
+        if not value or self.is_unknown(value):
+            return self.__handle_unresolved__(
+                __subscribe__, value, UnwantedDataType.MISSING
+            )
+
+        possible_values = self.in_depth(value) if depth else [value]
 
         if len(possible_values) > 1:
             for possible_value in possible_values:
                 self.subscribe(possible_value, approx, exact, format)
-
-        # TODO : Handle unknown value
-        if self.is_unknown(value):
-            return
 
         for key, info in self.data.items():
             if approx and does_match(value, info["name"]):
@@ -98,12 +218,87 @@ class StoreCollection:
         self.data[len(self.data)] = {"name": value, "count": 1}
 
 
-class IntSet:
-    def __init__(self, data: list[int]):
-        self.data = data
+class StoreSet(DataManager):
+    def __init__(self, pos):
+        self.pos = pos
+        self.data = []
+        self.name = doc_headers[pos]["default"] + f" ({doc_headers[pos]['format']})"
+        self.invalid_subsets = []
 
-    def store(self, value: int):
-        self.data.append(value)
+    def collect(self, value: int | str | None, condition: Callable):
+        value = value.strip() if isinstance(value, str) else value
+
+        def __collect__(v):
+            self.data.append(v)
+
+        if self.is_unknown(value):
+            return self.__handle_unresolved__(
+                __collect__, value, UnwantedDataType.MISSING
+            )
+
+        if isinstance(value, int):
+            if condition(value):
+                return self.data.append(value)
+            else:
+                self.__handle_unresolved__(
+                    __collect__, value, UnwantedDataType.OUT_OF_RANGE
+                )
+        elif isinstance(value, str):
+            if match := re.search(r"(\d+)", value):
+                value = int(match.group(1))
+                if condition(value):
+                    return self.data.append(value)
+                else:
+                    self.__handle_unresolved__(
+                        __collect__, value, UnwantedDataType.OUT_OF_RANGE
+                    )
+            else:
+                self.__handle_unresolved__(
+                    __collect__, match, UnwantedDataType.INVALID_FORMAT
+                )
+        else:
+            self.__handle_unresolved__(__collect__, value, UnwantedDataType.UNKNOWN)
+
+    # Référence: https://fr.wikipedia.org/wiki/Corr%C3%A9lation_(statistiques)
+    def correlation(self, data: list[int]) -> int:
+        # X : Indices des valeurs connues, y : Valeurs connues
+        X = [i for i, x in enumerate(data) if x is not None]
+        y = [x for x in data if x is not None]
+
+        n = len(X)
+        sum_x = sum(X)
+        sum_y = sum(y)
+        sum_xy = sum(x * y for x, y in zip(X, y))
+        sum_x2 = sum(x**2 for x in X)
+        sum_y2 = sum(y**2 for y in y)
+
+        numerator = sum_xy - (sum_x * sum_y) / n
+        denominator_x = (sum_x2 - (sum_x**2) / n) ** 0.5
+        denominator_y = (sum_y2 - (sum_y**2) / n) ** 0.5
+        denominator = denominator_x * denominator_y
+
+        return abs(numerator / denominator) if denominator != 0 else 0
+
+    def estimate_missing_values(self, values: list[int]) -> list[int]:
+        missing_indices = [i for i, x in enumerate(values) if x is None]
+
+        # X : Indices des valeurs connues, y : Valeurs connues
+        X = [i for i, x in enumerate(values) if x is not None]
+        y = [x for x in values if x is not None]
+
+        n = len(X)
+        sum_x = sum(X)
+        sum_y = sum(y)
+        sum_xy = sum(x * y for x, y in zip(X, y))
+        sum_x2 = sum(x**2 for x in X)
+
+        a = (n * sum_xy - sum_x * sum_y) / (n * sum_x2 - sum_x**2)
+        b = (sum_y - a * sum_x) / n
+
+        for i in missing_indices:
+            values[i] = round(a * i + b)  # y = ax + b
+
+        return values
 
 
 # Référence: https://fr.wikipedia.org/wiki/Distance_de_Levenshtein
@@ -141,57 +336,13 @@ def does_match(s1: str, s2: str, threshold=2):
     return distance <= threshold
 
 
-# Référence: https://fr.wikipedia.org/wiki/Corr%C3%A9lation_(statistiques)
-def correlation(data: list) -> int:
-    X = [i for i, x in enumerate(data) if x is not None]  # Indices des valeurs connues
-    y = [x for x in data if x is not None]  # Valeurs connues
-
-    n = len(X)
-    sum_x = sum(X)
-    sum_y = sum(y)
-    sum_xy = sum(x * y for x, y in zip(X, y))
-    sum_x2 = sum(x**2 for x in X)
-    sum_y2 = sum(y**2 for y in y)
-
-    numerator = sum_xy - (sum_x * sum_y) / n
-    denominator_x = (sum_x2 - (sum_x**2) / n) ** 0.5
-    denominator_y = (sum_y2 - (sum_y**2) / n) ** 0.5
-    denominator = denominator_x * denominator_y
-
-    # éviter le cas infini en divisant par zéro
-    return abs(numerator / denominator) if denominator != 0 else 0
-
-
-def predict_missing_value(data: list[int]) -> list[int]:
-    missing_indices = [i for i, x in enumerate(data) if x is None]
-
-    X = [i for i, x in enumerate(data) if x is not None]  # Indices des valeurs connues
-    y = [x for x in data if x is not None]  # Valeurs connues
-
-    n = len(X)
-    sum_x = sum(X)
-    sum_y = sum(y)
-    sum_xy = sum(x * y for x, y in zip(X, y))
-    sum_x2 = sum(x**2 for x in X)
-
-    a = (n * sum_xy - sum_x * sum_y) / (n * sum_x2 - sum_x**2)
-    b = (sum_y - a * sum_x) / n
-
-    for i in missing_indices:
-        data[i] = round(a * i + b)  # y = ax + b
-
-    return data
-
-
 class Option(Listable):
-    EXP = auto()
-    MATH = auto()
-    ECO = auto()
+    ECO = EXP = MATH = auto()
 
     @classmethod
-    def classify(self, filiere: str) -> Listable:
+    def classify(cls, filiere: str):
         if "MATH" in filiere:
-            return Option.MATH
+            return Option.MATH.name
 
         if (
             "VIE" in filiere
@@ -199,36 +350,29 @@ class Option(Listable):
             or "PHYSIQUE" in filiere
             or "EXPERIMENTAL" in filiere
         ):
-            return Option.EXP
+            return Option.EXP.name
 
         if "ECONOMIE" in filiere or "GESTION" in filiere:
-            return Option.ECO
+            return Option.ECO.name
 
 
 class MDL(Listable):
-    SPSS = auto()
-    PYTHON = auto()
-    R = auto()
-    POWER_BI = auto()
-    AUTRE = auto()
+    SPSS = PYTHON = R = POWER_BI = AUTRE = auto()
 
     @classmethod
-    def classify(self, logiciel: str) -> Listable:
-        for software in self.get():
+    def classify(cls, logiciel: str):
+        for software in cls.get():
             if software.replace("_", " ") in logiciel:
-                return self[software].name
-        return self.AUTRE.name
+                return cls[software].name
+        return cls.AUTRE.name
 
 
 # Importation des données
 with open(file="data.csv", mode="r") as file:
     file = reader(file)
-    headers = next(file)
+    headers, doc_headers = next(file), []
 
-    # Création de variables / TODO : avoid duplicates
-    doc.add_heading("Variables")
-    doc_headers = []
-
+    # Création des variables / TODO : avoid duplicates
     for i, header in enumerate(headers):
         normalized_header = re.sub(r"\(.*?\)", "", normalize(header)).strip()
         words = normalized_header.split()
@@ -243,21 +387,20 @@ with open(file="data.csv", mode="r") as file:
         else:
             formatted_header = normalized_header.upper()
 
-        doc_headers.append(f"`{formatted_header}` -> {header}")
+        doc_headers.append({"format": formatted_header, "default": header})
         headers[i] = formatted_header
-
-    # Documenter les variables
-    doc.add_unordered_list(doc_headers)
 
     # Suppression des données sensibles et/ou inutiles
     for i in ["ND", "AD", "HORODATEUR"]:
         index = headers.index(i)
         headers.pop(index)
+        doc_headers.pop(index)
         file = [row[:index] + row[index + 1 :] for row in file]
 
     # Données numériques
-    age_index = headers.index("AGE")
-    annee_bac_index = headers.index("ADDB")
+    ages_set = StoreSet(headers.index("AGE"))
+    anneebac_set = StoreSet(headers.index("ADDB"))
+    ndfelsca_set = StoreSet(headers.index("NDFELSCA"))
     # Données alphanumériques
     sex_dict = StoreCollection(headers.index("GENRE"))
     studyfield_dict = StoreCollection(headers.index("FD"))
@@ -267,97 +410,93 @@ with open(file="data.csv", mode="r") as file:
     mentions_dicts = [StoreCollection(headers.index(f"MS{i}")) for i in range(1, 6)]
     excel_dict = StoreCollection(headers.index("UD"))
     logiciels_dict = StoreCollection(headers.index("MDL"))
+    padpa_dict = StoreCollection(headers.index("PADPA"))
+    nddps_dict = StoreCollection(headers.index("NDDPS"))
 
-    valid_years = []
-
-    # Gestion des données manquantes
-    ## Méthode 1 - Suppression des valeurs manquantes
-    ### Critère global: Si les données manquantes est faible < 5%
-    missing_values = sum(
-        1 for row in file for data in row if data is None or data.strip() == ""
-    )
-
-    total_values = sum(len(row) for row in file)
-    applicable = ((missing_values / total_values) * 100) < 5
+    dicts = {
+        "literal": [sex_dict, studyfield_dict, excel_dict, *mentions_dicts],
+    }
 
     i = 0
     rows = list(file)
+
     while i < len(rows):
-        row = rows[i]
+        ages_set.collect(rows[i][ages_set.pos], lambda age: 18 <= age <= 24)
 
-        ### Critère variable: Si une des variables a plus de 30-40% de données manquantes
-        nb_missing = sum(1 for data in row if data is None or data.strip() == "")
-        percent = (nb_missing / len(row)) * 100
-        too_many_missing_data = percent >= 30 and percent <= 40
-        threshold = 0.5  # près de 1 = fortement corrélé
+        for dict in dicts["literal"]:
+            dict.subscribe(rows[i][dict.pos])
 
-        if applicable:
-            if too_many_missing_data:
-                headers.pop(i)
-                rows.pop(i)
-                continue
+        city_dict.subscribe(rows[i][city_dict.pos], approx=True, depth=False)
 
-        # TODO: implémenter l'imputation multiple
-
-        # ✅ L'âge de l'étudiant
-
-        def valid_age(value: int, threshold=24) -> str:
-            if value <= threshold:
-                return str(value)
-
-            valid_ages = [numeric_data(data[age_index]) for data in rows]
-            valid_ages = [
-                age for age in valid_ages if age is not None and age <= threshold
-            ]
-
-            return str(max(valid_ages)) if valid_ages else str(threshold)
-
-        age = (row[age_index] or "").strip()
-
-        if not age:
-            ### Régression linéaire
-            ages = [int(data[age_index]) for data in rows]
-            if correlation(ages) >= threshold:
-                row[age_index] = str(predict_missing_value(ages)[i])
-            else:  ### Moyenne
-                avg_age = sum(int(data[age_index]) for data in rows) / len(rows)
-                row[age_index] = str(round(avg_age))
-
-            age = row[age_index].strip()
-
-        current = numeric_data(age)
-        if current is not None:
-            row[age_index] = valid_age(current)
-        else:
-            raise ValueError("L'âge n'est pas correctement formatté")
-
-        for dict in [
-            sex_dict,
-            studyfield_dict,
-            excel_dict,
-            *mentions_dicts,
-        ]:
-            dict.subscribe(row[dict.pos])
-
-        city_dict.subscribe(row[city_dict.pos], approx=True)
-
-        mention = re.sub(r"[. ]*", "", row[mentionbac_dict.pos])
+        mention = re.sub(r"[. ]*", "", rows[i][mentionbac_dict.pos])
         mentionbac_dict.subscribe(mention)
 
-        match = re.search(r"(\d{4})[-/_\s]*(\d{4})?", row[annee_bac_index])
-        if match:
-            valid_years.append(match.group(2) if match.group(2) else match.group(1))
-        else:
-            valid_years.append(Counter(valid_years).most_common(1)[0][0])
+        match = re.search(r"(\d{4})[-/_\s]*(\d{4})?", rows[i][anneebac_set.pos])
+        anneebac_set.collect(
+            match.group(1) if match else None, lambda year: 2020 <= year <= 2023
+        )
 
-        branche = Option.classify(normalize(row[optionbac_dict.pos]).upper())
-        optionbac_dict.subscribe(branche.name, exact=True, format=False)
+        branche = Option.classify(normalize(rows[i][optionbac_dict.pos]).upper())
+        optionbac_dict.subscribe(branche, exact=True, format=False)
 
-        logiciel = normalize(row[logiciels_dict.pos]).upper()
-        possible_values = logiciels_dict.in_depth(logiciel)
-        for possible_value in possible_values:
-            logiciels_dict.subscribe(MDL.classify(possible_value), exact=True)
+        logiciel = normalize(rows[i][logiciels_dict.pos]).upper()
+        for value in logiciels_dict.in_depth(logiciel):
+            logiciels_dict.subscribe(MDL.classify(value), exact=True, format=False)
+
+        padpa_dict.subscribe(rows[i][padpa_dict.pos], exact=True)
 
         i += 1
 
-    doc.dump("README")  # Générer la documentation en markdown
+        if i == len(rows):
+            stats.add_heading("Statistiques", level=2)
+            rows = [["N", "Valide"], ["", "Manquant"]]
+            headers = [
+                "",
+                "",
+                *[
+                    d.name
+                    for k in dicts
+                    for d in dicts[k]
+                    if len(d.invalid_subsets) > 0
+                ],
+            ]
+
+            for dict in [
+                d for k in dicts for d in dicts[k] if len(d.invalid_subsets) > 0
+            ]:
+                rows[0].append(str(len(dict.data)))
+                rows[1].append(str(len(dict.invalid_subsets)))
+
+            stats.add_table(headers, rows)
+
+            stats.add_heading("Validation des données", level=2)
+            for dict in [d for k in dicts for d in dicts[k]]:
+                if len(dict.invalid_subsets) == 0:
+                    continue
+
+                if any(
+                    subset["type"] == UnwantedDataType.MISSING
+                    for subset in dict.invalid_subsets
+                ):
+                    dict.generate_rapport(dict)
+
+                if dict.removable(dict):
+                    headers.pop(i)
+                    rows.pop(i)
+                else:
+                    dict.handle_missing_data(dict)
+
+    # TODO : Interprétations et représentations graphiques
+    stats.add_heading("Analyse des données", level=2)
+
+    doc.add_heading("Variables", level=2)
+    doc.add_unordered_list(
+        [
+            doc_headers[k]["default"] + f" -> {doc_headers[k]['format']}"
+            for k, _ in enumerate(doc_headers)
+        ]
+    )
+
+    # Généres la documentation et les statistiques en markdown
+    doc.dump("DOCS")
+    stats.dump("STATS")
