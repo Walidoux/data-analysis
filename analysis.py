@@ -76,7 +76,14 @@ class DataManager:
                         valid_values = [v for v in dict.data if v is not None]
                         dict.data[k] = int(round(sum(valid_values) / len(valid_values)))
         elif isinstance(dict, StoreCollection):
-            return NotImplemented
+            none_indices = [k for k, v in dict.data.items() if v is None]
+            valid_data = [v for v in dict.data.values() if v is not None]
+            common_value = max(valid_data, key=lambda x: x["count"])
+            common_value["count"] += len(none_indices)
+            for index in sorted(none_indices, reverse=True):
+                dict.data.pop(index)
+                # if index < len(self.invalid_subsets):
+                #     self.invalid_subsets.pop(index)
 
     def generate_rapport(self, dict):
         stats.add_heading(dict.name, level=3)
@@ -93,7 +100,7 @@ class DataManager:
             if isinstance(dict, StoreCollection):
                 return sum(set["count"] for set in data.values())
             else:
-                return sum(value for value in data)
+                return len(data) - len(dict.invalid_subsets)
 
         valid_values = get_valid_values(dict.data)
 
@@ -183,9 +190,7 @@ class DataManager:
         stats.add_table(headers, list(row))
 
     def __handle_unresolved__(self, callback: Callable, value, type):
-        if type != UnwantedDataType.MISSING:
-            callback()
-
+        callback()
         return self.invalid_subsets.append(
             {"var_name": self.name, "unresolved_value": value, "type": type}
         )
@@ -235,6 +240,8 @@ class StoreCollection(DataManager):
                 self.subscribe(possible_value, approx, exact, format)
 
         for key, info in self.data.items():
+            if info is None:
+                continue
             if approx and does_match(value, info["name"]):
                 self.data[key]["count"] += 1
                 return
@@ -464,7 +471,8 @@ with open(file="data.csv", mode="r") as file:
 
         match = re.search(r"(\d{4})[-/_\s]*(\d{4})?", rows[i][anneebac_set.pos])
         anneebac_set.collect(
-            match.group(1) if match else None, lambda year: 2020 <= year <= 2023
+            match.group(2) if match and match.group(2) else match and match.group(1),
+            lambda year: 2020 <= year <= 2023,
         )
 
         branche = Option.classify(normalize(rows[i][optionbac_dict.pos]).upper())
@@ -498,6 +506,7 @@ with open(file="data.csv", mode="r") as file:
                 if dict.removable(dict):
                     headers.pop(i)
                     rows.pop(i)
+                    continue
                 else:
                     dict.handle_missing_data(dict)
 
