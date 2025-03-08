@@ -189,6 +189,48 @@ class DataManager:
 
         stats.add_table(headers, list(row))
 
+    def generate_statistics(self, dict):
+        doc.add_heading(dict.name, level=3)
+
+        # Statistiques descriptives
+        # TODO : calculer la moyenne et l'écart type
+        headers = ["", "N", "Minimum", "Moyenne", "Ecart type"]
+        rows = [["N Valide (liste)", len(dict.data), min(dict.data), 0, 0]]
+        stats.add_table(headers, rows)
+
+        # TODO : Interprétation des résultats
+        # si écart-type est faible, les valeurs sont proches de la moyenne
+        # si écart-type est élevé, il y a une grande dispersion des données
+
+        # Distribution des données et test de normalité
+        headers = ["Kolmogrov-Smirnov", "Shapiro-Wilk"]
+        sub_header = ["Statistique", "ddl", "Sig."]
+        header_styles = "style='text-align: center;' colspan='3'"
+
+        # TODO : effectuer le test de formalité de Kolmogorov-Smirnov et Shapiro-Wilk
+        # si p < 0.05, distribution non normale
+        # si p > 0.05, distribution normale
+        html_table = f"""
+        <table>
+            <tr>
+                {"".join(f"<th {header_styles}>{header}</th>" for header in headers)}
+            </tr>
+            <tr>
+                {"".join(f"<th>{header}</th>" for header in sub_header + sub_header[::-1])}
+            </tr>
+            <tr>
+                <td>Data 1.1</td>
+                <td>Data 1.2</td>
+                <td>Data 1.3</td>
+                <td>Data 2.1</td>
+                <td>Data 2.2</td>
+                <td>Data 2.3</td>
+            </tr>
+        </table>
+        """
+
+        stats.add_raw(html_table)
+
     def __handle_unresolved__(self, callback: Callable, value, type):
         callback()
         return self.invalid_subsets.append(
@@ -511,6 +553,9 @@ with open(file="data.csv", mode="r") as file:
                     dict.handle_missing_data(dict)
 
                 dict.generate_rapport(dict)
+
+            for dict in [d for k in dicts for d in dicts[k] if isinstance(d, StoreSet)]:
+                dict.generate_statistics(dict)
 
     # TODO : Interprétations et représentations graphiques
     stats.add_heading("Analyse des données", level=2)
