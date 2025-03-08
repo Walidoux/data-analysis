@@ -55,21 +55,26 @@ class DataManager:
         return missing_data < 5
 
     def removable(self, dict) -> bool:
-        percent = (len(self.invalid_subsets) / len(dict.data.values())) * 100
+        percent = (
+            len(self.invalid_subsets)
+            / len(
+                dict.data.values() if isinstance(dict, StoreCollection) else dict.data
+            )
+        ) * 100
+
         return self.is_applicable() and 30 <= percent <= 40
 
     # TODO : imputation multiple (>10%)
     def handle_missing_data(self, dict):
         if isinstance(dict, StoreSet):
-            values = [subset["unresolved_value"] for subset in self.invalid_subsets]
-
             # Hypothèse de linéarité pour appliquer la régression
-            if dict.correlation(values) > self.TRESHOLD_CORRELATION:
-                self.data = dict.estimate_missing_values(values)
+            if dict.correlation(dict.data) > self.TRESHOLD_CORRELATION:
+                self.data = dict.estimate_missing_values(dict.data)
             else:  # Moyenne des valeurs connues
                 for k in range(len(dict.data)):
                     if dict.data[k] is None:
-                        dict.data[k] = int(round(sum(values) / len(values)))
+                        valid_values = [v for v in dict.data if v is not None]
+                        dict.data[k] = int(round(sum(valid_values) / len(valid_values)))
         elif isinstance(dict, StoreCollection):
             return NotImplemented
 
@@ -84,7 +89,14 @@ class DataManager:
             "Pourcentage cumulé",
         ]
 
-        valid_values = sum(set["count"] for set in dict.data.values())
+        def get_valid_values(data):
+            if isinstance(dict, StoreCollection):
+                return sum(set["count"] for set in data.values())
+            else:
+                return sum(value for value in data)
+
+        valid_values = get_valid_values(dict.data)
+
         missing_values = len(dict.invalid_subsets)
         percent_missing_values = (
             missing_values / (valid_values + missing_values)
@@ -125,17 +137,35 @@ class DataManager:
         cumul_percent = 0
         cumul_percent_valid = 0
         data_rows = []
-        for k, data in list(enumerate(dict.data.values())):
-            firs_row = k == min(dict.data.keys())
-            percent_total = data["count"] / (valid_values + missing_values)
-            percent_basedon_valid = data["count"] / valid_values
+
+        if isinstance(dict, StoreSet):
+            unique_data = list(set(dict.data))
+        else:
+            unique_data = dict.data.values()
+
+        for k, data in enumerate(unique_data):
+            firs_row = k == (
+                min(dict.data.keys()) if isinstance(dict, StoreCollection) else 0
+            )
+
+            if isinstance(dict, StoreCollection):
+                count = data["count"]
+                name = data["name"]
+            else:
+                count = dict.data.count(data)
+                name = data
+
+            percent_total = count / (valid_values + missing_values)
+            percent_basedon_valid = count / valid_values
+
             cumul_percent += percent_total
             cumul_percent_valid += percent_basedon_valid
+
             data_rows.append(
                 [
                     "Valide" if firs_row else "",
-                    data["name"],
-                    data["count"],
+                    name,
+                    count,
                     f"{percent_total * 100:.2f}%",
                     f"{percent_basedon_valid * 100:.2f}%",
                     f"{cumul_percent * 100:.2f}%",
@@ -154,7 +184,7 @@ class DataManager:
 
     def __handle_unresolved__(self, callback: Callable, value, type):
         if type != UnwantedDataType.MISSING:
-            callback(value)
+            callback()
 
         return self.invalid_subsets.append(
             {"var_name": self.name, "unresolved_value": value, "type": type}
@@ -190,8 +220,8 @@ class StoreCollection(DataManager):
     ):
         value = normalize(value).upper() if format and value else value
 
-        def __subscribe__(v):
-            self.data[len(self.data)] = v
+        def __subscribe__():
+            self.data[len(self.data)] = None
 
         if not value or self.is_unknown(value):
             return self.__handle_unresolved__(
@@ -221,14 +251,15 @@ class StoreSet(DataManager):
     def __init__(self, pos):
         self.pos = pos
         self.data = []
+        self.TRESHOLD_CORRELATION = 0.5
         self.name = doc_headers[pos]["default"] + f" ({doc_headers[pos]['format']})"
         self.invalid_subsets = []
 
     def collect(self, value: int | str | None, condition: Callable):
         value = value.strip() if isinstance(value, str) else value
 
-        def __collect__(v):
-            self.data.append(v)
+        def __collect__():
+            self.data.append(None)
 
         if self.is_unknown(value):
             return self.__handle_unresolved__(
@@ -414,6 +445,7 @@ with open(file="data.csv", mode="r") as file:
 
     dicts = {
         "literal": [sex_dict, studyfield_dict, excel_dict, *mentions_dicts],
+        "numeric": [ages_set, anneebac_set],
     }
 
     i = 0
@@ -463,13 +495,13 @@ with open(file="data.csv", mode="r") as file:
 
             stats.add_heading("Validation des données", level=2)
             for dict in [d for k in dicts for d in dicts[k]]:
-                dict.generate_rapport(dict)
-
                 if dict.removable(dict):
                     headers.pop(i)
                     rows.pop(i)
                 else:
                     dict.handle_missing_data(dict)
+
+                dict.generate_rapport(dict)
 
     # TODO : Interprétations et représentations graphiques
     stats.add_heading("Analyse des données", level=2)

@@ -1,11 +1,11 @@
-# Analyse des données - Généré le 08/03/2025 02:41
+# Analyse des données - Généré le 08/03/2025 03:41
 
 ## Statistiques
 
-|   |          | Genre (GENRE) | Filière d’étude (FD) | Utilisation d’Excel (UD) | Mentions S1 (MS1) | Mentions S2 (MS2) | Mentions S3 (MS3) | Mentions S4 (MS4) | Mentions S5 (MS5) |
-| - | -------- | ------------- | -------------------- | ------------------------ | ----------------- | ----------------- | ----------------- | ----------------- | ----------------- |
-| N | Valide   | 2             | 2                    | 4                        | 3                 | 2                 | 3                 | 2                 | 3                 |
-|   | Manquant | 0             | 0                    | 0                        | 4                 | 4                 | 4                 | 4                 | 3                 |
+|   |          | Genre (GENRE) | Filière d’étude (FD) | Utilisation d’Excel (UD) | Mentions S1 (MS1) | Mentions S2 (MS2) | Mentions S3 (MS3) | Mentions S4 (MS4) | Mentions S5 (MS5) | Âge (AGE) | Année d’obtention du Bac (ADDB) |
+| - | -------- | ------------- | -------------------- | ------------------------ | ----------------- | ----------------- | ----------------- | ----------------- | ----------------- | --------- | ------------------------------- |
+| N | Valide   | 2             | 2                    | 4                        | 3                 | 2                 | 3                 | 2                 | 3                 | 116       | 115                             |
+|   | Manquant | 0             | 0                    | 0                        | 4                 | 4                 | 4                 | 4                 | 3                 | 1         | 1                               |
 
 ## Validation des données
 
@@ -93,5 +93,29 @@
 |          | Total    | 113       | 97.41%      | 100.00%            |                    |
 | Manquant | Système  | 3         | 2.59%       |                    |                    |
 | Total    |          | 116       | 100.00%     |                    |                    |
+
+### Âge (AGE)
+
+|          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
+| -------- | ------- | --------- | ----------- | ------------------ | ------------------ |
+| Valide   | 19      | 7         | 0.30%       | 0.30%              | 0.30%              |
+|          | 20      | 68        | 2.88%       | 2.88%              | 3.18%              |
+|          | 21      | 36        | 1.52%       | 1.53%              | 4.70%              |
+|          | 22      | 4         | 0.17%       | 0.17%              | 4.87%              |
+|          | 23      | 1         | 0.04%       | 0.04%              | 4.91%              |
+|          | Total   | 2360      | 4.87%       | 4.92%              |                    |
+| Manquant | Système | 1         | 0.04%       |                    |                    |
+| Total    |         | 2361      | 4.92%       |                    |                    |
+
+### Année d’obtention du Bac (ADDB)
+
+|          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
+| -------- | ------- | --------- | ----------- | ------------------ | ------------------ |
+| Valide   | 2020    | 1         | 0.00%       | 0.00%              | 0.00%              |
+|          | 2021    | 35        | 0.02%       | 0.02%              | 0.02%              |
+|          | 2022    | 79        | 0.03%       | 0.03%              | 0.05%              |
+|          | Total   | 232493    | 0.05%       | 0.05%              |                    |
+| Manquant | Système | 1         | 0.00%       |                    |                    |
+| Total    |         | 232494    | 0.05%       |                    |                    |
 
 ## Analyse des données
