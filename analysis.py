@@ -74,7 +74,7 @@ class DataManager:
             return NotImplemented
 
     def generate_rapport(self, dict):
-        stats.add_heading(f"Données invalides pour : {dict.name}", level=3)
+        stats.add_heading(dict.name, level=3)
         headers = [
             "",
             "",
@@ -127,8 +127,8 @@ class DataManager:
         data_rows = []
         for k, data in list(enumerate(dict.data.values())):
             firs_row = k == min(dict.data.keys())
-            percent_basedon_valid = data["count"] / (valid_values)
-            percent_total = data["count"] / valid_values
+            percent_total = data["count"] / (valid_values + missing_values)
+            percent_basedon_valid = data["count"] / valid_values
             cumul_percent += percent_total
             cumul_percent_valid += percent_basedon_valid
             data_rows.append(
@@ -145,10 +145,9 @@ class DataManager:
         for item in reversed(data_rows):
             row.appendleft(item)
 
-        percent_valid_values = (cumul_percent * 100) - percent_missing_values
+        percent_valid_values = (cumul_percent_valid * 100) - percent_missing_values
         row[len(row) - 3][3] = f"{percent_valid_values:.2f}%"
         row[len(row) - 1][3] = f"{percent_valid_values + percent_missing_values:.2f}%"
-
         row[len(row) - 3][4] = f"{cumul_percent_valid * 100:.2f}%"
 
         stats.add_table(headers, list(row))
@@ -453,17 +452,10 @@ with open(file="data.csv", mode="r") as file:
             headers = [
                 "",
                 "",
-                *[
-                    d.name
-                    for k in dicts
-                    for d in dicts[k]
-                    if len(d.invalid_subsets) > 0
-                ],
+                *[d.name for k in dicts for d in dicts[k]],
             ]
 
-            for dict in [
-                d for k in dicts for d in dicts[k] if len(d.invalid_subsets) > 0
-            ]:
+            for dict in [d for k in dicts for d in dicts[k]]:
                 rows[0].append(str(len(dict.data)))
                 rows[1].append(str(len(dict.invalid_subsets)))
 
@@ -471,14 +463,7 @@ with open(file="data.csv", mode="r") as file:
 
             stats.add_heading("Validation des données", level=2)
             for dict in [d for k in dicts for d in dicts[k]]:
-                if len(dict.invalid_subsets) == 0:
-                    continue
-
-                if any(
-                    subset["type"] == UnwantedDataType.MISSING
-                    for subset in dict.invalid_subsets
-                ):
-                    dict.generate_rapport(dict)
+                dict.generate_rapport(dict)
 
                 if dict.removable(dict):
                     headers.pop(i)
