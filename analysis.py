@@ -492,7 +492,7 @@ with open(file="data.csv", mode="r") as file:
     doc.add_heading("Variables", level=2)
     doc.add_unordered_list(
         [
-            doc_headers[k]["default"] + f" -> {doc_headers[k]['format']}"
+            f"`{doc_headers[k]["format"]}` -> {doc_headers[k]['default']}"
             for k, _ in enumerate(doc_headers)
         ]
     )

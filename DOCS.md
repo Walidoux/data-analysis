@@ -1,41 +1,41 @@
-# Analyse des données - Généré le 07/03/2025 07:31
+# Analyse des données - Généré le 08/03/2025 02:03
 
 ## Variables
 
-- Âge -> AGE
-- Genre -> GENRE
-- Filière d’étude -> FD
-- Ville d’origine -> VD
-- Mention Bac -> MB
-- Année d’obtention du Bac -> ADDB
-- Option Bac -> OB
-- Mentions S1 -> MS1
-- Mentions S2 -> MS2
-- Mentions S3 -> MS3
-- Mentions S4 -> MS4
-- Mentions S5 -> MS5
-- Utilisation d’Excel -> UD
-- Maîtrise d’autres logiciels -> MDL
-- Participation à des projets académiques/professionnels -> PADPA
-- Nombre de formations en ligne suivies cette année -> NDFELSCA
-- Nombre d'heures d'étude par semaine -> NDDPS
-- Matière préfère -> MP
-- Temps passé sur les écrans par jour -> TPSLEPJ
-- Nombre d’heures passées sur YouTube, Netflix par semaine -> NDPSYNPS
-- Fréquence d’utilisation des réseaux sociaux par jour -> FDDRSPJ
-- Type d’application la plus utilisée -> TDLPU
-- Pratique du multitâche lors des études -> PDMLDE
-- Activité physique (heures par semaine) -> AP
-- Loisir préféré -> LP
-- Type de sport pratiqué -> TDSP
-- •Nombre de livres lus par an -> NDLLPA
-- Qualité du sommeil -> QDS
-- Nombre moyen d’heures de sommeil par nuit -> NMDDSPN
-- Dépenses mensuelles moyennes (en MAD) -> DMM
-- Source principale de revenu -> SPDR
-- •Travail en parallèle des études -> TEPDE
-- Nombre d’heures de travail par semaine -> NDDTPS
-- capacité à économiser par moins ( MAD) -> CAEPM
-- •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans -> CDFVVPA
-- Moyen de voyage Utiliser -> MDVU
-- Type de logement ( à Dakhla ) -> TDL
+- `AGE` -> Âge
+- `GENRE` -> Genre
+- `FD` -> Filière d’étude
+- `VD` -> Ville d’origine
+- `MB` -> Mention Bac
+- `ADDB` -> Année d’obtention du Bac
+- `OB` -> Option Bac
+- `MS1` -> Mentions S1
+- `MS2` -> Mentions S2
+- `MS3` -> Mentions S3
+- `MS4` -> Mentions S4
+- `MS5` -> Mentions S5
+- `UD` -> Utilisation d’Excel
+- `MDL` -> Maîtrise d’autres logiciels
+- `PADPA` -> Participation à des projets académiques/professionnels
+- `NDFELSCA` -> Nombre de formations en ligne suivies cette année
+- `NDDPS` -> Nombre d'heures d'étude par semaine
+- `MP` -> Matière préfère
+- `TPSLEPJ` -> Temps passé sur les écrans par jour
+- `NDPSYNPS` -> Nombre d’heures passées sur YouTube, Netflix par semaine
+- `FDDRSPJ` -> Fréquence d’utilisation des réseaux sociaux par jour
+- `TDLPU` -> Type d’application la plus utilisée
+- `PDMLDE` -> Pratique du multitâche lors des études
+- `AP` -> Activité physique (heures par semaine)
+- `LP` -> Loisir préféré
+- `TDSP` -> Type de sport pratiqué
+- `NDLLPA` -> •Nombre de livres lus par an
+- `QDS` -> Qualité du sommeil
+- `NMDDSPN` -> Nombre moyen d’heures de sommeil par nuit
+- `DMM` -> Dépenses mensuelles moyennes (en MAD)
+- `SPDR` -> Source principale de revenu
+- `TEPDE` -> •Travail en parallèle des études
+- `NDDTPS` -> Nombre d’heures de travail par semaine
+- `CAEPM` -> capacité à économiser par moins ( MAD)
+- `CDFVVPA` -> •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans
+- `MDVU` -> Moyen de voyage Utiliser
+- `TDL` -> Type de logement ( à Dakhla )
