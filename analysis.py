@@ -1,3 +1,4 @@
+from math import erf, exp, sqrt
 from statistics import mean, stdev
 from typing import Callable
 from unicodedata import normalize as normalize_unicode
@@ -6,11 +7,12 @@ from csv import reader
 from enum import Enum, auto
 
 import re
-import snakemd  # type: ignore
+
+from snakemd import Document, Quote  # type: ignore
 from datetime import datetime
 
-doc = snakemd.Document()
-stats = snakemd.Document()
+doc = Document()
+stats = Document()
 time_generated = datetime.now().strftime("%d/%m/%Y %H:%M")
 for markdown in [doc, stats]:
     markdown.add_heading(f"Analyse des données - Généré le {time_generated}")
@@ -191,52 +193,89 @@ class DataManager:
         stats.add_table(headers, list(row))
 
     def generate_statistics(self, dict):
-        doc.add_heading(dict.name, level=3)
+        stats.add_heading(dict.name, level=3)
 
-        # Statistiques descriptives
-        headers = ["", "N", "Minimum", "Moyenne", "Ecart type"]
+        stats.add_heading("Statistiques descriptives", level=4)
+        headers = ["", "N", "Minimum", "Maximum", "Moyenne", "Ecart type"]
+
+        avg = round(mean(dict.data), 3)
+        std_dev = round(stdev(dict.data), 3)
+
         rows = [
             [
                 "N Valide (liste)",
                 len(dict.data),
+                max(dict.data),
                 min(dict.data),
-                mean(dict.data),
-                stdev(dict.data),  # pstdev sur une population
+                avg,
+                std_dev,
             ]
         ]
 
         stats.add_table(headers, rows)
 
-        # TODO : Interprétation des résultats
-        # si écart-type est faible, les valeurs sont proches de la moyenne
-        # si écart-type est élevé, il y a une grande dispersion des données
+        def interpretation(*args: str):
+            stats.add_block(
+                Quote(
+                    f"L'écart-type est relativement {args[0]} ce qui veut dire {args[1]}"
+                )
+            )
 
-        # Distribution des données et test de normalité
+        if (std_dev / avg) * 100 > 50:
+            interpretation("élevé", "qu'il y a une grande dispersion des données")
+        else:
+            interpretation("faible", "que les valeurs sont proches de la moyenne")
+
+        stats.add_heading("Distribution des données et test de normalité", level=4)
+
         headers = ["Kolmogrov-Smirnov", "Shapiro-Wilk"]
-        sub_header = ["Statistique", "ddl", "Sig."]
+        sub_header = ["Statistiques", "ddl", "Sig."]
         header_styles = "style='text-align: center;' colspan='3'"
 
-        # TODO : effectuer le test de formalité de Kolmogorov-Smirnov et Shapiro-Wilk
+        def ecdf(data):  # Fonction de distribution empirique cumulative
+            n = len(data)
+            x = sorted(data)
+            y = [i / n for i in range(1, n + 1)]  # Calculer les probabilités cumulées
+            return x, y
+
+        def normal_cdf(x, avg, sigma):  # CDF théorique d'une distribution normale
+            return 0.5 * (1 + erf((x - avg) / (sigma * sqrt(2))))
+
+        def ks_test(data):  # Test de Kolmogorov-Smirnov
+            n = len(data)
+            avg = sum(data) / n
+            sigma = sqrt(
+                sum((x - avg) ** 2 for x in data) / (n - 1)
+            )  # Écart-type (non biaisé)
+            x, y = ecdf(data)
+            cdf_theorique = [normal_cdf(xi, avg, sigma) for xi in x]
+            Dn = max(abs(yi - cdf_t) for yi, cdf_t in zip(y, cdf_theorique))
+            p_value = 2 * exp(-2 * n * Dn**2)
+            return Dn, p_value
+
+        kstest_dn, ktest_pvalue = ks_test(dict.data)
+
         # si p < 0.05, distribution non normale
         # si p > 0.05, distribution normale
+
         html_table = f"""
-        <table>
-            <tr>
-                {"".join(f"<th {header_styles}>{header}</th>" for header in headers)}
-            </tr>
-            <tr>
-                {"".join(f"<th>{header}</th>" for header in sub_header + sub_header[::-1])}
-            </tr>
-            <tr>
-                <td>Data 1.1</td>
-                <td>Data 1.2</td>
-                <td>Data 1.3</td>
-                <td>Data 2.1</td>
-                <td>Data 2.2</td>
-                <td>Data 2.3</td>
-            </tr>
-        </table>
-        """
+<table>
+    <tr>
+        {"".join(f"<th {header_styles}>{header}</th>" for header in headers)}
+    </tr>
+    <tr>
+        {"".join(f"<th>{header}</th>" for header in sub_header + sub_header[::-1])}
+    </tr>
+    <tr>
+        <td>{round(kstest_dn, 3)}</td>
+        <td>{len(dict.data)}</td>
+        <td>{ktest_pvalue}</td>
+        <td>Data 2.1</td>
+        <td>Data 2.2</td>
+        <td>Data 2.3</td>
+    </tr>
+</table>
+"""
 
         stats.add_raw(html_table)
 

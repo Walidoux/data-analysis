@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 08/03/2025 05:44
+# Analyse des données - Généré le 09/03/2025 03:42
 
 ## Statistiques
 
@@ -117,50 +117,66 @@
 | Manquant | Système | 1         | 0.86%       |                    |                    |
 | Total    |         | 116       | 100.87%     |                    |                    |
 
-|                  | N   | Minimum | Moyenne | Ecart type |
-| ---------------- | --- | ------- | ------- | ---------- |
-| N Valide (liste) | 116 | 19      | 0       | 0          |
+### Âge (AGE)
+
+#### Statistiques descriptives
+
+|                  | N   | Minimum | Maximum | Moyenne | Ecart type |
+| ---------------- | --- | ------- | ------- | ------- | ---------- |
+| N Valide (liste) | 116 | 23      | 19      | 20.345  | 0.687      |
+
+> L'écart-type est relativement faible ce qui veut dire que les valeurs sont proches de la moyenne
+
+#### Distribution des données et test de normalité
 
 
-        <table>
-            <tr>
-                <th style='text-align: center;' colspan='3'>Kolmogrov-Smirnov</th><th style='text-align: center;' colspan='3'>Shapiro-Wilk</th>
-            </tr>
-            <tr>
-                <th>Statistique</th><th>ddl</th><th>Sig.</th><th>Sig.</th><th>ddl</th><th>Statistique</th>
-            </tr>
-            <tr>
-                <td>Data 1.1</td>
-                <td>Data 1.2</td>
-                <td>Data 1.3</td>
-                <td>Data 2.1</td>
-                <td>Data 2.2</td>
-                <td>Data 2.3</td>
-            </tr>
-        </table>
-        
-
-|                  | N   | Minimum | Moyenne | Ecart type |
-| ---------------- | --- | ------- | ------- | ---------- |
-| N Valide (liste) | 116 | 2021    | 0       | 0          |
+<table>
+    <tr>
+        <th style='text-align: center;' colspan='3'>Kolmogrov-Smirnov</th><th style='text-align: center;' colspan='3'>Shapiro-Wilk</th>
+    </tr>
+    <tr>
+        <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Sig.</th><th>ddl</th><th>Statistiques</th>
+    </tr>
+    <tr>
+        <td>0.339</td>
+        <td>116</td>
+        <td>5.434589473061813e-12</td>
+        <td>Data 2.1</td>
+        <td>Data 2.2</td>
+        <td>Data 2.3</td>
+    </tr>
+</table>
 
 
-        <table>
-            <tr>
-                <th style='text-align: center;' colspan='3'>Kolmogrov-Smirnov</th><th style='text-align: center;' colspan='3'>Shapiro-Wilk</th>
-            </tr>
-            <tr>
-                <th>Statistique</th><th>ddl</th><th>Sig.</th><th>Sig.</th><th>ddl</th><th>Statistique</th>
-            </tr>
-            <tr>
-                <td>Data 1.1</td>
-                <td>Data 1.2</td>
-                <td>Data 1.3</td>
-                <td>Data 2.1</td>
-                <td>Data 2.2</td>
-                <td>Data 2.3</td>
-            </tr>
-        </table>
-        
+### Année d’obtention du Bac (ADDB)
+
+#### Statistiques descriptives
+
+|                  | N   | Minimum | Maximum | Moyenne | Ecart type |
+| ---------------- | --- | ------- | ------- | ------- | ---------- |
+| N Valide (liste) | 116 | 2022    | 2021    | 2021.75 | 0.435      |
+
+> L'écart-type est relativement faible ce qui veut dire que les valeurs sont proches de la moyenne
+
+#### Distribution des données et test de normalité
+
+
+<table>
+    <tr>
+        <th style='text-align: center;' colspan='3'>Kolmogrov-Smirnov</th><th style='text-align: center;' colspan='3'>Shapiro-Wilk</th>
+    </tr>
+    <tr>
+        <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Sig.</th><th>ddl</th><th>Statistiques</th>
+    </tr>
+    <tr>
+        <td>0.459</td>
+        <td>116</td>
+        <td>1.2667974464090072e-21</td>
+        <td>Data 2.1</td>
+        <td>Data 2.2</td>
+        <td>Data 2.3</td>
+    </tr>
+</table>
+
 
 ## Analyse des données

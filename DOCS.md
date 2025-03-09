@@ -1,8 +1,4 @@
-# Analyse des données - Généré le 08/03/2025 05:44
-
-### Âge (AGE)
-
-### Année d’obtention du Bac (ADDB)
+# Analyse des données - Généré le 09/03/2025 03:42
 
 ## Variables
 
