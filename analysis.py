@@ -1,3 +1,4 @@
+from statistics import mean, stdev
 from typing import Callable
 from unicodedata import normalize as normalize_unicode
 from collections import deque
@@ -193,9 +194,17 @@ class DataManager:
         doc.add_heading(dict.name, level=3)
 
         # Statistiques descriptives
-        # TODO : calculer la moyenne et l'écart type
         headers = ["", "N", "Minimum", "Moyenne", "Ecart type"]
-        rows = [["N Valide (liste)", len(dict.data), min(dict.data), 0, 0]]
+        rows = [
+            [
+                "N Valide (liste)",
+                len(dict.data),
+                min(dict.data),
+                mean(dict.data),
+                stdev(dict.data),  # pstdev sur une population
+            ]
+        ]
+
         stats.add_table(headers, rows)
 
         # TODO : Interprétation des résultats
