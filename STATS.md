@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 09/03/2025 03:42
+# Analyse des données - Généré le 09/03/2025 04:08
 
 ## Statistiques
 
@@ -138,15 +138,17 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Sig.</th><th>ddl</th><th>Statistiques</th>
     </tr>
     <tr>
-        <td>0.339</td>
+        <td>1.0</td>
         <td>116</td>
-        <td>5.434589473061813e-12</td>
-        <td>Data 2.1</td>
-        <td>Data 2.2</td>
-        <td>Data 2.3</td>
+        <td>0.0</td>
+        <td>0.7889062166213989</td>
+        <td>116</td>
+        <td>1.277562777790564e-11</td>
     </tr>
 </table>
 
+
+> Une distribution non normale
 
 ### Année d’obtention du Bac (ADDB)
 
@@ -169,14 +171,16 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Sig.</th><th>ddl</th><th>Statistiques</th>
     </tr>
     <tr>
-        <td>0.459</td>
+        <td>1.0</td>
         <td>116</td>
-        <td>1.2667974464090072e-21</td>
-        <td>Data 2.1</td>
-        <td>Data 2.2</td>
-        <td>Data 2.3</td>
+        <td>0.0</td>
+        <td>0.5383056402206421</td>
+        <td>116</td>
+        <td>1.8772938448146093e-17</td>
     </tr>
 </table>
 
+
+> Une distribution non normale
 
 ## Analyse des données

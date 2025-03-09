@@ -5,11 +5,11 @@ from unicodedata import normalize as normalize_unicode
 from collections import deque
 from csv import reader
 from enum import Enum, auto
-
-import re
-
+from scipy.stats import shapiro, kstest  # type: ignore
 from snakemd import Document, Quote  # type: ignore
 from datetime import datetime
+from re import search, sub
+
 
 doc = Document()
 stats = Document()
@@ -232,28 +232,8 @@ class DataManager:
         sub_header = ["Statistiques", "ddl", "Sig."]
         header_styles = "style='text-align: center;' colspan='3'"
 
-        def ecdf(data):  # Fonction de distribution empirique cumulative
-            n = len(data)
-            x = sorted(data)
-            y = [i / n for i in range(1, n + 1)]  # Calculer les probabilités cumulées
-            return x, y
-
-        def normal_cdf(x, avg, sigma):  # CDF théorique d'une distribution normale
-            return 0.5 * (1 + erf((x - avg) / (sigma * sqrt(2))))
-
-        def ks_test(data):  # Test de Kolmogorov-Smirnov
-            n = len(data)
-            avg = sum(data) / n
-            sigma = sqrt(
-                sum((x - avg) ** 2 for x in data) / (n - 1)
-            )  # Écart-type (non biaisé)
-            x, y = ecdf(data)
-            cdf_theorique = [normal_cdf(xi, avg, sigma) for xi in x]
-            Dn = max(abs(yi - cdf_t) for yi, cdf_t in zip(y, cdf_theorique))
-            p_value = 2 * exp(-2 * n * Dn**2)
-            return Dn, p_value
-
-        kstest_dn, ktest_pvalue = ks_test(dict.data)
+        kolmogrov_dn, kolmogrov_pvalue = kstest(dict.data, "norm", args=(0, 1))
+        shapiro_dn, shapiro_pvalue = shapiro(dict.data)
 
         # si p < 0.05, distribution non normale
         # si p > 0.05, distribution normale
@@ -267,17 +247,25 @@ class DataManager:
         {"".join(f"<th>{header}</th>" for header in sub_header + sub_header[::-1])}
     </tr>
     <tr>
-        <td>{round(kstest_dn, 3)}</td>
+        <td>{kolmogrov_dn}</td>
         <td>{len(dict.data)}</td>
-        <td>{ktest_pvalue}</td>
-        <td>Data 2.1</td>
-        <td>Data 2.2</td>
-        <td>Data 2.3</td>
+        <td>{kolmogrov_pvalue}</td>
+        <td>{shapiro_dn}</td>
+        <td>{len(dict.data)}</td>
+        <td>{shapiro_pvalue}</td>
     </tr>
 </table>
 """
 
         stats.add_raw(html_table)
+
+        def interpretation_normality(*args: str):
+            stats.add_block(Quote(f"Une distribution {args[0]}"))
+
+        if shapiro_pvalue > 0.05:
+            interpretation_normality("normale")
+        else:
+            interpretation_normality("non normale")
 
     def __handle_unresolved__(self, callback: Callable, value, type):
         callback()
@@ -294,11 +282,11 @@ class StoreCollection(DataManager):
         self.invalid_subsets = []
 
     def is_unknown(self, value) -> bool:
-        alnum = bool(re.search(r"[a-zA-Z0-9]", value.replace(" ", "")))
+        alnum = bool(search(r"[a-zA-Z0-9]", value.replace(" ", "")))
         return super().is_unknown(value) or not alnum
 
     def in_depth(self, value: str):
-        match = re.search(r"[;,/]| ET ", value)
+        match = search(r"[;,/]| ET ", value)
         matches = []
 
         if match:
@@ -371,7 +359,7 @@ class StoreSet(DataManager):
                     __collect__, value, UnwantedDataType.OUT_OF_RANGE
                 )
         elif isinstance(value, str):
-            if match := re.search(r"(\d+)", value):
+            if match := search(r"(\d+)", value):
                 value = int(match.group(1))
                 if condition(value):
                     return self.data.append(value)
@@ -501,7 +489,7 @@ with open(file="data.csv", mode="r") as file:
 
     # Création des variables / TODO : avoid duplicates
     for i, header in enumerate(headers):
-        normalized_header = re.sub(r"\(.*?\)", "", normalize(header)).strip()
+        normalized_header = sub(r"\(.*?\)", "", normalize(header)).strip()
         words = normalized_header.split()
 
         if len(words) > 1:
@@ -556,10 +544,10 @@ with open(file="data.csv", mode="r") as file:
 
         city_dict.subscribe(rows[i][city_dict.pos], approx=True, depth=False)
 
-        mention = re.sub(r"[. ]*", "", rows[i][mentionbac_dict.pos])
+        mention = sub(r"[. ]*", "", rows[i][mentionbac_dict.pos])
         mentionbac_dict.subscribe(mention)
 
-        match = re.search(r"(\d{4})[-/_\s]*(\d{4})?", rows[i][anneebac_set.pos])
+        match = search(r"(\d{4})[-/_\s]*(\d{4})?", rows[i][anneebac_set.pos])
         anneebac_set.collect(
             match.group(2) if match and match.group(2) else match and match.group(1),
             lambda year: 2020 <= year <= 2023,
