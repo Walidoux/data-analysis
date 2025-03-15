@@ -36,7 +36,9 @@ class UnwantedDataType(Listable):
 
 
 class Option(Listable):
-    ECO = EXP = MATH = auto()
+    ECO = auto()
+    EXP = auto()
+    MATH = auto()
 
     @classmethod
     def classify(cls, filiere: str):
@@ -405,8 +407,7 @@ class StoreCollection(DataManager):
         matches = []
 
         for v in parts:
-            if not self.is_unknown(v.strip()):
-                matches.append(v.strip())
+            matches.append(v.strip())
 
         return matches
 
@@ -540,28 +541,28 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     padpa_dict = StoreCollection(headers.index("PADPA"))
     sex_dict = StoreCollection(headers.index("GENRE"))
     anneebac_set = StoreSet(headers.index("ADDB"), lambda year: 2020 <= year <= 2023)
-    ndfelsca_dict = StoreSet(headers.index("NDFELSCA"))
-    studyfield_dict = StoreCollection(headers.index("FD"), method="approx")
-    optionbac_dict = StoreCollection(headers.index("OB"))
-    excel_dict = StoreCollection(headers.index("UD"))
-    logiciels_dict = StoreCollection(headers.index("MDL"), recursive=True)
-    nddps_dict = StoreSet(headers.index("NDDPS"))
-    tdl_dict = StoreCollection(headers.index("TDL"), method="approx")
-    preferedsubjct_dict = StoreCollection(
-        headers.index("MP"), method="approx", recursive=True
-    )
-    tpslepj_dict = StoreCollection(headers.index("TPSLEPJ"))
-    mdvu_dict = StoreCollection(headers.index("MDVU"))
-    cdfvvpa_dict = StoreCollection(headers.index("CDFVVPA"))
-    caepm_dict = StoreCollection(headers.index("CAEPM"))
-    nddtps_dict = StoreCollection(headers.index("NDDTPS"))
-    tepde_dict = StoreCollection(headers.index("TEPDE"))
-    spdr_dict = StoreCollection(headers.index("SPDR"), recursive=True)
-    qds_dict = StoreSet(headers.index("QDS"))
+    ndfelsca_dict = StoreSet(headers.index("NDFELSCA"))  # ✅
+    studyfield_dict = StoreCollection(headers.index("FD"), method="approx")  # ✅
+    optionbac_dict = StoreCollection(headers.index("OB"))  # ✅
+    excel_dict = StoreCollection(headers.index("UD"))  # ✅
+    logiciels_dict = StoreCollection(headers.index("MDL"), recursive=True)  # ✅⌛
+    nddps_dict = StoreCollection(headers.index("NDDPS"))  # ⌛ (Not sure if StoreSet)
+    tdl_dict = StoreCollection(headers.index("TDL"), method="approx")  # ✅
+    # ⌛ (Not sure)
+    mp_dict = StoreCollection(headers.index("MP"), method="approx", recursive=True)
+    tpslepj_dict = StoreCollection(headers.index("TPSLEPJ"))  # ✅
+    mdvu_dict = StoreCollection(headers.index("MDVU"), recursive=True)  # ⌛ (Not sure)
+    cdfvvpa_dict = StoreCollection(headers.index("CDFVVPA"))  # ❌ (Unstable)
+    caepm_dict = StoreCollection(headers.index("CAEPM"))  # ❌ (Unstable)
+    nddtps_dict = StoreCollection(headers.index("NDDTPS"))  # ❌ (Unstable)
+    tepde_dict = StoreCollection(headers.index("TEPDE"))  # ✅
+    spdr_dict = StoreCollection(headers.index("SPDR"), recursive=True)  # ✅
+    qds_dict = StoreSet(headers.index("QDS"))  # ✅
     # lambda salaire: 1000 <= salaire <= 20000
-    dmm_dict = StoreSet(headers.index("DMM"))
-    lp_dict = StoreCollection(headers.index("LP"))
-    ndllpa_dict = StoreCollection(headers.index("NDLLPA"))
+    dmm_dict = StoreSet(headers.index("DMM"))  # ❌ (Unhandled)
+    lp_dict = StoreCollection(headers.index("LP"), recursive=True)  # ❌ (Unstable)
+    ndllpa_dict = StoreCollection(headers.index("NDLLPA"))  # ✅
+    # ❌ (Unstable)
     tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True)
     ap_dict = StoreCollection(headers.index("AP"))  # ❌ (Unstable)
     nmddspn_dict = StoreCollection(headers.index("NMDDSPN"))  # ✅
@@ -593,7 +594,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         city_dict,
         dmm_dict,
         ndfelsca_dict,
-        preferedsubjct_dict,
+        mp_dict,
         studyfield_dict,
         spdr_dict,
         logiciels_dict,
@@ -642,8 +643,19 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
         i += 1
 
-    stats.add_heading("Vue des variables", level=2)
-    # TODO : Generate Variable View Table
+    doc.add_heading("Vue des variables", level=2)
+    doc.add_table(
+        ["Nom", "Type", "Libellés", "Valeurs"],
+        [
+            [
+                f"{dict.name["format"]}[^{k+1}]",
+                "Quantitative" if isinstance(dict, StoreSet) else "Qualitative",
+                "{TODO}",
+                "{TODO}",
+            ]
+            for k, dict in enumerate(dicts)
+        ],
+    )
 
     stats.add_heading("Gestion des données", level=2)
 
@@ -684,8 +696,8 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     doc.add_heading("Codification des variables", level=2)
     doc.add_unordered_list(
         [
-            f"`{doc_headers[k]["format"]}` -> {doc_headers[k]['default']}"
-            for k, _ in enumerate(doc_headers)
+            f"[{k+1}]: `{dict.name["format"]}` -> {dict.name["default"]}"
+            for k, dict in enumerate(dicts)
         ]
     )
 
