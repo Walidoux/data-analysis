@@ -1,6 +1,6 @@
-# Analyse des données - Généré le 09/03/2025 04:08
+# Analyse des données - Généré le 15/03/2025 à 05:27
 
-## Variables
+## Codification des variables
 
 - `AGE` -> Âge
 - `GENRE` -> Genre

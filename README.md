@@ -5,6 +5,7 @@ Le rapport final est présenté sur [ce lien](https://walid-projects.notion.site
 Temps passé sur le projet : +50h
 
 IDE utilisé : Visual Studio Code
+
 EOL Sequence : LF
 
 ## Installation
@@ -26,3 +27,4 @@ pip install snakemd
   - [ ] Régression linéaire
   - [ ] Imputation multiple
 - [-] (Diapo 28) Transformation ou permutation des villes par division limitrophe du continent africain
+- [ ] (Diapo 46) Détection des valeurs aberrantes (outliers)
