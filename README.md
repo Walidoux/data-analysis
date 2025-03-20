@@ -14,7 +14,7 @@ Le rapport final est présenté sur [ce lien.](https://walid-projects.notion.sit
 ## Installation
 
 ```bash
-pip install snakemd scipy
+pip install -r requirements.txt
 ```
 
 ### Roadmap
