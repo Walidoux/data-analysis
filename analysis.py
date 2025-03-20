@@ -1,6 +1,7 @@
 from statistics import correlation, linear_regression, mean, median, stdev
 from scipy.stats import shapiro, kstest
-from snakemd import Document, Quote
+import snakemd as mkdn
+import matplotlib.pyplot as plt
 
 from csv import reader
 from re import search, split, sub
@@ -12,9 +13,9 @@ from datetime import datetime
 from utils import matches_approx, normalize
 
 
-doc = Document()
-data = Document()
-stats = Document()
+doc = mkdn.Document()
+data = mkdn.Document()
+stats = mkdn.Document()
 MD_DIR = "markdown"
 time_generated = datetime.now().strftime("%d/%m/%Y à %H:%M")
 for markdown in [doc, data, stats]:
@@ -255,7 +256,7 @@ class DataManager:
             else:
                 message = f"L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne"
 
-            stats.add_block(Quote(message))
+            stats.add_block(mkdn.Quote(message))
 
             stats.add_heading("Distribution des données et test de normalité", level=4)
             headers = ["Kolmogrov-Smirnov", "Shapiro-Wilk"]
@@ -278,10 +279,10 @@ class DataManager:
     <tr>
         <td>{round(kolmogrov_dn, 4)}</td>
         <td>{len(dict.data)}</td>
-        <td>{kolmogrov_pvalue}</td>
+        <td>{round(kolmogrov_pvalue, 4)}</td>
         <td>{round(shapiro_dn, 4)}</td>
         <td>{len(dict.data)}</td>
-        <td>{shapiro_pvalue}</td>
+        <td>{round(shapiro_pvalue, 4)}</td>
     </tr>
 </table>
 """
@@ -291,18 +292,22 @@ class DataManager:
             p_value = shapiro_pvalue if len(dict.data) < 50 else kolmogrov_pvalue
             sig = 0.05
 
-            print(
-                p_value,
-                sig,
-                "shapiro_pvalue" if len(dict.data) < 50 else "kolmogrov_pvalue",
-            )
-
             if p_value > sig:
                 message = "Une distribution normale"
             else:
                 message = "Une distribution non normale"
 
-            stats.add_block(Quote(message))
+            stats.add_block(mkdn.Quote(message))
+
+            filename = f"./assets/hist_{dict.name["format"]}.png"
+
+            plt.hist(dict.data, bins=30, density=True, alpha=0.6, color="g")
+            plt.title("Normalité de distribution")
+            plt.xlabel(dict.name["default"])
+            plt.ylabel("Fréquence")
+            plt.savefig(filename, bbox_inches="tight")
+            stats.add_block(mkdn.Paragraph([mkdn.Inline("", image=filename)]))
+
         else:
             headers = [
                 "",
@@ -377,7 +382,7 @@ class DataManager:
 
             if p < 0.05:
                 stats.add_block(
-                    Quote("Il y a une relation significative entre les variables")
+                    mkdn.Quote("Il y a une relation significative entre les variables")
                 )
 
     # TODO : Interprétations et représentations graphiques

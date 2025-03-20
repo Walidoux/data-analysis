@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 20/03/2025 à 21:33
+# Analyse des données - Généré le 20/03/2025 à 22:44
 
 ## Statistiques descriptives
 
@@ -89,15 +89,17 @@
     <tr>
         <td>0.1093</td>
         <td>116</td>
-        <td>0.11609543867739136</td>
+        <td>0.1161</td>
         <td>0.9648</td>
         <td>116</td>
-        <td>0.003870458277022081</td>
+        <td>0.0039</td>
     </tr>
 </table>
 
 
 > Une distribution normale
+
+![](./assets/hist_QDS.png)
 
 ### •Nombre de livres lus par an [NDLLPA]
 
@@ -362,15 +364,17 @@
     <tr>
         <td>0.3547</td>
         <td>116</td>
-        <td>1.465638920680499e-13</td>
+        <td>0.0</td>
         <td>0.2508</td>
         <td>116</td>
-        <td>1.0214237442570202e-21</td>
+        <td>0.0</td>
     </tr>
 </table>
 
 
 > Une distribution non normale
+
+![](./assets/hist_DMM.png)
 
 ### Nombre de formations en ligne suivies cette année [NDFELSCA]
 
@@ -395,15 +399,17 @@
     <tr>
         <td>0.3091</td>
         <td>116</td>
-        <td>2.437228339499973e-10</td>
+        <td>0.0</td>
         <td>0.5762</td>
         <td>116</td>
-        <td>9.466266795274947e-17</td>
+        <td>0.0</td>
     </tr>
 </table>
 
 
 > Une distribution non normale
+
+![](./assets/hist_NDFELSCA.png)
 
 ### Matière préfère  [MP]
 
@@ -556,15 +562,17 @@
     <tr>
         <td>0.3388</td>
         <td>116</td>
-        <td>2.2010914910280654e-12</td>
+        <td>0.0</td>
         <td>0.7889</td>
         <td>116</td>
-        <td>1.277551601666744e-11</td>
+        <td>0.0</td>
     </tr>
 </table>
 
 
 > Une distribution non normale
+
+![](./assets/hist_AGE.png)
 
 ### Année d’obtention du Bac [ADDB]
 
@@ -589,15 +597,17 @@
     <tr>
         <td>0.4673</td>
         <td>116</td>
-        <td>9.700883204483927e-24</td>
+        <td>0.0</td>
         <td>0.5383</td>
         <td>116</td>
-        <td>1.877294947104022e-17</td>
+        <td>0.0</td>
     </tr>
 </table>
 
 
 > Une distribution non normale
+
+![](./assets/hist_ADDB.png)
 
 ### Mentions S1 [MS1]
 
