@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 20/03/2025 à 22:44
+# Analyse des données - Généré le 20/03/2025 à 22:54
 
 ## Statistiques descriptives
 
@@ -99,7 +99,7 @@
 
 > Une distribution normale
 
-![](./assets/hist_QDS.png)
+![](../assets/hist_QDS.png)
 
 ### •Nombre de livres lus par an [NDLLPA]
 
@@ -374,7 +374,7 @@
 
 > Une distribution non normale
 
-![](./assets/hist_DMM.png)
+![](../assets/hist_DMM.png)
 
 ### Nombre de formations en ligne suivies cette année [NDFELSCA]
 
@@ -409,7 +409,7 @@
 
 > Une distribution non normale
 
-![](./assets/hist_NDFELSCA.png)
+![](../assets/hist_NDFELSCA.png)
 
 ### Matière préfère  [MP]
 
@@ -572,7 +572,7 @@
 
 > Une distribution non normale
 
-![](./assets/hist_AGE.png)
+![](../assets/hist_AGE.png)
 
 ### Année d’obtention du Bac [ADDB]
 
@@ -607,7 +607,7 @@
 
 > Une distribution non normale
 
-![](./assets/hist_ADDB.png)
+![](../assets/hist_ADDB.png)
 
 ### Mentions S1 [MS1]
 

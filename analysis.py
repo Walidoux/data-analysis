@@ -1,28 +1,28 @@
 from statistics import correlation, linear_regression, mean, median, stdev
 from scipy.stats import shapiro, kstest
-import snakemd as mkdn
 import matplotlib.pyplot as plt
+import snakemd as mkdn
 
-from csv import reader
-from re import search, split, sub
-from typing import Callable, Literal
-from enum import Enum, auto
-from collections import deque
-from datetime import datetime
+import re
+import typing
+import collections
+import datetime
+import enum
+import csv
 
-from utils import matches_approx, normalize
+import utils
 
 
 doc = mkdn.Document()
 data = mkdn.Document()
 stats = mkdn.Document()
 MD_DIR = "markdown"
-time_generated = datetime.now().strftime("%d/%m/%Y à %H:%M")
+time_generated = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
 for markdown in [doc, data, stats]:
     markdown.add_heading(f"Analyse des données - Généré le {time_generated}")
 
 
-class Listable(Enum):
+class Listable(enum.Enum):
     @classmethod
     def get(cls) -> list[str]:
         return [c.name for c in cls]
@@ -36,9 +36,9 @@ class UnwantedDataType(Listable):
 
 
 class Option(Listable):
-    ECO = auto()
-    EXP = auto()
-    MATH = auto()
+    ECO = enum.auto()
+    EXP = enum.auto()
+    MATH = enum.auto()
 
     @classmethod
     def classify(cls, filiere: str):
@@ -58,16 +58,16 @@ class Option(Listable):
 
 
 class MDL(Listable):
-    SPSS = auto()
-    PYTHON = auto()
-    R = auto()
-    POWER_BI = auto()
-    AUTRE = auto()
+    SPSS = enum.auto()
+    PYTHON = enum.auto()
+    R = enum.auto()
+    POWER_BI = enum.auto()
+    AUTRE = enum.auto()
 
     @classmethod
     def classify(cls, logiciel: str):
         for software in cls.get():
-            if matches_approx(software, logiciel):
+            if utils.matches_approx(software, logiciel):
                 return cls[software].name
         return cls.AUTRE.name
 
@@ -145,7 +145,7 @@ class DataManager:
             missing_values / (valid_values + missing_values)
         ) * 100
 
-        row = deque(
+        row = collections.deque(
             [
                 # Données valides
                 [
@@ -306,7 +306,7 @@ class DataManager:
             plt.xlabel(dict.name["default"])
             plt.ylabel("Fréquence")
             plt.savefig(filename, bbox_inches="tight")
-            stats.add_block(mkdn.Paragraph([mkdn.Inline("", image=filename)]))
+            stats.add_block(mkdn.Paragraph([mkdn.Inline("", image=f".{filename}")]))
 
         else:
             headers = [
@@ -400,7 +400,7 @@ class DataManager:
 
 class StoreCollection(DataManager):
     def __init__(
-        self, pos, method: Literal["exact", "approx"] = "exact", recursive=False
+        self, pos, method: typing.Literal["exact", "approx"] = "exact", recursive=False
     ):
         self.pos = pos
         self.data = {}
@@ -410,11 +410,11 @@ class StoreCollection(DataManager):
         self.recursive = recursive
 
     def is_unknown(self, value: str) -> bool:
-        alnum = search(r"[a-zA-Z0-9]", value.strip())
+        alnum = re.search(r"[a-zA-Z0-9]", value.strip())
         return DataManager.is_unknown(self, value) or not alnum
 
     def in_depth(self, value: str):
-        parts = split(r"[;,/]| ET ", value)
+        parts = re.split(r"[;,/]| ET ", value)
         matches = []
 
         for v in parts:
@@ -423,7 +423,7 @@ class StoreCollection(DataManager):
         return matches
 
     def subscribe(self, value: str | None):
-        value = normalize(value).upper() if value else value
+        value = utils.normalize(value).upper() if value else value
 
         if not value or self.is_unknown(value):
             self.data[len(self.data)] = None
@@ -444,7 +444,7 @@ class StoreCollection(DataManager):
         for key, info in self.data.items():
             if info is None:
                 continue
-            if self.method == "approx" and matches_approx(value, info["name"]):
+            if self.method == "approx" and utils.matches_approx(value, info["name"]):
                 self.data[key]["count"] += 1
                 return
             elif self.method == "exact" and info["name"] == value:
@@ -462,7 +462,7 @@ class StoreCollection(DataManager):
 
 
 class StoreSet(DataManager):
-    def __init__(self, pos, rule: Callable | None = None):
+    def __init__(self, pos, rule: typing.Callable | None = None):
         self.pos = pos
         self.data = []
         self.rule = rule
@@ -498,7 +498,7 @@ class StoreSet(DataManager):
         if isinstance(value, int):
             return satifies_rule(value, UnwantedDataType.OUT_OF_RANGE)
         elif isinstance(value, str):
-            if match := search(r"(\d+)", value):
+            if match := re.search(r"(\d+)", value):
                 value = int(match.group(1))
                 return satifies_rule(value, UnwantedDataType.OUT_OF_RANGE)
             else:
@@ -512,12 +512,12 @@ class StoreSet(DataManager):
 
 # Importation des données
 with open(file="data.csv", mode="r", encoding="utf-8") as file:
-    file = reader(file)
+    file = csv.reader(file)
     headers, doc_headers = next(file), []
 
     # Création des variables
     for i, header in enumerate(headers):
-        normalized_header = sub(r"\(.*?\)", "", normalize(header)).strip()
+        normalized_header = re.sub(r"\(.*?\)", "", utils.normalize(header)).strip()
         words = normalized_header.split()
 
         if len(words) > 1:
@@ -639,14 +639,14 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
                 elif isinstance(dict, StoreSet):
                     dict.collect(rows[i][dict.pos])
 
-        match = search(r"(\d{4})[-/_\s]*(\d{4})?", rows[i][anneebac_set.pos])
+        match = re.search(r"(\d{4})[-/_\s]*(\d{4})?", rows[i][anneebac_set.pos])
         year = match.group(2) if match and match.group(2) else match and match.group(1)
         anneebac_set.collect(year)
 
-        branche = Option.classify(normalize(rows[i][optionbac_dict.pos]).upper())
+        branche = Option.classify(utils.normalize(rows[i][optionbac_dict.pos]).upper())
         optionbac_dict.subscribe(branche)
 
-        logiciel = normalize(rows[i][logiciels_dict.pos]).upper()
+        logiciel = utils.normalize(rows[i][logiciels_dict.pos]).upper()
         unknown_logiciel = logiciels_dict.is_unknown(logiciel)
         for value in logiciels_dict.in_depth(logiciel):
             software = MDL.classify(value) if not unknown_logiciel else None
