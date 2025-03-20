@@ -13,13 +13,12 @@ from utils import matches_approx, normalize
 
 
 doc = Document()
+data = Document()
 stats = Document()
 MD_DIR = "markdown"
 time_generated = datetime.now().strftime("%d/%m/%Y à %H:%M")
-for markdown in [doc, stats]:
+for markdown in [doc, data, stats]:
     markdown.add_heading(f"Analyse des données - Généré le {time_generated}")
-
-# TODO: doc.add_table_of_contents()
 
 
 class Listable(Enum):
@@ -89,6 +88,7 @@ class DataManager:
         percent = (len(self.invalid_subsets) / dict.length()) * 100
         return self.is_applicable() and 30 <= percent <= 40
 
+    # TODO : Kurtosis & Skewness
     def handle_missing_data(self, dict):
         if isinstance(dict, StoreSet):
             X = [i for i, x in enumerate(dict.data) if x is not None]  # Indices VC
@@ -125,7 +125,7 @@ class DataManager:
             #     self.invalid_subsets.pop(index)
 
     def generate_rapport(self, dict):
-        stats.add_heading(f"{dict.name["default"]} [{dict.name["format"]}]", level=4)
+        data.add_heading(f"{dict.name["default"]} [{dict.name["format"]}]", level=4)
         headers = [
             "",
             "",
@@ -186,16 +186,16 @@ class DataManager:
             else list(set(dict.data))
         )
 
-        for k, data in enumerate(stores):
-            if data is None:
+        for k, value in enumerate(stores):
+            if value is None:
                 continue
 
             if isinstance(dict, StoreCollection):
-                count = data["count"]
-                name = data["name"]
+                count = value["count"]
+                name = value["name"]
             else:
-                count = dict.data.count(data)
-                name = data
+                count = dict.data.count(value)
+                name = value
 
             percent_total = count / (valid_values + missing_values)
             percent_basedon_valid = count / valid_values
@@ -225,22 +225,24 @@ class DataManager:
         row[len(row) - 3][4] = f"{cumul_percent_valid * 100:.2f}%"
         row[len(row) - 1][3] = f"{percent_valid_values + percent_missing_values:.2f}%"
 
-        stats.add_table(headers, [[str(cell) for cell in r] for r in row])
+        data.add_table(headers, [[str(cell) for cell in r] for r in row])
 
     def generate_statistics(self, dict):
         stats.add_heading(f"{dict.name["default"]} [{dict.name["format"]}]", level=3)
-        if isinstance(dict, StoreSet):
-            headers = ["", "N", "Minimum", "Maximum", "Moyenne", "Ecart type"]
+        stats.add_heading("Dispersion des données", level=4)
 
-            avg = round(mean(dict.data), 3)
-            std_dev = round(stdev(dict.data), 3)
+        if isinstance(dict, StoreSet):
+            headers = ["", "N", "Minimum", "Maximum", "Moyenne", "Écart type"]
+
+            avg = mean(dict.data)
+            std_dev = stdev(dict.data)
 
             rows = [
                 [
                     "N Valide (liste)",
                     len(dict.data),
-                    max(dict.data),
                     min(dict.data),
+                    max(dict.data),
                     avg,
                     std_dev,
                 ]
@@ -248,55 +250,59 @@ class DataManager:
 
             stats.add_table(headers, rows)
 
-            def interpretation(*args: str):
-                stats.add_block(
-                    Quote(
-                        f"L'écart-type est relativement {args[0]} ce qui veut dire {args[1]}"
-                    )
-                )
-
-            if (std_dev / avg) * 100 > 50:
-                interpretation("élevé", "qu'il y a une grande dispersion des données")
+            if std_dev > max(dict.data) - min(dict.data):
+                message = f"L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données"
             else:
-                interpretation("faible", "que les valeurs sont proches de la moyenne")
+                message = f"L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne"
+
+            stats.add_block(Quote(message))
 
             stats.add_heading("Distribution des données et test de normalité", level=4)
-
             headers = ["Kolmogrov-Smirnov", "Shapiro-Wilk"]
             sub_header = ["Statistiques", "ddl", "Sig."]
             header_styles = "style='text-align: center;' colspan='3'"
 
-            kolmogrov_dn, kolmogrov_pvalue = kstest(dict.data, "norm")
             shapiro_dn, shapiro_pvalue = shapiro(dict.data)
+            kolmogrov_dn, kolmogrov_pvalue = kstest(
+                dict.data, "norm", args=(avg, std_dev)
+            )
 
             html_table = f"""
-    <table>
-        <tr>
-            {"".join(f"<th {header_styles}>{header}</th>" for header in headers)}
-        </tr>
-        <tr>
-            {"".join(f"<th>{header}</th>" for header in sub_header * 2)}
-        </tr>
-        <tr>
-            <td>{kolmogrov_dn}</td>
-            <td>{len(dict.data)}</td>
-            <td>{kolmogrov_pvalue}</td>
-            <td>{shapiro_dn}</td>
-            <td>{len(dict.data)}</td>
-            <td>{shapiro_pvalue}</td>
-        </tr>
-    </table>
-    """
+<table>
+    <tr>
+        {"".join(f"<th {header_styles}>{header}</th>" for header in headers)}
+    </tr>
+    <tr>
+        {"".join(f"<th>{header}</th>" for header in sub_header * 2)}
+    </tr>
+    <tr>
+        <td>{round(kolmogrov_dn, 4)}</td>
+        <td>{len(dict.data)}</td>
+        <td>{kolmogrov_pvalue}</td>
+        <td>{round(shapiro_dn, 4)}</td>
+        <td>{len(dict.data)}</td>
+        <td>{shapiro_pvalue}</td>
+    </tr>
+</table>
+"""
 
             stats.add_raw(html_table)
 
-            def interpretation_normality(*args: str):
-                stats.add_block(Quote(f"Une distribution {args[0]}"))
+            p_value = shapiro_pvalue if len(dict.data) < 50 else kolmogrov_pvalue
+            sig = 0.05
 
-            if shapiro_pvalue > 0.05:
-                interpretation_normality("normale")
+            print(
+                p_value,
+                sig,
+                "shapiro_pvalue" if len(dict.data) < 50 else "kolmogrov_pvalue",
+            )
+
+            if p_value > sig:
+                message = "Une distribution normale"
             else:
-                interpretation_normality("non normale")
+                message = "Une distribution non normale"
+
+            stats.add_block(Quote(message))
         else:
             headers = [
                 "",
@@ -648,18 +654,18 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         ["Nom", "Type", "Libellés", "Valeurs"],
         [
             [
-                f"{dict.name["format"]}[^{k+1}]",
+                dict.name["format"],
                 "Quantitative" if isinstance(dict, StoreSet) else "Qualitative",
                 "{TODO}",
                 "{TODO}",
             ]
-            for k, dict in enumerate(dicts)
+            for _, dict in enumerate(dicts)
         ],
     )
 
-    stats.add_heading("Gestion des données", level=2)
+    data.add_heading("Gestion des données", level=2)
 
-    stats.add_heading("Identification des données manquantes", level=3)
+    data.add_heading("Identification des données manquantes", level=3)
     rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
     headers = [d.name["format"] for d in dicts]
     for dict in dicts:
@@ -669,11 +675,11 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
                 v for v in dict.invalid_subsets if v["type"] == UnwantedDataType[type]
             ]
             rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
-    stats.add_table(["", "", *headers], rows)
+    data.add_table(["", "", *headers], rows)
     for dict in dicts:
         dict.generate_rapport(dict)
 
-    stats.add_heading("Traitement des données manquantes", level=2)
+    data.add_heading("Traitement des données manquantes", level=3)
     for dict in dicts:
         if dict.removable(dict):
             headers.pop(i)
@@ -682,8 +688,8 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         dict.handle_missing_data(dict)
 
     stats.add_heading("Statistiques descriptives", level=2)
-    # for dict in dicts:
-    #     dict.generate_statistics(dict)
+    for dict in dicts:
+        dict.generate_statistics(dict)
 
     stats.add_heading("Visualisation/Représentation graphique", level=2)
     for dict in dicts:
@@ -696,10 +702,11 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     doc.add_heading("Codification des variables", level=2)
     doc.add_unordered_list(
         [
-            f"[{k+1}]: `{dict.name["format"]}` -> {dict.name["default"]}"
+            f"`{dict.name["format"]}` -> {dict.name["default"]}"
             for k, dict in enumerate(dicts)
         ]
     )
 
     doc.dump("DOCS", directory=MD_DIR)
+    data.dump("DATA", directory=MD_DIR)
     stats.dump("STATS", directory=MD_DIR)

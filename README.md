@@ -30,4 +30,4 @@ pip install snakemd scipy
   - [x] Régression linéaire
   - [ ] Imputation multiple
 - [-] (Diapo 28) Transformation ou permutation des villes par division limitrophe du continent africain
-- [ ] (Diapo 46) Détection des valeurs aberrantes (outliers)
+- [ ] (Diapo 48) Statistiques descriptives pour les variables catégorielles
