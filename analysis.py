@@ -1,6 +1,7 @@
-from statistics import correlation, linear_regression, mean, median, stdev
-from scipy.stats import shapiro, kstest
+from statistics import correlation, linear_regression, median
+from scipy.stats import shapiro, kstest, norm
 import matplotlib.pyplot as plt
+import numpy as np
 import snakemd as mkdn
 import argparse
 
@@ -323,17 +324,6 @@ class DataManager:
             else:
                 stats.add_block(mkdn.Quote(message))
                 message = "Une distribution non normale"
-
-            stats.add_block(mkdn.Quote(message))
-
-            filename = f"./assets/hist_{dict.name["format"]}.png"
-
-            plt.hist(dict.data, bins=30, density=True, alpha=0.6, color="g")
-            plt.title("Normalité de distribution")
-            plt.xlabel(dict.name["default"])
-            plt.ylabel("Fréquence")
-            plt.savefig(filename, bbox_inches="tight")
-            stats.add_block(mkdn.Paragraph([mkdn.Inline("", image=f".{filename}")]))
 
         else:
             headers = [
@@ -739,6 +729,18 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         ]
     )
 
-    doc.dump("DOCS", directory=MD_DIR)
-    data.dump("DATA", directory=MD_DIR)
-    stats.dump("STATS", directory=MD_DIR)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
+    args = parser.parse_args()
+
+    match args.write:
+        case "DOCS":
+            doc.dump(args.write, directory=MD_DIR)
+        case "DATA":
+            data.dump(args.write, directory=MD_DIR)
+        case "STATS":
+            stats.dump(args.write, directory=MD_DIR)
+        case _, None:
+            doc.dump("DOCS", directory=MD_DIR)
+            data.dump("DATA", directory=MD_DIR)
+            stats.dump("STATS", directory=MD_DIR)
