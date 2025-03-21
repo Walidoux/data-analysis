@@ -15,6 +15,7 @@ Le rapport final est présenté sur [ce lien.](https://walid-projects.notion.sit
 
 ```bash
 pip install -r requirements.txt
+py.exe .\analysis.py --write="STATS"
 ```
 
 ### Roadmap
