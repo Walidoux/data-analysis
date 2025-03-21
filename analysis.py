@@ -2,6 +2,7 @@ from statistics import correlation, linear_regression, mean, median, stdev
 from scipy.stats import shapiro, kstest
 import matplotlib.pyplot as plt
 import snakemd as mkdn
+import argparse
 
 import re
 import typing
@@ -235,23 +236,20 @@ class DataManager:
         if isinstance(dict, StoreSet):
             headers = ["", "N", "Minimum", "Maximum", "Moyenne", "Écart type"]
 
-            avg = mean(dict.data)
-            std_dev = stdev(dict.data)
-
             rows = [
                 [
                     "N Valide (liste)",
                     len(dict.data),
                     min(dict.data),
                     max(dict.data),
-                    avg,
-                    std_dev,
+                    np.mean(dict.data),
+                    np.std(dict.data),
                 ]
             ]
 
             stats.add_table(headers, rows)
 
-            if std_dev > max(dict.data) - min(dict.data):
+            if np.std(dict.data) > max(dict.data) - min(dict.data):
                 message = f"L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données"
             else:
                 message = f"L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne"
@@ -264,8 +262,8 @@ class DataManager:
             header_styles = "style='text-align: center;' colspan='3'"
 
             shapiro_dn, shapiro_pvalue = shapiro(dict.data)
-            kolmogrov_dn, kolmogrov_pvalue = kstest(
-                dict.data, "norm", args=(avg, std_dev)
+            kolmogrov_dn, kolmogorov_pvalue = kstest(
+                dict.data, "norm", args=(np.mean(dict.data), np.std(dict.data))
             )
 
             html_table = f"""
@@ -279,7 +277,7 @@ class DataManager:
     <tr>
         <td>{round(kolmogrov_dn, 4)}</td>
         <td>{len(dict.data)}</td>
-        <td>{round(kolmogrov_pvalue, 4)}</td>
+        <td>{round(kolmogorov_pvalue, 4)}</td>
         <td>{round(shapiro_dn, 4)}</td>
         <td>{len(dict.data)}</td>
         <td>{round(shapiro_pvalue, 4)}</td>
@@ -289,12 +287,41 @@ class DataManager:
 
             stats.add_raw(html_table)
 
-            p_value = shapiro_pvalue if len(dict.data) < 50 else kolmogrov_pvalue
+            p_value = shapiro_pvalue if len(dict.data) < 50 else kolmogorov_pvalue
             sig = 0.05
 
             if p_value > sig:
                 message = "Une distribution normale"
+                filename = f"assets/hist_{dict.name["format"]}.png"
+
+                plt.figure(figsize=(8, 5))
+                plt.hist(
+                    dict.data,
+                    bins=10,
+                    density=True,
+                    alpha=0.7,
+                    color="blue",
+                    edgecolor="black",
+                )
+
+                x = np.linspace(min(dict.data), max(dict.data), 100)
+                p = norm.pdf(x, np.mean(dict.data), np.std(dict.data, ddof=1))
+                legend = f"μ = {np.mean(dict.data)}, σ = {np.std(dict.data)}"
+
+                plt.plot(x, p, "r-", linewidth=2, label=legend)
+
+                plt.axvline(float(np.mean(dict.data)), ls="--", color="lightgray")
+                plt.title(f"Histogramme avec une cou    rbe de distribution normale")
+                plt.xlabel(dict.name["default"])
+                plt.ylabel("Probabilité de densité")
+                plt.savefig(filename, bbox_inches="tight")
+
+                stats.add_block(mkdn.Quote(message))
+                stats.add_block(
+                    mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")])
+                )
             else:
+                stats.add_block(mkdn.Quote(message))
                 message = "Une distribution non normale"
 
             stats.add_block(mkdn.Quote(message))
