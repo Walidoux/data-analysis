@@ -237,20 +237,25 @@ class DataManager:
         if isinstance(dict, StoreSet):
             headers = ["", "N", "Minimum", "Maximum", "Moyenne", "Écart type"]
 
+            min = np.min(dict.data)
+            max = np.max(dict.data)
+            mean = np.mean(dict.data)
+            std = np.std(dict.data, ddof=1)
+
             rows = [
                 [
                     "N Valide (liste)",
                     len(dict.data),
-                    min(dict.data),
-                    max(dict.data),
-                    np.mean(dict.data),
-                    np.std(dict.data),
+                    min,
+                    max,
+                    round(mean, 4),
+                    round(std, 4),
                 ]
             ]
 
             stats.add_table(headers, rows)
 
-            if np.std(dict.data) > max(dict.data) - min(dict.data):
+            if std > max - min:
                 message = f"L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données"
             else:
                 message = f"L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne"
@@ -264,7 +269,7 @@ class DataManager:
 
             shapiro_dn, shapiro_pvalue = shapiro(dict.data)
             kolmogrov_dn, kolmogorov_pvalue = kstest(
-                dict.data, "norm", args=(np.mean(dict.data), np.std(dict.data))
+                dict.data, "norm", args=(mean, std)
             )
 
             html_table = f"""
@@ -295,6 +300,16 @@ class DataManager:
                 message = "Une distribution normale"
                 filename = f"assets/hist_{dict.name["format"]}.png"
 
+                x_ticks = [
+                    mean - 3 * std,
+                    mean - 2 * std,
+                    mean - std,
+                    mean,
+                    mean + std,
+                    mean + 2 * std,
+                    mean + 3 * std,
+                ]
+
                 plt.figure(figsize=(8, 5))
                 plt.hist(
                     dict.data,
@@ -305,14 +320,24 @@ class DataManager:
                     edgecolor="black",
                 )
 
-                x = np.linspace(min(dict.data), max(dict.data), 100)
-                p = norm.pdf(x, np.mean(dict.data), np.std(dict.data, ddof=1))
-                legend = f"μ = {np.mean(dict.data)}, σ = {np.std(dict.data)}"
+                x = np.linspace(min, max, 100)
+                p = norm.pdf(x, mean, std)
 
-                plt.plot(x, p, "r-", linewidth=2, label=legend)
-
+                plt.xticks(
+                    x_ticks,
+                    labels=[
+                        r"$\mu - 3\sigma$",
+                        r"$\mu - 2\sigma$",
+                        r"$\mu - \sigma$",
+                        r"$\mu$",
+                        r"$\mu + \sigma$",
+                        r"$\mu + 2\sigma$",
+                        r"$\mu + 3\sigma$",
+                    ],
+                )
+                plt.plot(x, p, "r-", linewidth=2)
                 plt.axvline(float(np.mean(dict.data)), ls="--", color="lightgray")
-                plt.title(f"Histogramme avec une cou    rbe de distribution normale")
+                plt.title(f"Histogramme avec une courbe de distribution normale")
                 plt.xlabel(dict.name["default"])
                 plt.ylabel("Probabilité de densité")
                 plt.savefig(filename, bbox_inches="tight")
