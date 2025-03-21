@@ -351,53 +351,6 @@ class DataManager:
                 message = "Une distribution non normale"
 
         else:
-            headers = [
-                "",
-                "",
-                "Fréquence",
-                "Pourcentage",
-                "Pourcentage valide",
-                "Pourcentage cumulé",
-            ]
-
-            # values = sum(set["count"] for set in dict.data.values())
-
-            row = [
-                [
-                    "Valide",
-                    "",
-                    "{filled}",
-                    "{filled}",
-                    "{filled}",
-                    "",
-                ],
-            ]
-
-            """ cumul_percent = 0
-            for k, data in enumerate(dict.data):
-                print(k, data)
-                cumul_percent += data["count"] / values
-                row.append(
-                    [
-                        "",
-                        data.name,
-                        data.count,
-                        data.count / values,  # filter valid values
-                        cumul_percent,
-                    ]
-                ) """
-
-            row.append(
-                [
-                    "",
-                    "Total",
-                    "{filled}",
-                    "{totalvaluespercent}",
-                    "{totalvaluespercentvalid}",
-                    "",
-                ]
-            )
-
             # TODO : Tableaux croisés
             stats.add_heading("Tableau croisé", level=4)
 
