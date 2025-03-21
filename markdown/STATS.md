@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 20/03/2025 à 22:54
+# Analyse des données - Généré le 21/03/2025 à 20:53
 
 ## Statistiques descriptives
 
@@ -72,7 +72,7 @@
 
 |                  | N   | Minimum | Maximum | Moyenne           | Écart type        |
 | ---------------- | --- | ------- | ------- | ----------------- | ----------------- |
-| N Valide (liste) | 116 | 1       | 10      | 5.931034482758621 | 2.309617464772729 |
+| N Valide (liste) | 116 | 1       | 10      | 5.931034482758621 | 2.299640668823608 |
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
@@ -87,9 +87,9 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.1093</td>
+        <td>0.11</td>
         <td>116</td>
-        <td>0.1161</td>
+        <td>0.1119</td>
         <td>0.9648</td>
         <td>116</td>
         <td>0.0039</td>
@@ -345,9 +345,9 @@
 
 #### Dispersion des données
 
-|                  | N   | Minimum | Maximum | Moyenne            | Écart type         |
-| ---------------- | --- | ------- | ------- | ------------------ | ------------------ |
-| N Valide (liste) | 116 | 0       | 40000   | 2291.2241379310344 | 3679.9471028480993 |
+|                  | N   | Minimum | Maximum | Moyenne            | Écart type        |
+| ---------------- | --- | ------- | ------- | ------------------ | ----------------- |
+| N Valide (liste) | 116 | 0       | 40000   | 2291.2241379310344 | 3664.050928737601 |
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
@@ -362,7 +362,7 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.3547</td>
+        <td>0.3543</td>
         <td>116</td>
         <td>0.0</td>
         <td>0.2508</td>
@@ -372,17 +372,15 @@
 </table>
 
 
-> Une distribution non normale
-
-![](../assets/hist_DMM.png)
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
 ### Nombre de formations en ligne suivies cette année [NDFELSCA]
 
 #### Dispersion des données
 
-|                  | N   | Minimum | Maximum | Moyenne           | Écart type        |
-| ---------------- | --- | ------- | ------- | ----------------- | ----------------- |
-| N Valide (liste) | 116 | 0       | 10      | 0.853448275862069 | 1.578410374504941 |
+|                  | N   | Minimum | Maximum | Moyenne           | Écart type         |
+| ---------------- | --- | ------- | ------- | ----------------- | ------------------ |
+| N Valide (liste) | 116 | 0       | 10      | 0.853448275862069 | 1.5715921552670804 |
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
@@ -397,7 +395,7 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.3091</td>
+        <td>0.3099</td>
         <td>116</td>
         <td>0.0</td>
         <td>0.5762</td>
@@ -407,9 +405,7 @@
 </table>
 
 
-> Une distribution non normale
-
-![](../assets/hist_NDFELSCA.png)
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
 ### Matière préfère  [MP]
 
@@ -545,7 +541,7 @@
 
 |                  | N   | Minimum | Maximum | Moyenne            | Écart type         |
 | ---------------- | --- | ------- | ------- | ------------------ | ------------------ |
-| N Valide (liste) | 116 | 19      | 23      | 20.344827586206897 | 0.6865597700426959 |
+| N Valide (liste) | 116 | 19      | 23      | 20.344827586206897 | 0.6835940552275521 |
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
@@ -560,7 +556,7 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.3388</td>
+        <td>0.3396</td>
         <td>116</td>
         <td>0.0</td>
         <td>0.7889</td>
@@ -570,17 +566,15 @@
 </table>
 
 
-> Une distribution non normale
-
-![](../assets/hist_AGE.png)
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
 ### Année d’obtention du Bac [ADDB]
 
 #### Dispersion des données
 
-|                  | N   | Minimum | Maximum | Moyenne | Écart type          |
-| ---------------- | --- | ------- | ------- | ------- | ------------------- |
-| N Valide (liste) | 116 | 2021    | 2022    | 2021.75 | 0.43489129076426525 |
+|                  | N   | Minimum | Maximum | Moyenne | Écart type         |
+| ---------------- | --- | ------- | ------- | ------- | ------------------ |
+| N Valide (liste) | 116 | 2021    | 2022    | 2021.75 | 0.4330127018922193 |
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
@@ -595,7 +589,7 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.4673</td>
+        <td>0.4681</td>
         <td>116</td>
         <td>0.0</td>
         <td>0.5383</td>
@@ -605,9 +599,7 @@
 </table>
 
 
-> Une distribution non normale
-
-![](../assets/hist_ADDB.png)
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
 ### Mentions S1 [MS1]
 
