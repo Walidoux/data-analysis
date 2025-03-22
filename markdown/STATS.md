@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 21/03/2025 à 22:13
+# Analyse des données - Généré le 22/03/2025 à 12:58
 
 ## Statistiques descriptives
 
@@ -6,15 +6,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 2    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -22,15 +20,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 6    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -38,15 +34,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 2    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -54,15 +48,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -105,15 +97,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 6    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -121,15 +111,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 35   | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -137,15 +125,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 63   | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -153,15 +139,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 69   | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -169,15 +153,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 2    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -185,15 +167,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 3    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -201,15 +181,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -217,15 +195,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 5    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -233,15 +209,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -249,15 +223,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 16   | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -265,15 +237,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 13   | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -281,15 +251,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -297,15 +265,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 8    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -313,15 +279,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 22   | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -329,15 +293,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 41   | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -347,7 +309,7 @@
 
 |                  | N   | Minimum | Maximum | Moyenne   | Écart type |
 | ---------------- | --- | ------- | ------- | --------- | ---------- |
-| N Valide (liste) | 116 | 0       | 40000   | 2291.2241 | 3679.9471  |
+| N Valide (liste) | 116 | 0.0     | 40000.0 | 2286.2069 | 3680.1441  |
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
@@ -362,10 +324,10 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.3547</td>
+        <td>0.3541</td>
         <td>116</td>
         <td>0.0</td>
-        <td>0.2508</td>
+        <td>0.2503</td>
         <td>116</td>
         <td>0.0</td>
     </tr>
@@ -411,15 +373,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 32   | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -427,15 +387,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 2    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -443,15 +401,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -459,15 +415,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 5    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -475,15 +429,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 5    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -491,15 +443,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 16   | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -507,15 +457,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 2    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -523,15 +471,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 5    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -541,7 +487,7 @@
 
 |                  | N   | Minimum | Maximum | Moyenne | Écart type |
 | ---------------- | --- | ------- | ------- | ------- | ---------- |
-| N Valide (liste) | 116 | 19      | 23      | 20.3448 | 0.6866     |
+| N Valide (liste) | 116 | 19      | 27      | 20.4052 | 0.9229     |
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
@@ -556,10 +502,10 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.3388</td>
+        <td>0.3076</td>
         <td>116</td>
         <td>0.0</td>
-        <td>0.7889</td>
+        <td>0.648</td>
         <td>116</td>
         <td>0.0</td>
     </tr>
@@ -605,15 +551,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -621,15 +565,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -637,15 +579,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -653,15 +593,13 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
 
@@ -669,18 +607,14 @@
 
 #### Dispersion des données
 
-#### Tableau croisé
-
 #### Test de Khi-carré
 
-|                          | Valeur | dll | Sig.  |
-| ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.0    | 2   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2   | 0.465 |
-| N d'observations valides | 20     |     |       |
+|                          | Valeur | dll  | Sig.  |
+| ------------------------ | ------ | ---- | ----- |
+| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
+| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
+| N d'observations valides | 1.0    | None | None  |
 
 > Il y a une relation significative entre les variables
-
-## Visualisation/Représentation graphique
 
 ## Analyse inférentielle

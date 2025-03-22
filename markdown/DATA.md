@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 21/03/2025 à 20:49
+# Analyse des données - Généré le 22/03/2025 à 12:58
 
 ## Gestion des données
 
@@ -6,10 +6,9 @@
 
 |   |                | GENRE | TDLPU | PDMLDE | FDDRSPJ | QDS | NDLLPA | TDSP | AP  | LP  | TEPDE | OB  | NDPSYNPS | NMDDSPN | MB  | NDDTPS | CDFVVPA | TPSLEPJ | MDVU | CAEPM | VD  | DMM | NDFELSCA | MP  | FD  | SPDR | MDL | TDL | NDDPS | PADPA | UD  | AGE | ADDB | MS1 | MS2 | MS3 | MS4 | MS5 |
 | - | -------------- | ----- | ----- | ------ | ------- | --- | ------ | ---- | --- | --- | ----- | --- | -------- | ------- | --- | ------ | ------- | ------- | ---- | ----- | --- | --- | -------- | --- | --- | ---- | --- | --- | ----- | ----- | --- | --- | ---- | --- | --- | --- | --- | --- |
-| N | VALIDE         | 116   | 150   | 116    | 116     | 116 | 116    | 131  | 116 | 138 | 116   | 116 | 116      | 116     | 116 | 115    | 116     | 116     | 119  | 116   | 116 | 114 | 116      | 130 | 116 | 162  | 142 | 115 | 108   | 116   | 116 | 115 | 115  | 112 | 112 | 112 | 112 | 113 |
+| N | VALIDE         | 116   | 150   | 116    | 116     | 116 | 116    | 131  | 116 | 138 | 116   | 116 | 116      | 116     | 116 | 115    | 116     | 116     | 119  | 116   | 116 | 114 | 116      | 130 | 116 | 162  | 142 | 115 | 108   | 116   | 116 | 116 | 115  | 112 | 112 | 112 | 112 | 113 |
 |   | UNKNOWN        |       |       |        |         |     |        |      |     |     |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     |      |     |     |       |       |     |     |      |     |     |     |     |     |
 |   | MISSING        |       |       |        |         |     |        |      |     |     |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     |      |     |     |       |       |     |     | 1    |     |     |     |     |     |
-|   | OUT_OF_RANGE   |       |       |        |         |     |        |      |     |     |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     |      |     |     |       |       |     | 1   |      |     |     |     |     |     |
 |   | INVALID_FORMAT |       |       |        |         |     |        |      |     |     |       |     |          |         |     |        |         |         |      |       |     | 2   |          |     |     |      |     |     |       |       |     |     |      |     |     |     |     |     |
 
 #### Genre [GENRE]
@@ -679,14 +678,15 @@
 
 |          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
 | -------- | ------- | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | 19      | 7         | 5.98%       | 6.03%              | 6.03%              |
-|          | 20      | 67        | 57.26%      | 57.76%             | 63.79%             |
-|          | 21      | 36        | 30.77%      | 31.03%             | 94.83%             |
-|          | 22      | 4         | 3.42%       | 3.45%              | 98.28%             |
-|          | 23      | 1         | 0.85%       | 0.86%              | 99.14%             |
-|          | Total   | 116       | 98.29%      | 99.14%             |                    |
-| Manquant | Système | 1         | 0.85%       |                    |                    |
-| Total    |         | 117       | 99.14%      |                    |                    |
+| Valide   | 19      | 7         | 6.03%       | 6.03%              | 6.03%              |
+|          | 20      | 67        | 57.76%      | 57.76%             | 63.79%             |
+|          | 21      | 36        | 31.03%      | 31.03%             | 94.83%             |
+|          | 22      | 4         | 3.45%       | 3.45%              | 98.28%             |
+|          | 23      | 1         | 0.86%       | 0.86%              | 99.14%             |
+|          | 27      | 1         | 0.86%       | 0.86%              | 100.00%            |
+|          | Total   | 116       | 100.00%     | 100.00%            |                    |
+| Manquant | Système | 0         | 0.00%       |                    |                    |
+| Total    |         | 116       | 100.00%     |                    |                    |
 
 #### Année d’obtention du Bac [ADDB]
 
@@ -758,4 +758,20 @@
 | Manquant | Système  | 3         | 2.59%       |                    |                    |
 | Total    |          | 116       | 100.00%     |                    |                    |
 
-### Traitement des données manquantes
+### Détection des valeurs aberrantes
+
+#### Qualité du sommeil  [QDS]
+
+![](../assets/boxplot_QDS.png)
+
+#### Dépenses mensuelles moyennes (en MAD) [DMM]
+
+![](../assets/boxplot_DMM.png)
+
+#### Nombre de formations en ligne suivies cette année [NDFELSCA]
+
+![](../assets/boxplot_NDFELSCA.png)
+
+#### Âge [AGE]
+
+![](../assets/boxplot_AGE.png)

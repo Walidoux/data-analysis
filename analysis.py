@@ -1,5 +1,5 @@
 from statistics import correlation, linear_regression, median
-from scipy.stats import shapiro, kstest, norm
+from scipy.stats import chi2_contingency, shapiro, kstest, norm, chisquare
 import matplotlib.pyplot as plt
 import numpy as np
 import snakemd as mkdn
@@ -33,7 +33,6 @@ class Listable(enum.Enum):
 class UnwantedDataType(Listable):
     UNKNOWN = "Inconnu"
     MISSING = "Manquant"
-    OUT_OF_RANGE = "Hors de portée"
     INVALID_FORMAT = "Format invalide"
 
 
@@ -76,7 +75,7 @@ class MDL(Listable):
 
 class DataManager:
     def __init__(self):
-        self.name = None
+        self.name = {}
         self.invalid_subsets = []
 
     def is_unknown(self, value) -> bool:
@@ -91,41 +90,73 @@ class DataManager:
         percent = (len(self.invalid_subsets) / dict.length()) * 100
         return self.is_applicable() and 30 <= percent <= 40
 
+    #  Interquartile Range (IQR)
+    def outliers(self, data: list[int]) -> list[int]:
+        q1 = np.quantile(data, 0.25)
+        q3 = np.quantile(data, 0.75)
+        median = np.median(data)
+        iqr_region = q3 - q1
+        upper_bound = q3 + (1.5 * iqr_region)
+        lower_bound = q1 - (1.5 * iqr_region)
+        array = np.array(data)
+        outliers = array[(array <= lower_bound) | (array >= upper_bound)]
+        return list(map(int, outliers))
+
+    def handle_outliers(self, outliers: list[int]):
+        filename = f"assets/boxplot_{dict.name["format"]}.png"
+
+        bp = plt.boxplot(dict.data)
+        plt.figure(figsize=(10, 6))
+        plt.boxplot(dict.data, vert=True, patch_artist=True)
+        plt.title(f"Boxplot : {self.name["default"]}", fontsize=14)
+        plt.ylabel("Veleurs", fontsize=12)
+        plt.grid(axis="y", alpha=0.75)
+        plt.legend([bp["medians"][0], bp["boxes"][0]], ["Médiane", "IQR"])
+        plt.savefig(filename, bbox_inches="tight")
+
+        data.add_heading(f"{self.name["default"]} [{self.name["format"]}]", level=4)
+        data.add_block(mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")]))
+
     # TODO : Kurtosis & Skewness
     def handle_missing_data(self, dict):
         if isinstance(dict, StoreSet):
             X = [i for i, x in enumerate(dict.data) if x is not None]  # Indices VC
             y = [x for x in dict.data if x is not None]  # VC
 
-            has_oor = any(
-                x
-                for x in dict.invalid_subsets
-                if x["type"] == UnwantedDataType.OUT_OF_RANGE
-            )
+            outliers = dict.outliers(y)
+            has_outliers = len(outliers) > 0
 
             # Régression linéaire (Hypothèse de linéarité)
             if abs(correlation(X, y)) > 0.5:
                 slope, intercept = linear_regression(X, y)
                 for i, value in enumerate(dict.data):
                     if value is None:
-                        dict.data[i] = slope * i + intercept  # y = ax + b
-            else:  # Moyenne et Médiane
+                        value = slope * i + intercept  # y = ax + b
+                        dict.data[i] = value
+                        data.add_paragraph(
+                            f"La valeur numérique manquante de la variable {dict.name["format"]} a été estimée à {value}"
+                        )
+            else:  # Moyenne/Médiane
                 for k in range(len(dict.data)):
                     if dict.data[k] is None:
                         dict.data[k] = (
-                            int(round(sum(y) / len(y))) if not has_oor else median(y)
+                            median(y) if has_outliers else int(round(sum(y) / len(y)))
                         )
+
+            if has_outliers:
+                self.handle_outliers(outliers)
 
         # Mode (VF)
         elif isinstance(dict, StoreCollection):
-            none_indices = [k for k, v in dict.data.items() if v is None]
-            valid_data = [v for v in dict.data.values() if v is not None]
-            common_value = max(valid_data, key=lambda x: x["count"])
-            common_value["count"] += len(none_indices)
-            # for index in sorted(none_indices, reverse=True):
-            #     dict.data.pop(index)
-            # if index < len(self.invalid_subsets):
-            #     self.invalid_subsets.pop(index)
+            for k, v in list(dict.data.items()):
+                if v is None:
+                    valid_data = [v for v in dict.data.values() if v is not None]
+                    common_value = max(valid_data, key=lambda x: x["count"])
+                    common_value["count"] += 1
+                    dict.data.pop(k)
+                    self.invalid_subsets = [
+                        subset for subset in self.invalid_subsets if subset["pos"] != k
+                    ]
 
     def generate_rapport(self, dict):
         data.add_heading(f"{dict.name["default"]} [{dict.name["format"]}]", level=4)
@@ -351,24 +382,16 @@ class DataManager:
                 message = "Une distribution non normale"
 
         else:
-            # TODO : Tableaux croisés
-            stats.add_heading("Tableau croisé", level=4)
-
-            # TODO : Test de Khi-carré
             stats.add_heading("Test de Khi-carré", level=4)
             headers = ["", "Valeur", "dll", "Sig."]
 
-            p_cor = abs(
-                correlation(
-                    [i for i, x in enumerate(dict.data) if x is not None],
-                    [x for x in dict.data if x is not None],
-                )
-            )
+            observed = [dict.data[key]["count"] for key in dict.data]
+            stat, p_value, dof, expected = chi2_contingency(observed)
 
             rows = [
-                ["Khi-Carré de Pearson", p_cor, 2, 0.565],
+                ["Khi-Carré de Pearson", 4, len(dict.data), 0.565],
                 ["Rapport de vraisemblance", 1.530, 2, 0.465],
-                ["N d'observations valides", 20, "", ""],
+                ["N d'observations valides", p_value, None, None],
             ]
 
             p = 0  # coef de corr ?
@@ -379,14 +402,6 @@ class DataManager:
                 stats.add_block(
                     mkdn.Quote("Il y a une relation significative entre les variables")
                 )
-
-    # TODO : Interprétations et représentations graphiques
-    def visualize(self, dict):
-        return NotImplemented
-        # histogrammes (distribution des variables quantitatives)
-        # boxplot (détection des valeurs aberrantes)
-        # diagramme en barres (variables catégorielles)
-        # nuage de points (Scatterplot) (relation entre 2 variables quantitatives)
 
     # TODO: Analyse inférentielle
     def analyze(self, dict):
@@ -457,10 +472,9 @@ class StoreCollection(DataManager):
 
 
 class StoreSet(DataManager):
-    def __init__(self, pos, rule: typing.Callable | None = None):
+    def __init__(self, pos):
         self.pos = pos
         self.data = []
-        self.rule = rule
         self.name = doc_headers[pos]
         self.invalid_subsets = []
 
@@ -478,24 +492,15 @@ class StoreSet(DataManager):
                 }
             )
 
-        def satifies_rule(v, unexpected_type):
-            if self.rule is not None:
-                if self.rule(value):
-                    return self.data.append(value)
-                else:
-                    return unresolved(v, unexpected_type)
-            else:
-                return self.data.append(value)
-
         if self.is_unknown(value):
             return unresolved(value, UnwantedDataType.MISSING)
 
         if isinstance(value, int):
-            return satifies_rule(value, UnwantedDataType.OUT_OF_RANGE)
+            return self.data.append(value)
         elif isinstance(value, str):
             if match := re.search(r"(\d+)", value):
                 value = int(match.group(1))
-                return satifies_rule(value, UnwantedDataType.OUT_OF_RANGE)
+                return self.data.append(value)
             else:
                 unresolved(match, UnwantedDataType.INVALID_FORMAT)
         else:
@@ -540,13 +545,13 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         file = [row[:index] + row[index + 1 :] for row in file]
 
     # Traitement des données numériques et alphanumériques
-    ages_set = StoreSet(headers.index("AGE"), lambda age: 18 <= age <= 24)
+    ages_set = StoreSet(headers.index("AGE"))
     city_dict = StoreCollection(headers.index("VD"), method="approx")
     mentions_dicts = [StoreCollection(headers.index(f"MS{i}")) for i in range(1, 6)]
     mentionbac_dict = StoreCollection(headers.index("MB"))
     padpa_dict = StoreCollection(headers.index("PADPA"))
     sex_dict = StoreCollection(headers.index("GENRE"))
-    anneebac_set = StoreSet(headers.index("ADDB"), lambda year: 2020 <= year <= 2023)
+    anneebac_set = StoreSet(headers.index("ADDB"))
     ndfelsca_dict = StoreSet(headers.index("NDFELSCA"))  # ✅
     studyfield_dict = StoreCollection(headers.index("FD"), method="approx")  # ✅
     optionbac_dict = StoreCollection(headers.index("OB"))  # ✅
@@ -676,24 +681,21 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
             ]
             rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
     data.add_table(["", "", *headers], rows)
-    for dict in dicts:
-        dict.generate_rapport(dict)
 
-    data.add_heading("Traitement des données manquantes", level=3)
     for dict in dicts:
         if dict.removable(dict):
             headers.pop(i)
             rows.pop(i)
             continue
+        dict.generate_rapport(dict)
+
+    data.add_heading("Détection des valeurs aberrantes", level=3)
+    for dict in dicts:
         dict.handle_missing_data(dict)
 
     stats.add_heading("Statistiques descriptives", level=2)
     for dict in dicts:
         dict.generate_statistics(dict)
-
-    stats.add_heading("Visualisation/Représentation graphique", level=2)
-    for dict in dicts:
-        dict.visualize(dict)
 
     stats.add_heading("Analyse inférentielle", level=2)
     for dict in dicts:
@@ -718,7 +720,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
             data.dump(args.write, directory=MD_DIR)
         case "STATS":
             stats.dump(args.write, directory=MD_DIR)
-        case _, None:
+        case _:
             doc.dump("DOCS", directory=MD_DIR)
             data.dump("DATA", directory=MD_DIR)
             stats.dump("STATS", directory=MD_DIR)
