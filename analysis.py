@@ -94,7 +94,6 @@ class DataManager:
     def outliers(self, data: list[int]) -> list[int]:
         q1 = np.quantile(data, 0.25)
         q3 = np.quantile(data, 0.75)
-        median = np.median(data)
         iqr_region = q3 - q1
         upper_bound = q3 + (1.5 * iqr_region)
         lower_bound = q1 - (1.5 * iqr_region)
@@ -106,12 +105,18 @@ class DataManager:
         filename = f"assets/boxplot_{dict.name["format"]}.png"
 
         bp = plt.boxplot(dict.data)
+        median = bp["medians"][0].get_ydata()[0]
+
         plt.figure(figsize=(10, 6))
         plt.boxplot(dict.data, vert=True, patch_artist=True)
-        plt.title(f"Boxplot : {self.name["default"]}", fontsize=14)
-        plt.ylabel("Veleurs", fontsize=12)
+        plt.title(f"Boxplot : {self.name['default']}", fontsize=14)
+        plt.ylabel("Valeurs", fontsize=12)
         plt.grid(axis="y", alpha=0.75)
-        plt.legend([bp["medians"][0], bp["boxes"][0]], ["Médiane", "IQR"])
+        plt.legend(
+            [bp["medians"][0], bp["boxes"][0]],
+            [f"Médiane : {median}", "IQR"],
+        )
+
         plt.savefig(filename, bbox_inches="tight")
 
         data.add_heading(f"{self.name["default"]} [{self.name["format"]}]", level=4)
@@ -545,13 +550,15 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         file = [row[:index] + row[index + 1 :] for row in file]
 
     # Traitement des données numériques et alphanumériques
-    ages_set = StoreSet(headers.index("AGE"))
-    city_dict = StoreCollection(headers.index("VD"), method="approx")
-    mentions_dicts = [StoreCollection(headers.index(f"MS{i}")) for i in range(1, 6)]
-    mentionbac_dict = StoreCollection(headers.index("MB"))
-    padpa_dict = StoreCollection(headers.index("PADPA"))
-    sex_dict = StoreCollection(headers.index("GENRE"))
-    anneebac_set = StoreSet(headers.index("ADDB"))
+    ages_set = StoreSet(headers.index("AGE"))  # ✅
+    city_dict = StoreCollection(headers.index("VD"), method="approx")  # ✅
+    mentions_dicts = [
+        StoreCollection(headers.index(f"MS{i}")) for i in range(1, 6)
+    ]  # ✅
+    mentionbac_dict = StoreCollection(headers.index("MB"))  # ✅
+    padpa_dict = StoreCollection(headers.index("PADPA"))  # ✅
+    sex_dict = StoreCollection(headers.index("GENRE"))  # ✅
+    anneebac_set = StoreSet(headers.index("ADDB"))  # ✅
     ndfelsca_dict = StoreSet(headers.index("NDFELSCA"))  # ✅
     studyfield_dict = StoreCollection(headers.index("FD"), method="approx")  # ✅
     optionbac_dict = StoreCollection(headers.index("OB"))  # ✅
@@ -559,8 +566,9 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     logiciels_dict = StoreCollection(headers.index("MDL"), recursive=True)  # ✅⌛
     nddps_dict = StoreCollection(headers.index("NDDPS"))  # ⌛ (Not sure if StoreSet)
     tdl_dict = StoreCollection(headers.index("TDL"), method="approx")  # ✅
-    # ⌛ (Not sure)
-    mp_dict = StoreCollection(headers.index("MP"), method="approx", recursive=True)
+    mp_dict = StoreCollection(
+        headers.index("MP"), method="approx", recursive=True
+    )  # ⌛ (Not sure)
     tpslepj_dict = StoreCollection(headers.index("TPSLEPJ"))  # ✅
     mdvu_dict = StoreCollection(headers.index("MDVU"), recursive=True)  # ⌛ (Not sure)
     cdfvvpa_dict = StoreCollection(headers.index("CDFVVPA"))  # ❌ (Unstable)
@@ -569,12 +577,12 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     tepde_dict = StoreCollection(headers.index("TEPDE"))  # ✅
     spdr_dict = StoreCollection(headers.index("SPDR"), recursive=True)  # ✅
     qds_dict = StoreSet(headers.index("QDS"))  # ✅
-    # lambda salaire: 1000 <= salaire <= 20000
-    dmm_dict = StoreSet(headers.index("DMM"))  # ❌ (Unhandled)
+    dmm_dict = StoreSet(headers.index("DMM"))  # ❌ (Unstable)
     lp_dict = StoreCollection(headers.index("LP"), recursive=True)  # ❌ (Unstable)
     ndllpa_dict = StoreCollection(headers.index("NDLLPA"))  # ✅
-    # ❌ (Unstable)
-    tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True)
+    tdsp_dict = StoreCollection(
+        headers.index("TDSP"), method="approx", recursive=True
+    )  # ❌ (Unstable)
     ap_dict = StoreCollection(headers.index("AP"))  # ❌ (Unstable)
     nmddspn_dict = StoreCollection(headers.index("NMDDSPN"))  # ✅
     ndpsynps_dict = StoreCollection(headers.index("NDPSYNPS"))  # ✅
@@ -720,6 +728,8 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
             data.dump(args.write, directory=MD_DIR)
         case "STATS":
             stats.dump(args.write, directory=MD_DIR)
+        case "NONE":
+            pass
         case _:
             doc.dump("DOCS", directory=MD_DIR)
             data.dump("DATA", directory=MD_DIR)
