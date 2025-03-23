@@ -31,7 +31,7 @@ class Listable(enum.Enum):
 
 
 class UnwantedDataType(Listable):
-    UNKNOWN = "Inconnu"
+    OUTLIER = "Valeur aberrante"
     MISSING = "Manquant"
     INVALID_FORMAT = "Format invalide"
 
@@ -138,15 +138,11 @@ class DataManager:
                     if value is None:
                         value = slope * i + intercept  # y = ax + b
                         dict.data[i] = value
-                        data.add_paragraph(
-                            f"La valeur numérique manquante de la variable {dict.name["format"]} a été estimée à {value}"
-                        )
+                        data.add_paragraph(f"La valeur numérique manquante de la variable {dict.name["format"]} a été estimée à {value}")
             else:  # Moyenne/Médiane
                 for k in range(len(dict.data)):
                     if dict.data[k] is None:
-                        dict.data[k] = (
-                            median(y) if has_outliers else int(round(sum(y) / len(y)))
-                        )
+                        dict.data[k] = (median(y) if has_outliers else int(round(sum(y) / len(y))))
 
             if has_outliers:
                 self.handle_outliers(outliers)
@@ -159,9 +155,7 @@ class DataManager:
                     common_value = max(valid_data, key=lambda x: x["count"])
                     common_value["count"] += 1
                     dict.data.pop(k)
-                    self.invalid_subsets = [
-                        subset for subset in self.invalid_subsets if subset["pos"] != k
-                    ]
+                    self.invalid_subsets = [subset for subset in self.invalid_subsets if subset["pos"] != k]
 
     def generate_rapport(self, dict):
         data.add_heading(f"{dict.name["default"]} [{dict.name["format"]}]", level=4)
@@ -175,13 +169,9 @@ class DataManager:
         ]
 
         missing_values = len(dict.invalid_subsets)
-        valid_values = (
-            dict.length() if isinstance(dict, StoreCollection) else len(dict.data)
-        )
+        valid_values = (dict.length() if isinstance(dict, StoreCollection) else len(dict.data))
 
-        percent_missing_values = (
-            missing_values / (valid_values + missing_values)
-        ) * 100
+        percent_missing_values = (missing_values / (valid_values + missing_values)) * 100
 
         row = collections.deque(
             [
@@ -219,11 +209,7 @@ class DataManager:
         cumul_percent_valid = 0
         data_rows = []
         first_row = True
-        stores = (
-            dict.data.values()
-            if isinstance(dict, StoreCollection)
-            else list(set(dict.data))
-        )
+        stores = (dict.data.values() if isinstance(dict, StoreCollection) else list(set(dict.data)))
 
         for k, value in enumerate(stores):
             if value is None:
@@ -304,9 +290,7 @@ class DataManager:
             header_styles = "style='text-align: center;' colspan='3'"
 
             shapiro_dn, shapiro_pvalue = shapiro(dict.data)
-            kolmogrov_dn, kolmogorov_pvalue = kstest(
-                dict.data, "norm", args=(mean, std)
-            )
+            kolmogrov_dn, kolmogorov_pvalue = kstest(dict.data, "norm", args=(mean, std))
 
             html_table = f"""
 <table>
@@ -347,30 +331,12 @@ class DataManager:
                 ]
 
                 plt.figure(figsize=(8, 5))
-                plt.hist(
-                    dict.data,
-                    bins=10,
-                    density=True,
-                    alpha=0.7,
-                    color="blue",
-                    edgecolor="black",
-                )
+                plt.hist(dict.data, bins=10, density=True, alpha=0.7, color="blue", edgecolor="black")
 
                 x = np.linspace(min, max, 100)
                 p = norm.pdf(x, mean, std)
 
-                plt.xticks(
-                    x_ticks,
-                    labels=[
-                        r"$\mu - 3\sigma$",
-                        r"$\mu - 2\sigma$",
-                        r"$\mu - \sigma$",
-                        r"$\mu$",
-                        r"$\mu + \sigma$",
-                        r"$\mu + 2\sigma$",
-                        r"$\mu + 3\sigma$",
-                    ],
-                )
+                plt.xticks(x_ticks, labels=[r"$\mu - 3\sigma$", r"$\mu - 2\sigma$", r"$\mu - \sigma$", r"$\mu$", r"$\mu + \sigma$", r"$\mu + 2\sigma$", r"$\mu + 3\sigma$"])
                 plt.plot(x, p, "r-", linewidth=2)
                 plt.axvline(float(np.mean(dict.data)), ls="--", color="lightgray")
                 plt.title(f"Histogramme avec une courbe de distribution normale")
@@ -379,9 +345,7 @@ class DataManager:
                 plt.savefig(filename, bbox_inches="tight")
 
                 stats.add_block(mkdn.Quote(message))
-                stats.add_block(
-                    mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")])
-                )
+                stats.add_block(mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")]))
             else:
                 stats.add_block(mkdn.Quote(message))
                 message = "Une distribution non normale"
@@ -404,9 +368,7 @@ class DataManager:
             stats.add_table(headers, rows)
 
             if p < 0.05:
-                stats.add_block(
-                    mkdn.Quote("Il y a une relation significative entre les variables")
-                )
+                stats.add_block(mkdn.Quote("Il y a une relation significative entre les variables"))
 
     # TODO: Analyse inférentielle
     def analyze(self, dict):
@@ -414,13 +376,7 @@ class DataManager:
 
 
 class StoreCollection(DataManager):
-    def __init__(
-        self,
-        pos,
-        method: typing.Literal["exact", "approx"] = "exact",
-        recursive=False,
-        verified=False,
-    ):
+    def __init__(self, pos, method: typing.Literal["exact", "approx"] = "exact", recursive=False, verified=False):
         self.pos = pos
         self.data = {}
         self.method = method
@@ -514,8 +470,6 @@ class StoreSet(DataManager):
                 return self.data.append(value)
             else:
                 unresolved(match, UnwantedDataType.INVALID_FORMAT)
-        else:
-            unresolved(value, UnwantedDataType.UNKNOWN)
 
     def length(self) -> int:
         return len([item for item in self.data if item is not None])
@@ -553,39 +507,35 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         index = headers.index(i)
         headers.pop(index)
         doc_headers.pop(index)
-        file = [row[:index] + row[index + 1 :] for row in file]
+        file = [row[:index] + row[index + 1:] for row in file]
 
     # Traitement des données numériques et alphanumériques
     ages_set = StoreSet(headers.index("AGE"), verified=True)
     city_dict = StoreCollection(headers.index("VD"), method="approx", verified=True)
-    mentions_dicts = [
-        StoreCollection(headers.index(f"MS{i}"), verified=True) for i in range(1, 6)
-    ]
+    mentions_dicts = [StoreCollection(headers.index(f"MS{i}"), verified=True) for i in range(1, 6)]
     mentionbac_dict = StoreCollection(headers.index("MB"), verified=True)
     padpa_dict = StoreCollection(headers.index("PADPA"), verified=True)
     sex_dict = StoreCollection(headers.index("GENRE"), verified=True)
     anneebac_set = StoreSet(headers.index("ADDB"), verified=True)
     ndfelsca_dict = StoreSet(headers.index("NDFELSCA"), verified=True)
-    studyfield_dict = StoreCollection(
-        headers.index("FD"), method="approx", verified=True
-    )
+    studyfield_dict = StoreCollection(headers.index("FD"), method="approx", verified=True)
     optionbac_dict = StoreCollection(headers.index("OB"), verified=True)
     excel_dict = StoreCollection(headers.index("UD"), verified=True)
     logiciels_dict = StoreCollection(headers.index("MDL"), recursive=True)
-    nddps_dict = StoreCollection(headers.index("NDDPS"))
+    nddps_dict = StoreSet(headers.index("NDDPS"), verified=True)
     tdl_dict = StoreCollection(headers.index("TDL"), method="approx", verified=True)
-    mp_dict = StoreCollection(headers.index("MP"), method="approx", recursive=True)
+    mp_dict = StoreCollection(headers.index("MP"), method="approx", recursive=True, verified=True)
     tpslepj_dict = StoreCollection(headers.index("TPSLEPJ"), verified=True)
     mdvu_dict = StoreCollection(headers.index("MDVU"), recursive=True)
-    cdfvvpa_dict = StoreCollection(headers.index("CDFVVPA"))
+    cdfvvpa_dict = StoreSet(headers.index("CDFVVPA"), verified=True)
     caepm_dict = StoreCollection(headers.index("CAEPM"))
     nddtps_dict = StoreCollection(headers.index("NDDTPS"))
     tepde_dict = StoreCollection(headers.index("TEPDE"), verified=True)
     spdr_dict = StoreCollection(headers.index("SPDR"), recursive=True, verified=True)
     qds_dict = StoreSet(headers.index("QDS"), verified=True)
-    dmm_dict = StoreSet(headers.index("DMM"))
+    dmm_dict = StoreSet(headers.index("DMM"), verified=True)
     lp_dict = StoreCollection(headers.index("LP"), recursive=True)
-    ndllpa_dict = StoreCollection(headers.index("NDLLPA"), verified=True)
+    ndllpa_dict = StoreSet(headers.index("NDLLPA"), verified=True)
     tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True)
     ap_dict = StoreCollection(headers.index("AP"))
     nmddspn_dict = StoreCollection(headers.index("NMDDSPN"), verified=True)
@@ -672,6 +622,14 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         ],
     )
 
+    doc.add_paragraph(f"Total variables : `{str(sum(1 for _ in dicts))}`, dont :")
+    doc.add_unordered_list(
+        [
+            f"`{sum(1 for dict in dicts if isinstance(dict, StoreSet))}` variables de type numérique",
+            f"`{sum(1 for dict in dicts if isinstance(dict, StoreCollection))}` variables de type catégorielle",
+        ]
+    )
+
     data.add_heading("Gestion des données", level=2)
     data.add_heading("Identification des données manquantes", level=3)
     rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
@@ -679,9 +637,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     for dict in dicts:
         rows[0].append(str(dict.length()))
         for i, type in enumerate(UnwantedDataType.get()):
-            subset = [
-                v for v in dict.invalid_subsets if v["type"] == UnwantedDataType[type]
-            ]
+            subset = [v for v in dict.invalid_subsets if v["type"] == UnwantedDataType[type]]
             rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
     data.add_table(["", "", *headers], rows)
 
