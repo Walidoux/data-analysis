@@ -415,7 +415,11 @@ class DataManager:
 
 class StoreCollection(DataManager):
     def __init__(
-        self, pos, method: typing.Literal["exact", "approx"] = "exact", recursive=False
+        self,
+        pos,
+        method: typing.Literal["exact", "approx"] = "exact",
+        recursive=False,
+        verified=False,
     ):
         self.pos = pos
         self.data = {}
@@ -423,6 +427,7 @@ class StoreCollection(DataManager):
         self.name = doc_headers[pos]
         self.invalid_subsets = []
         self.recursive = recursive
+        self.verified = verified
 
     def is_unknown(self, value: str) -> bool:
         alnum = re.search(r"[a-zA-Z0-9]", value.strip())
@@ -472,16 +477,17 @@ class StoreCollection(DataManager):
                 return
         self.data[len(self.data)] = {"name": value, "count": 1}
 
-    def length(self):
+    def length(self) -> int:
         return sum(item["count"] for item in self.data.values() if item is not None)
 
 
 class StoreSet(DataManager):
-    def __init__(self, pos):
+    def __init__(self, pos, verified=False):
         self.pos = pos
         self.data = []
         self.name = doc_headers[pos]
         self.invalid_subsets = []
+        self.verified = verified
 
     def collect(self, value: int | str | None):
         value = value.strip() if isinstance(value, str) else value
@@ -511,7 +517,7 @@ class StoreSet(DataManager):
         else:
             unresolved(value, UnwantedDataType.UNKNOWN)
 
-    def length(self):
+    def length(self) -> int:
         return len([item for item in self.data if item is not None])
 
 
@@ -550,45 +556,43 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         file = [row[:index] + row[index + 1 :] for row in file]
 
     # Traitement des données numériques et alphanumériques
-    ages_set = StoreSet(headers.index("AGE"))  # ✅
-    city_dict = StoreCollection(headers.index("VD"), method="approx")  # ✅
+    ages_set = StoreSet(headers.index("AGE"), verified=True)
+    city_dict = StoreCollection(headers.index("VD"), method="approx", verified=True)
     mentions_dicts = [
-        StoreCollection(headers.index(f"MS{i}")) for i in range(1, 6)
-    ]  # ✅
-    mentionbac_dict = StoreCollection(headers.index("MB"))  # ✅
-    padpa_dict = StoreCollection(headers.index("PADPA"))  # ✅
-    sex_dict = StoreCollection(headers.index("GENRE"))  # ✅
-    anneebac_set = StoreSet(headers.index("ADDB"))  # ✅
-    ndfelsca_dict = StoreSet(headers.index("NDFELSCA"))  # ✅
-    studyfield_dict = StoreCollection(headers.index("FD"), method="approx")  # ✅
-    optionbac_dict = StoreCollection(headers.index("OB"))  # ✅
-    excel_dict = StoreCollection(headers.index("UD"))  # ✅
-    logiciels_dict = StoreCollection(headers.index("MDL"), recursive=True)  # ✅⌛
-    nddps_dict = StoreCollection(headers.index("NDDPS"))  # ⌛ (Not sure if StoreSet)
-    tdl_dict = StoreCollection(headers.index("TDL"), method="approx")  # ✅
-    mp_dict = StoreCollection(
-        headers.index("MP"), method="approx", recursive=True
-    )  # ⌛ (Not sure)
-    tpslepj_dict = StoreCollection(headers.index("TPSLEPJ"))  # ✅
-    mdvu_dict = StoreCollection(headers.index("MDVU"), recursive=True)  # ⌛ (Not sure)
-    cdfvvpa_dict = StoreCollection(headers.index("CDFVVPA"))  # ❌ (Unstable)
-    caepm_dict = StoreCollection(headers.index("CAEPM"))  # ❌ (Unstable)
-    nddtps_dict = StoreCollection(headers.index("NDDTPS"))  # ❌ (Unstable)
-    tepde_dict = StoreCollection(headers.index("TEPDE"))  # ✅
-    spdr_dict = StoreCollection(headers.index("SPDR"), recursive=True)  # ✅
-    qds_dict = StoreSet(headers.index("QDS"))  # ✅
-    dmm_dict = StoreSet(headers.index("DMM"))  # ❌ (Unstable)
-    lp_dict = StoreCollection(headers.index("LP"), recursive=True)  # ❌ (Unstable)
-    ndllpa_dict = StoreCollection(headers.index("NDLLPA"))  # ✅
-    tdsp_dict = StoreCollection(
-        headers.index("TDSP"), method="approx", recursive=True
-    )  # ❌ (Unstable)
-    ap_dict = StoreCollection(headers.index("AP"))  # ❌ (Unstable)
-    nmddspn_dict = StoreCollection(headers.index("NMDDSPN"))  # ✅
-    ndpsynps_dict = StoreCollection(headers.index("NDPSYNPS"))  # ✅
-    pdmlde_dict = StoreCollection(headers.index("PDMLDE"))  # ✅
-    tdlpu_dict = StoreCollection(headers.index("TDLPU"), recursive=True)  # ✅
-    fddrspj_dict = StoreCollection(headers.index("FDDRSPJ"))  # ✅
+        StoreCollection(headers.index(f"MS{i}"), verified=True) for i in range(1, 6)
+    ]
+    mentionbac_dict = StoreCollection(headers.index("MB"), verified=True)
+    padpa_dict = StoreCollection(headers.index("PADPA"), verified=True)
+    sex_dict = StoreCollection(headers.index("GENRE"), verified=True)
+    anneebac_set = StoreSet(headers.index("ADDB"), verified=True)
+    ndfelsca_dict = StoreSet(headers.index("NDFELSCA"), verified=True)
+    studyfield_dict = StoreCollection(
+        headers.index("FD"), method="approx", verified=True
+    )
+    optionbac_dict = StoreCollection(headers.index("OB"), verified=True)
+    excel_dict = StoreCollection(headers.index("UD"), verified=True)
+    logiciels_dict = StoreCollection(headers.index("MDL"), recursive=True)
+    nddps_dict = StoreCollection(headers.index("NDDPS"))
+    tdl_dict = StoreCollection(headers.index("TDL"), method="approx", verified=True)
+    mp_dict = StoreCollection(headers.index("MP"), method="approx", recursive=True)
+    tpslepj_dict = StoreCollection(headers.index("TPSLEPJ"), verified=True)
+    mdvu_dict = StoreCollection(headers.index("MDVU"), recursive=True)
+    cdfvvpa_dict = StoreCollection(headers.index("CDFVVPA"))
+    caepm_dict = StoreCollection(headers.index("CAEPM"))
+    nddtps_dict = StoreCollection(headers.index("NDDTPS"))
+    tepde_dict = StoreCollection(headers.index("TEPDE"), verified=True)
+    spdr_dict = StoreCollection(headers.index("SPDR"), recursive=True, verified=True)
+    qds_dict = StoreSet(headers.index("QDS"), verified=True)
+    dmm_dict = StoreSet(headers.index("DMM"))
+    lp_dict = StoreCollection(headers.index("LP"), recursive=True)
+    ndllpa_dict = StoreCollection(headers.index("NDLLPA"), verified=True)
+    tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True)
+    ap_dict = StoreCollection(headers.index("AP"))
+    nmddspn_dict = StoreCollection(headers.index("NMDDSPN"), verified=True)
+    ndpsynps_dict = StoreCollection(headers.index("NDPSYNPS"), verified=True)
+    pdmlde_dict = StoreCollection(headers.index("PDMLDE"), verified=True)
+    tdlpu_dict = StoreCollection(headers.index("TDLPU"), recursive=True, verified=True)
+    fddrspj_dict = StoreCollection(headers.index("FDDRSPJ"), verified=True)
 
     dicts = [
         sex_dict,
@@ -626,15 +630,6 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         *mentions_dicts,
     ]
 
-    unprocessed_data = [
-        f"`{h["format"]}` > {h["default"]}"
-        for h in doc_headers
-        if h["format"] not in {d.name["format"] for d in dicts}
-    ]
-    if len(unprocessed_data) >= 1:
-        doc.add_heading("Variables à traité", level=1)
-        doc.add_ordered_list(unprocessed_data)
-
     i = 0
     rows = list(file)
 
@@ -662,22 +657,22 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
         i += 1
 
-    doc.add_heading("Vue des variables", level=2)
+    doc.add_heading("Vue d'ensemble des variables", level=2)
     doc.add_table(
-        ["Nom", "Type", "Libellés", "Valeurs"],
+        ["Nom", "Type", "Largeur", "Libellé", "Vérifiée"],
         [
             [
                 dict.name["format"],
-                "Quantitative" if isinstance(dict, StoreSet) else "Qualitative",
-                "{TODO}",
-                "{TODO}",
+                "Numérique" if isinstance(dict, StoreSet) else "Catégorielle",
+                str(dict.length()),
+                dict.name["default"],
+                "✅" if dict.verified else "❌",
             ]
             for _, dict in enumerate(dicts)
         ],
     )
 
     data.add_heading("Gestion des données", level=2)
-
     data.add_heading("Identification des données manquantes", level=3)
     rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
     headers = [d.name["format"] for d in dicts]
@@ -708,14 +703,6 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     stats.add_heading("Analyse inférentielle", level=2)
     for dict in dicts:
         dict.analyze(dict)
-
-    doc.add_heading("Codification des variables", level=2)
-    doc.add_unordered_list(
-        [
-            f"`{dict.name["format"]}` -> {dict.name["default"]}"
-            for k, dict in enumerate(dicts)
-        ]
-    )
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")

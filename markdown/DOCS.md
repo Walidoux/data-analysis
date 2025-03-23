@@ -1,83 +1,43 @@
-# Analyse des données - Généré le 22/03/2025 à 12:58
+# Analyse des données - Généré le 23/03/2025 à 15:15
 
-## Vue des variables
+## Vue d'ensemble des variables
 
-| Nom      | Type         | Libellés | Valeurs |
-| -------- | ------------ | -------- | ------- |
-| GENRE    | Qualitative  | {TODO}   | {TODO}  |
-| TDLPU    | Qualitative  | {TODO}   | {TODO}  |
-| PDMLDE   | Qualitative  | {TODO}   | {TODO}  |
-| FDDRSPJ  | Qualitative  | {TODO}   | {TODO}  |
-| QDS      | Quantitative | {TODO}   | {TODO}  |
-| NDLLPA   | Qualitative  | {TODO}   | {TODO}  |
-| TDSP     | Qualitative  | {TODO}   | {TODO}  |
-| AP       | Qualitative  | {TODO}   | {TODO}  |
-| LP       | Qualitative  | {TODO}   | {TODO}  |
-| TEPDE    | Qualitative  | {TODO}   | {TODO}  |
-| OB       | Qualitative  | {TODO}   | {TODO}  |
-| NDPSYNPS | Qualitative  | {TODO}   | {TODO}  |
-| NMDDSPN  | Qualitative  | {TODO}   | {TODO}  |
-| MB       | Qualitative  | {TODO}   | {TODO}  |
-| NDDTPS   | Qualitative  | {TODO}   | {TODO}  |
-| CDFVVPA  | Qualitative  | {TODO}   | {TODO}  |
-| TPSLEPJ  | Qualitative  | {TODO}   | {TODO}  |
-| MDVU     | Qualitative  | {TODO}   | {TODO}  |
-| CAEPM    | Qualitative  | {TODO}   | {TODO}  |
-| VD       | Qualitative  | {TODO}   | {TODO}  |
-| DMM      | Quantitative | {TODO}   | {TODO}  |
-| NDFELSCA | Quantitative | {TODO}   | {TODO}  |
-| MP       | Qualitative  | {TODO}   | {TODO}  |
-| FD       | Qualitative  | {TODO}   | {TODO}  |
-| SPDR     | Qualitative  | {TODO}   | {TODO}  |
-| MDL      | Qualitative  | {TODO}   | {TODO}  |
-| TDL      | Qualitative  | {TODO}   | {TODO}  |
-| NDDPS    | Qualitative  | {TODO}   | {TODO}  |
-| PADPA    | Qualitative  | {TODO}   | {TODO}  |
-| UD       | Qualitative  | {TODO}   | {TODO}  |
-| AGE      | Quantitative | {TODO}   | {TODO}  |
-| ADDB     | Quantitative | {TODO}   | {TODO}  |
-| MS1      | Qualitative  | {TODO}   | {TODO}  |
-| MS2      | Qualitative  | {TODO}   | {TODO}  |
-| MS3      | Qualitative  | {TODO}   | {TODO}  |
-| MS4      | Qualitative  | {TODO}   | {TODO}  |
-| MS5      | Qualitative  | {TODO}   | {TODO}  |
-
-## Codification des variables
-
-- `GENRE` -> Genre
-- `TDLPU` -> Type d’application la plus utilisée
-- `PDMLDE` -> Pratique du multitâche lors des études
-- `FDDRSPJ` -> Fréquence d’utilisation des réseaux sociaux par jour
-- `QDS` -> Qualité du sommeil
-- `NDLLPA` -> •Nombre de livres lus par an
-- `TDSP` -> Type de sport pratiqué
-- `AP` -> Activité physique (heures par semaine)
-- `LP` -> Loisir préféré
-- `TEPDE` -> •Travail en parallèle des études
-- `OB` -> Option Bac
-- `NDPSYNPS` -> Nombre d’heures passées sur YouTube, Netflix par semaine
-- `NMDDSPN` -> Nombre moyen d’heures de sommeil par nuit
-- `MB` -> Mention Bac
-- `NDDTPS` -> Nombre d’heures de travail par semaine
-- `CDFVVPA` -> •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans
-- `TPSLEPJ` -> Temps passé sur les écrans par jour
-- `MDVU` -> Moyen de voyage Utiliser
-- `CAEPM` -> capacité à économiser par moins ( MAD)
-- `VD` -> Ville d’origine
-- `DMM` -> Dépenses mensuelles moyennes (en MAD)
-- `NDFELSCA` -> Nombre de formations en ligne suivies cette année
-- `MP` -> Matière préfère
-- `FD` -> Filière d’étude
-- `SPDR` -> Source principale de revenu
-- `MDL` -> Maîtrise d’autres logiciels
-- `TDL` -> Type de logement ( à Dakhla )
-- `NDDPS` -> Nombre d'heures d'étude par semaine
-- `PADPA` -> Participation à des projets académiques/professionnels
-- `UD` -> Utilisation d’Excel
-- `AGE` -> Âge
-- `ADDB` -> Année d’obtention du Bac
-- `MS1` -> Mentions S1
-- `MS2` -> Mentions S2
-- `MS3` -> Mentions S3
-- `MS4` -> Mentions S4
-- `MS5` -> Mentions S5
+| Nom      | Type         | Largeur | Libellé                                                               | Vérifiée |
+| -------- | ------------ | ------- | --------------------------------------------------------------------- | -------- |
+| GENRE    | Catégorielle | 116     | Genre                                                                 | ✅        |
+| TDLPU    | Catégorielle | 150     | Type d’application la plus utilisée                                   | ✅        |
+| PDMLDE   | Catégorielle | 116     | Pratique du multitâche lors des études                                | ✅        |
+| FDDRSPJ  | Catégorielle | 116     | Fréquence d’utilisation des réseaux sociaux par jour                  | ✅        |
+| QDS      | Numérique    | 116     | Qualité du sommeil                                                    | ✅        |
+| NDLLPA   | Catégorielle | 116     | •Nombre de livres lus par an                                          | ✅        |
+| TDSP     | Catégorielle | 131     | Type de sport pratiqué                                                | ❌        |
+| AP       | Catégorielle | 116     | Activité physique (heures par semaine)                                | ❌        |
+| LP       | Catégorielle | 138     | Loisir préféré                                                        | ❌        |
+| TEPDE    | Catégorielle | 116     | •Travail en parallèle des études                                      | ✅        |
+| OB       | Catégorielle | 116     | Option Bac                                                            | ✅        |
+| NDPSYNPS | Catégorielle | 116     | Nombre d’heures passées sur YouTube, Netflix par semaine              | ✅        |
+| NMDDSPN  | Catégorielle | 116     | Nombre moyen d’heures de sommeil par nuit                             | ✅        |
+| MB       | Catégorielle | 116     | Mention Bac                                                           | ✅        |
+| NDDTPS   | Catégorielle | 115     | Nombre d’heures de travail par semaine                                | ❌        |
+| CDFVVPA  | Catégorielle | 116     | •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans | ❌        |
+| TPSLEPJ  | Catégorielle | 116     | Temps passé sur les écrans par jour                                   | ✅        |
+| MDVU     | Catégorielle | 119     | Moyen de voyage Utiliser                                              | ❌        |
+| CAEPM    | Catégorielle | 116     | capacité à économiser par moins ( MAD)                                | ❌        |
+| VD       | Catégorielle | 116     | Ville d’origine                                                       | ✅        |
+| DMM      | Numérique    | 114     | Dépenses mensuelles moyennes (en MAD)                                 | ❌        |
+| NDFELSCA | Numérique    | 116     | Nombre de formations en ligne suivies cette année                     | ✅        |
+| MP       | Catégorielle | 130     | Matière préfère                                                       | ❌        |
+| FD       | Catégorielle | 116     | Filière d’étude                                                       | ✅        |
+| SPDR     | Catégorielle | 162     | Source principale de revenu                                           | ✅        |
+| MDL      | Catégorielle | 142     | Maîtrise d’autres logiciels                                           | ❌        |
+| TDL      | Catégorielle | 115     | Type de logement ( à Dakhla )                                         | ✅        |
+| NDDPS    | Catégorielle | 108     | Nombre d'heures d'étude par semaine                                   | ❌        |
+| PADPA    | Catégorielle | 116     | Participation à des projets académiques/professionnels                | ✅        |
+| UD       | Catégorielle | 116     | Utilisation d’Excel                                                   | ✅        |
+| AGE      | Numérique    | 116     | Âge                                                                   | ✅        |
+| ADDB     | Numérique    | 115     | Année d’obtention du Bac                                              | ✅        |
+| MS1      | Catégorielle | 112     | Mentions S1                                                           | ✅        |
+| MS2      | Catégorielle | 112     | Mentions S2                                                           | ✅        |
+| MS3      | Catégorielle | 112     | Mentions S3                                                           | ✅        |
+| MS4      | Catégorielle | 112     | Mentions S4                                                           | ✅        |
+| MS5      | Catégorielle | 113     | Mentions S5                                                           | ✅        |
