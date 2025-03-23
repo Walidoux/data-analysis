@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 23/03/2025 à 15:15
+# Analyse des données - Généré le 23/03/2025 à 15:51
 
 ## Vue d'ensemble des variables
 
@@ -9,7 +9,7 @@
 | PDMLDE   | Catégorielle | 116     | Pratique du multitâche lors des études                                | ✅        |
 | FDDRSPJ  | Catégorielle | 116     | Fréquence d’utilisation des réseaux sociaux par jour                  | ✅        |
 | QDS      | Numérique    | 116     | Qualité du sommeil                                                    | ✅        |
-| NDLLPA   | Catégorielle | 116     | •Nombre de livres lus par an                                          | ✅        |
+| NDLLPA   | Numérique    | 116     | •Nombre de livres lus par an                                          | ✅        |
 | TDSP     | Catégorielle | 131     | Type de sport pratiqué                                                | ❌        |
 | AP       | Catégorielle | 116     | Activité physique (heures par semaine)                                | ❌        |
 | LP       | Catégorielle | 138     | Loisir préféré                                                        | ❌        |
@@ -19,19 +19,19 @@
 | NMDDSPN  | Catégorielle | 116     | Nombre moyen d’heures de sommeil par nuit                             | ✅        |
 | MB       | Catégorielle | 116     | Mention Bac                                                           | ✅        |
 | NDDTPS   | Catégorielle | 115     | Nombre d’heures de travail par semaine                                | ❌        |
-| CDFVVPA  | Catégorielle | 116     | •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans | ❌        |
+| CDFVVPA  | Numérique    | 111     | •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans | ✅        |
 | TPSLEPJ  | Catégorielle | 116     | Temps passé sur les écrans par jour                                   | ✅        |
 | MDVU     | Catégorielle | 119     | Moyen de voyage Utiliser                                              | ❌        |
 | CAEPM    | Catégorielle | 116     | capacité à économiser par moins ( MAD)                                | ❌        |
 | VD       | Catégorielle | 116     | Ville d’origine                                                       | ✅        |
-| DMM      | Numérique    | 114     | Dépenses mensuelles moyennes (en MAD)                                 | ❌        |
+| DMM      | Numérique    | 114     | Dépenses mensuelles moyennes (en MAD)                                 | ✅        |
 | NDFELSCA | Numérique    | 116     | Nombre de formations en ligne suivies cette année                     | ✅        |
 | MP       | Catégorielle | 130     | Matière préfère                                                       | ❌        |
 | FD       | Catégorielle | 116     | Filière d’étude                                                       | ✅        |
 | SPDR     | Catégorielle | 162     | Source principale de revenu                                           | ✅        |
 | MDL      | Catégorielle | 142     | Maîtrise d’autres logiciels                                           | ❌        |
 | TDL      | Catégorielle | 115     | Type de logement ( à Dakhla )                                         | ✅        |
-| NDDPS    | Catégorielle | 108     | Nombre d'heures d'étude par semaine                                   | ❌        |
+| NDDPS    | Numérique    | 107     | Nombre d'heures d'étude par semaine                                   | ✅        |
 | PADPA    | Catégorielle | 116     | Participation à des projets académiques/professionnels                | ✅        |
 | UD       | Catégorielle | 116     | Utilisation d’Excel                                                   | ✅        |
 | AGE      | Numérique    | 116     | Âge                                                                   | ✅        |
@@ -41,3 +41,8 @@
 | MS3      | Catégorielle | 112     | Mentions S3                                                           | ✅        |
 | MS4      | Catégorielle | 112     | Mentions S4                                                           | ✅        |
 | MS5      | Catégorielle | 113     | Mentions S5                                                           | ✅        |
+
+Total variables : `37`, dont :
+
+- `8` variables de type numérique
+- `29` variables de type catégorielle
