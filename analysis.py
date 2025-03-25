@@ -73,13 +73,22 @@ class MDL(Listable):
         return cls.AUTRE.name
 
 
+class NDDTPS():
+    @classmethod
+    def classify(cls, value: str):
+        if "PAS" in value or "AUCUN" in value or "NON" in value or "RIEN" in value:
+            return 0
+        else:
+            return value
+
+
 class DataManager:
     def __init__(self):
         self.name = {}
         self.invalid_subsets = []
 
     def is_unknown(self, value) -> bool:
-        return value in ["N.V", "UNKNOWN"] or not value
+        return value in ["N.V", "UNKNOWN"] or value is None
 
     def is_applicable(self) -> bool:
         total_values = sum(len(row) for row in file)
@@ -566,7 +575,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     while i < len(rows):
 
         for dict in dicts:
-            if dict not in [anneebac_set, optionbac_dict, logiciels_dict]:
+            if dict not in [anneebac_set, optionbac_dict, logiciels_dict, nddtps_dict]:
                 if isinstance(dict, StoreCollection):
                     dict.subscribe(rows[i][dict.pos])
                 elif isinstance(dict, StoreSet):
@@ -575,6 +584,9 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         match = re.search(r"(\d{4})[-/_\s]*(\d{4})?", rows[i][anneebac_set.pos])
         year = match.group(2) if match and match.group(2) else match and match.group(1)
         anneebac_set.collect(year)
+
+        nddtps = NDDTPS.classify(rows[i][nddtps_dict.pos].upper())
+        nddtps_dict.collect(nddtps)
 
         branche = Option.classify(utils.normalize(rows[i][optionbac_dict.pos]).upper())
         optionbac_dict.subscribe(branche)

@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 25/03/2025 à 05:15
+# Analyse des données - Généré le 25/03/2025 à 05:38
 
 ## Gestion des données
 
@@ -6,10 +6,10 @@
 
 |   |                | GENRE | TDLPU | PDMLDE | FDDRSPJ | QDS | NDLLPA | TDSP | AP | LP  | TEPDE | OB  | NDPSYNPS | NMDDSPN | MB  | NDDTPS | CDFVVPA | TPSLEPJ | MDVU | CAEPM | VD  | DMM | NDFELSCA | MP  | FD  | SPDR | MDL | TDL | NDDPS | PADPA | UD  | AGE | ADDB | MS1 | MS2 | MS3 | MS4 | MS5 |
 | - | -------------- | ----- | ----- | ------ | ------- | --- | ------ | ---- | -- | --- | ----- | --- | -------- | ------- | --- | ------ | ------- | ------- | ---- | ----- | --- | --- | -------- | --- | --- | ---- | --- | --- | ----- | ----- | --- | --- | ---- | --- | --- | --- | --- | --- |
-| N | VALIDE         | 116   | 150   | 116    | 116     | 116 | 116    | 131  | 87 | 138 | 116   | 116 | 116      | 115     | 116 | 96     | 111     | 116     | 119  | 110   | 116 | 114 | 116      | 130 | 116 | 162  | 143 | 115 | 107   | 116   | 116 | 116 | 115  | 112 | 112 | 112 | 112 | 113 |
+| N | VALIDE         | 116   | 150   | 116    | 116     | 116 | 116    | 131  | 87 | 138 | 116   | 116 | 116      | 115     | 116 | 115    | 111     | 116     | 119  | 110   | 116 | 114 | 116      | 130 | 116 | 162  | 143 | 115 | 107   | 116   | 116 | 116 | 115  | 112 | 112 | 112 | 112 | 113 |
 |   | OUTLIER        |       |       |        |         |     |        |      |    |     |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     |      |     |     |       |       |     |     |      |     |     |     |     |     |
-|   | MISSING        |       |       |        |         |     |        | 1    |    | 1   |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     | 1    |     |     | 8     |       |     |     | 1    | 4   | 4   | 4   | 4   | 3   |
-|   | INVALID_FORMAT |       |       |        |         |     |        | 1    | 29 | 1   |       |     |          | 1       |     | 20     | 5       |         | 1    | 6     |     | 2   |          | 2   |     |      |     | 1   | 1     |       |     |     |      |     |     |     |     |     |
+|   | MISSING        |       |       |        |         |     |        | 1    |    | 1   |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     | 1    |     |     |       |       |     |     | 1    | 4   | 4   | 4   | 4   | 3   |
+|   | INVALID_FORMAT |       |       |        |         |     |        | 1    | 29 | 1   |       |     |          | 1       |     | 1      | 5       |         | 1    | 6     |     | 2   |          | 2   |     |      |     | 1   | 9     |       |     |     |      |     |     |     |     |     |
 
 #### Genre [GENRE]
 
@@ -268,12 +268,12 @@
 
 |          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
 | -------- | ------- | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | 0       | 20        | 14.71%      | 17.24%             | 17.24%             |
-|          | 10      | 70        | 51.47%      | 60.34%             | 77.59%             |
-|          | 20      | 6         | 4.41%       | 5.17%              | 82.76%             |
-|          | Total   | 116       | 70.59%      | 82.76%             |                    |
-| Manquant | Système | 20        | 14.71%      |                    |                    |
-| Total    |         | 136       | 82.76%      |                    |                    |
+| Valide   | 0       | 39        | 33.33%      | 33.62%             | 33.62%             |
+|          | 10      | 70        | 59.83%      | 60.34%             | 93.97%             |
+|          | 20      | 6         | 5.13%       | 5.17%              | 99.14%             |
+|          | Total   | 116       | 98.29%      | 99.14%             |                    |
+| Manquant | Système | 1         | 0.85%       |                    |                    |
+| Total    |         | 117       | 99.14%      |                    |                    |
 
 #### •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans [CDFVVPA]
 
@@ -660,10 +660,6 @@
 #### Nombre moyen d’heures de sommeil par nuit [NMDDSPN]
 
 ![](../assets/boxplot_NMDDSPN.png)
-
-#### Nombre d’heures de travail par semaine [NDDTPS]
-
-![](../assets/boxplot_NDDTPS.png)
 
 #### capacité à économiser par moins ( MAD) [CAEPM]
 

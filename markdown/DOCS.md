@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 25/03/2025 à 05:15
+# Analyse des données - Généré le 25/03/2025 à 05:38
 
 Total variables (avant traitement) : `37`, dont :
 
@@ -27,7 +27,7 @@ Variables supprimées par identification des données manquantes :
 | NDPSYNPS | Catégorielle | 116     | Nombre d’heures passées sur YouTube, Netflix par semaine              | ✅        |
 | NMDDSPN  | Numérique    | 115     | Nombre moyen d’heures de sommeil par nuit                             | ✅        |
 | MB       | Catégorielle | 116     | Mention Bac                                                           | ✅        |
-| NDDTPS   | Numérique    | 96      | Nombre d’heures de travail par semaine                                | ❌        |
+| NDDTPS   | Numérique    | 115     | Nombre d’heures de travail par semaine                                | ❌        |
 | CDFVVPA  | Numérique    | 111     | •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans | ✅        |
 | TPSLEPJ  | Catégorielle | 116     | Temps passé sur les écrans par jour                                   | ✅        |
 | MDVU     | Catégorielle | 119     | Moyen de voyage Utiliser                                              | ✅        |
