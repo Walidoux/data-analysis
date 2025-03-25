@@ -94,9 +94,10 @@ _Vous pouvez optionnellement spécifier l'argument `--write="xyz"` pour choisir 
 - [x] (Diapo 13) Générer un tabeleau "Vue des variables" comme partie de la documentation
 - [x] (Diapo 17) Identifier les données manquantes + Documenter en créant un tableau statistiques avec toutes les variables et un tableau avec tout ces détails pour chaque variable
 - [x] (Diapo 18) Par défaut, ignorer les valeurs manquantes. Si ces dernières constituent un taux entre 30% et 40%, il faudra supprimer la variable concernée si seulement le pourcentage des données manquantes est faible (15%) et réparti aléatoirement. Sinon si aucune de ces conditions ne sont satisfaites
+- [ ] Créer une représentation graphique choroplèthe des villes du continent Africain
 - [ ] (Diapo 22) Gestion des données manquantes
   - [x] Régression linéaire
-  - [ ] [Qualité de la prédiction](https://fr.wikipedia.org/wiki/R%C3%A9gression_lin%C3%A9aire#Qualit%C3%A9_de_la_pr%C3%A9diction) si l'hypothèse de linéarité est respectée
+  - [ ] [Qualité de la prédiction](https://fr.**wikipedia**.org/wiki/R%C3%A9gression_lin%C3%A9aire#Qualit%C3%A9_de_la_pr%C3%A9diction) si l'hypothèse de linéarité est respectée
   - [x] Moyenne
   - [x] Médiane
   - [x] Mode

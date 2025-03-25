@@ -114,13 +114,13 @@ class DataManager:
         return list(map(int, outliers))
 
     def handle_outliers(self):
-        filename = f"assets/boxplot_{dict.name["format"]}.png"
+        filename = f"assets/boxplot_{store.name["format"]}.png"
 
-        bp = plt.boxplot(dict.data)
+        bp = plt.boxplot(store.data)
         median = bp["medians"][0].get_ydata()[0]
 
         plt.figure(figsize=(10, 6))
-        plt.boxplot(dict.data, vert=True, patch_artist=True)
+        plt.boxplot(store.data, vert=True, patch_artist=True)
         plt.title(f"Boxplot : {self.name['default']}", fontsize=14)
         plt.ylabel("Valeurs", fontsize=12)
         plt.grid(axis="y", alpha=0.75)
@@ -368,9 +368,75 @@ class DataManager:
             if p < 0.05:
                 stats.add_block(mkdn.Quote("Il y a une relation significative entre les variables"))
 
-    # TODO: Analyse inférentielle
-    def analyze(self, dict):
-        return NotImplemented
+    def analyze(self, store):
+        # Generate choropleth map
+        if (store.name["format"] == "VD"):
+            import plotly.express as pexp
+            import plotly.graph_objects as go
+            from geopy.geocoders import Nominatim
+            from geopy.exc import GeocoderTimedOut
+
+            def get_location_data(city_name):
+                geolocator = Nominatim(user_agent="geoapi")
+                try:
+                    location = geolocator.geocode(city_name)
+                    if location:
+                        return location.latitude, location.longitude, location.address.split(",")[-1].strip()
+                except GeocoderTimedOut:
+                    pass
+                return None, None, None
+
+            city_names = [store["name"] for store in store.data.values()]
+            city_lats, city_lons, countries = [], [], []
+
+            for city in city_names:
+                lat, lon, country = get_location_data(city)
+                if lat and lon and country:
+                    city_lats.append(lat)
+                    city_lons.append(lon)
+                    countries.append(country)
+
+            fig = pexp.choropleth(
+                locations=list(set(countries)),
+                locationmode="country names",
+                color=[countries.count(country) for country in set(countries)],
+                scope="africa"
+            )
+
+            fig.add_trace(go.Scattergeo(
+                lon=city_lons,
+                lat=city_lats,
+                text=city_names,
+                marker=dict(
+                    size=8,
+                    color='red',
+                    line=dict(
+                        width=1,
+                        color='white'
+                    )
+                ),
+                name='Cities',
+                mode='markers+text',
+                textposition='top center'
+            ))
+
+            fig.update_geos(
+                resolution=50,
+                showcountries=True,
+                countrycolor="Black",
+                showsubunits=True,
+                subunitcolor="Blue"
+            )
+
+            fig.update_layout(
+                title_text='African Countries with City Markers',
+                showlegend=True
+            )
+
+            filename = f"./assets/choropleth_{store.name["format"]}"
+
+            fig.write_image(f"{filename}.png")  # Image simple
+            fig.write_html(f"{filename}.html")  # Page interactive
 
 
 class StoreCollection(DataManager):
@@ -575,12 +641,12 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     while i < len(rows):
 
-        for dict in dicts:
-            if dict not in [anneebac_set, optionbac_dict, logiciels_dict, nddtps_dict]:
-                if isinstance(dict, StoreCollection):
-                    dict.subscribe(rows[i][dict.pos])
-                elif isinstance(dict, StoreSet):
-                    dict.collect(rows[i][dict.pos])
+        for store in dicts:
+            if store not in [anneebac_set, optionbac_dict, logiciels_dict, nddtps_dict]:
+                if isinstance(store, StoreCollection):
+                    store.subscribe(rows[i][store.pos])
+                elif isinstance(store, StoreSet):
+                    store.collect(rows[i][store.pos])
 
         match = re.search(r"(\d{4})[-/_\s]*(\d{4})?", rows[i][anneebac_set.pos])
         year = match.group(2) if match and match.group(2) else match and match.group(1)
@@ -609,9 +675,9 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     )
 
     removable_dicts = []
-    for dict in dicts:
-        if dict.removable():
-            removable_dicts.append(dict.name["default"])
+    for store in dicts:
+        if store.removable():
+            removable_dicts.append(store.name["default"])
     doc.add_paragraph(f"Variables supprimées par identification des données manquantes :")
     doc.add_unordered_list(removable_dicts)
 
@@ -630,34 +696,34 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         ],
     )
 
-    for dict in dicts:
-        if not dict.removable():
-            dict.generate_rapport(dict)
+    for store in dicts:
+        if not store.removable():
+            store.generate_rapport(store)
 
-    for dict in dicts:
-        if not dict.removable():
-            dict.handle_missing_data(dict)
+    for store in dicts:
+        if not store.removable():
+            store.handle_missing_data(store)
 
     data.add_heading("Identification des données manquantes", level=3)
     rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
     headers = [d.name["format"] for d in dicts if not d.removable()]
-    for dict in dicts:
-        if not dict.removable():
-            rows[0].append(str(dict.length()))
+    for store in dicts:
+        if not store.removable():
+            rows[0].append(str(store.length()))
             for i, type in enumerate(UnwantedDataType.get()):
-                subset = [v for v in dict.invalid_subsets if v["type"] == UnwantedDataType[type]]
+                subset = [v for v in store.invalid_subsets if v["type"] == UnwantedDataType[type]]
                 rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
     data.add_table(["", "", *headers], rows)
 
     stats.add_heading("Statistiques descriptives", level=2)
-    for dict in dicts:
-        if not dict.removable():
-            dict.generate_statistics(dict)
+    for store in dicts:
+        if not store.removable():
+            store.generate_statistics(store)
 
     stats.add_heading("Analyse inférentielle", level=2)
-    for dict in dicts:
-        if not dict.removable():
-            dict.analyze(dict)
+    for store in dicts:
+        if not store.removable():
+            store.analyze(store)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
