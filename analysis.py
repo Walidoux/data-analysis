@@ -86,7 +86,7 @@ class DataManager:
         missing_data = (len(self.invalid_subsets) / total_values) * 100
         return missing_data < 5
 
-    def removable(self, dict) -> bool:
+    def removable(self) -> bool:
         percent = (len(self.invalid_subsets) / dict.length()) * 100
         return self.is_applicable() and 30 <= percent <= 40
 
@@ -159,49 +159,20 @@ class DataManager:
 
     def generate_rapport(self, dict):
         data.add_heading(f"{dict.name["default"]} [{dict.name["format"]}]", level=4)
-        headers = [
-            "",
-            "",
-            "Fréquence",
-            "Pourcentage",
-            "Pourcentage valide",
-            "Pourcentage cumulé",
-        ]
+        headers = ["", "", "Fréquence", "Pourcentage", "Pourcentage valide", "Pourcentage cumulé"]
 
         missing_values = len(dict.invalid_subsets)
         valid_values = (dict.length() if isinstance(dict, StoreCollection) else len(dict.data))
-
         percent_missing_values = (missing_values / (valid_values + missing_values)) * 100
 
         row = collections.deque(
             [
                 # Données valides
-                [
-                    "",
-                    "Total",
-                    valid_values,
-                    "{percent_values}",
-                    "{percent_valid_values}",
-                    "",
-                ],
+                ["", "Total", valid_values, "{percent_values}", "{percent_valid_values}", ""],
                 # Données invalides
-                [
-                    "Manquant",
-                    "Système",
-                    missing_values,
-                    f"{percent_missing_values:.2f}%",
-                    "",
-                    "",
-                ],
+                ["Manquant", "Système", missing_values, f"{percent_missing_values:.2f}%", "", ""],
                 # Total des données
-                [
-                    "Total",
-                    "",
-                    missing_values + valid_values,
-                    "{percent_values}",
-                    "",
-                    "",
-                ],
+                ["Total", "", missing_values + valid_values, "{percent_values}", "", ""],
             ]
         )
 
@@ -336,7 +307,16 @@ class DataManager:
                 x = np.linspace(min, max, 100)
                 p = norm.pdf(x, mean, std)
 
-                plt.xticks(x_ticks, labels=[r"$\mu - 3\sigma$", r"$\mu - 2\sigma$", r"$\mu - \sigma$", r"$\mu$", r"$\mu + \sigma$", r"$\mu + 2\sigma$", r"$\mu + 3\sigma$"])
+                plt.xticks(x_ticks, labels=[
+                    r"$\mu - 3\sigma$",
+                    r"$\mu - 2\sigma$",
+                    r"$\mu - \sigma$",
+                    r"$\mu$",
+                    r"$\mu + \sigma$",
+                    r"$\mu + 2\sigma$",
+                    r"$\mu + 3\sigma$"
+                ])
+
                 plt.plot(x, p, "r-", linewidth=2)
                 plt.axvline(float(np.mean(dict.data)), ls="--", color="lightgray")
                 plt.title(f"Histogramme avec une courbe de distribution normale")
@@ -385,10 +365,6 @@ class StoreCollection(DataManager):
         self.recursive = recursive
         self.verified = verified
 
-    def is_unknown(self, value: str) -> bool:
-        alnum = re.search(r"[a-zA-Z0-9]", value.strip())
-        return DataManager.is_unknown(self, value) or not alnum
-
     def in_depth(self, value: str):
         parts = re.split(r"[;,/]| ET ", value)
         matches = []
@@ -401,16 +377,21 @@ class StoreCollection(DataManager):
     def subscribe(self, value: str | None):
         value = utils.normalize(value).upper() if value else value
 
-        if not value or self.is_unknown(value):
+        def unresolved(v, type):
             self.data[len(self.data)] = None
-            return self.invalid_subsets.append(
+            self.invalid_subsets.append(
                 {
                     "var_name": self.name,
-                    "unresolved_value": value,
+                    "unresolved_value": v,
                     "pos": len(self.data),
                     "type": type,
                 }
             )
+
+        if not value or self.is_unknown(value):
+            return unresolved(value, UnwantedDataType.MISSING)
+        elif value and not re.search(r"[a-zA-Z]", value.strip()):
+            return unresolved(value, UnwantedDataType.INVALID_FORMAT)
 
         if self.recursive and len(possible_values := self.in_depth(value)) > 1:
             for p_value in possible_values:
@@ -495,9 +476,8 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         else:
             formatted_header = normalized_header.upper()
 
-        # TODO : avoid duplicates
         if formatted_header in headers:
-            NotImplemented  # type: ignore
+            formatted_header = f"{formatted_header}_{headers.count(formatted_header) + 1}"
 
         doc_headers.append({"format": formatted_header, "default": header})
         headers[i] = formatted_header
@@ -526,7 +506,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     tdl_dict = StoreCollection(headers.index("TDL"), method="approx", verified=True)
     mp_dict = StoreCollection(headers.index("MP"), method="approx", recursive=True, verified=True)
     tpslepj_dict = StoreCollection(headers.index("TPSLEPJ"), verified=True)
-    mdvu_dict = StoreCollection(headers.index("MDVU"), recursive=True)
+    mdvu_dict = StoreCollection(headers.index("MDVU"), method="approx", recursive=True)
     cdfvvpa_dict = StoreSet(headers.index("CDFVVPA"), verified=True)
     caepm_dict = StoreCollection(headers.index("CAEPM"))
     nddtps_dict = StoreCollection(headers.index("NDDTPS"))
@@ -536,8 +516,8 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     dmm_dict = StoreSet(headers.index("DMM"), verified=True)
     lp_dict = StoreCollection(headers.index("LP"), recursive=True)
     ndllpa_dict = StoreSet(headers.index("NDLLPA"), verified=True)
-    tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True)
-    ap_dict = StoreCollection(headers.index("AP"))
+    tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True, verified=True)
+    ap_dict = StoreSet(headers.index("AP"))
     nmddspn_dict = StoreCollection(headers.index("NMDDSPN"), verified=True)
     ndpsynps_dict = StoreCollection(headers.index("NDPSYNPS"), verified=True)
     pdmlde_dict = StoreCollection(headers.index("PDMLDE"), verified=True)
@@ -625,36 +605,40 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     doc.add_paragraph(f"Total variables : `{str(sum(1 for _ in dicts))}`, dont :")
     doc.add_unordered_list(
         [
-            f"`{sum(1 for dict in dicts if isinstance(dict, StoreSet))}` variables de type numérique",
-            f"`{sum(1 for dict in dicts if isinstance(dict, StoreCollection))}` variables de type catégorielle",
+            f"`{sum(1 for d in dicts if isinstance(d, StoreSet) and not d.removable())}` variables de type numérique",
+            f"`{sum(1 for d in dicts if isinstance(d, StoreCollection) and not d.removable())}` variables de type catégorielle",
         ]
     )
+
+    test = [d for d in dicts if d.removable()]
+    print(test)
+    doc.add_paragraph(str(test))
 
     data.add_heading("Gestion des données", level=2)
     data.add_heading("Identification des données manquantes", level=3)
     rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
-    headers = [d.name["format"] for d in dicts]
+    headers = [d.name["format"] for d in dicts if not d.removable()]
     for dict in dicts:
-        rows[0].append(str(dict.length()))
-        for i, type in enumerate(UnwantedDataType.get()):
-            subset = [v for v in dict.invalid_subsets if v["type"] == UnwantedDataType[type]]
-            rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
+        if not dict.removable():
+            rows[0].append(str(dict.length()))
+            for i, type in enumerate(UnwantedDataType.get()):
+                subset = [v for v in dict.invalid_subsets if v["type"] == UnwantedDataType[type]]
+                rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
     data.add_table(["", "", *headers], rows)
 
     for dict in dicts:
-        if dict.removable(dict):
-            headers.pop(i)
-            rows.pop(i)
-            continue
-        dict.generate_rapport(dict)
+        if not dict.removable():
+            dict.generate_rapport(dict)
 
     data.add_heading("Détection des valeurs aberrantes", level=3)
     for dict in dicts:
-        dict.handle_missing_data(dict)
+        if not dict.removable():
+            dict.handle_missing_data(dict)
 
     stats.add_heading("Statistiques descriptives", level=2)
     for dict in dicts:
-        dict.generate_statistics(dict)
+        if not dict.removable():
+            dict.generate_statistics(dict)
 
     stats.add_heading("Analyse inférentielle", level=2)
     for dict in dicts:
@@ -664,16 +648,17 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
     args = parser.parse_args()
 
-    match args.write:
-        case "DOCS":
-            doc.dump(args.write, directory=MD_DIR)
-        case "DATA":
-            data.dump(args.write, directory=MD_DIR)
-        case "STATS":
-            stats.dump(args.write, directory=MD_DIR)
-        case "NONE":
-            pass
-        case _:
-            doc.dump("DOCS", directory=MD_DIR)
-            data.dump("DATA", directory=MD_DIR)
-            stats.dump("STATS", directory=MD_DIR)
+    for arg in args.write.split(","):
+        match arg:
+            case "DOCS":
+                doc.dump(arg, directory=MD_DIR)
+            case "DATA":
+                data.dump(arg, directory=MD_DIR)
+            case "STATS":
+                stats.dump(arg, directory=MD_DIR)
+            case "NONE":
+                pass
+            case _:
+                doc.dump("DOCS", directory=MD_DIR)
+                data.dump("DATA", directory=MD_DIR)
+                stats.dump("STATS", directory=MD_DIR)

@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 23/03/2025 à 15:51
+# Analyse des données - Généré le 23/03/2025 à 18:08
 
 ## Vue d'ensemble des variables
 
@@ -7,29 +7,29 @@
 | GENRE    | Catégorielle | 116     | Genre                                                                 | ✅        |
 | TDLPU    | Catégorielle | 150     | Type d’application la plus utilisée                                   | ✅        |
 | PDMLDE   | Catégorielle | 116     | Pratique du multitâche lors des études                                | ✅        |
-| FDDRSPJ  | Catégorielle | 116     | Fréquence d’utilisation des réseaux sociaux par jour                  | ✅        |
+| FDDRSPJ  | Catégorielle | 29      | Fréquence d’utilisation des réseaux sociaux par jour                  | ✅        |
 | QDS      | Numérique    | 116     | Qualité du sommeil                                                    | ✅        |
 | NDLLPA   | Numérique    | 116     | •Nombre de livres lus par an                                          | ✅        |
-| TDSP     | Catégorielle | 131     | Type de sport pratiqué                                                | ❌        |
-| AP       | Catégorielle | 116     | Activité physique (heures par semaine)                                | ❌        |
+| TDSP     | Catégorielle | 131     | Type de sport pratiqué                                                | ✅        |
+| AP       | Numérique    | 87      | Activité physique (heures par semaine)                                | ❌        |
 | LP       | Catégorielle | 138     | Loisir préféré                                                        | ❌        |
 | TEPDE    | Catégorielle | 116     | •Travail en parallèle des études                                      | ✅        |
 | OB       | Catégorielle | 116     | Option Bac                                                            | ✅        |
 | NDPSYNPS | Catégorielle | 116     | Nombre d’heures passées sur YouTube, Netflix par semaine              | ✅        |
-| NMDDSPN  | Catégorielle | 116     | Nombre moyen d’heures de sommeil par nuit                             | ✅        |
+| NMDDSPN  | Catégorielle | 27      | Nombre moyen d’heures de sommeil par nuit                             | ✅        |
 | MB       | Catégorielle | 116     | Mention Bac                                                           | ✅        |
-| NDDTPS   | Catégorielle | 115     | Nombre d’heures de travail par semaine                                | ❌        |
+| NDDTPS   | Catégorielle | 99      | Nombre d’heures de travail par semaine                                | ❌        |
 | CDFVVPA  | Numérique    | 111     | •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans | ✅        |
 | TPSLEPJ  | Catégorielle | 116     | Temps passé sur les écrans par jour                                   | ✅        |
-| MDVU     | Catégorielle | 119     | Moyen de voyage Utiliser                                              | ❌        |
-| CAEPM    | Catégorielle | 116     | capacité à économiser par moins ( MAD)                                | ❌        |
+| MDVU     | Catégorielle | 118     | Moyen de voyage Utiliser                                              | ❌        |
+| CAEPM    | Catégorielle | 17      | capacité à économiser par moins ( MAD)                                | ❌        |
 | VD       | Catégorielle | 116     | Ville d’origine                                                       | ✅        |
 | DMM      | Numérique    | 114     | Dépenses mensuelles moyennes (en MAD)                                 | ✅        |
 | NDFELSCA | Numérique    | 116     | Nombre de formations en ligne suivies cette année                     | ✅        |
-| MP       | Catégorielle | 130     | Matière préfère                                                       | ❌        |
+| MP       | Catégorielle | 130     | Matière préfère                                                       | ✅        |
 | FD       | Catégorielle | 116     | Filière d’étude                                                       | ✅        |
 | SPDR     | Catégorielle | 162     | Source principale de revenu                                           | ✅        |
-| MDL      | Catégorielle | 142     | Maîtrise d’autres logiciels                                           | ❌        |
+| MDL      | Catégorielle | 143     | Maîtrise d’autres logiciels                                           | ❌        |
 | TDL      | Catégorielle | 115     | Type de logement ( à Dakhla )                                         | ✅        |
 | NDDPS    | Numérique    | 107     | Nombre d'heures d'étude par semaine                                   | ✅        |
 | PADPA    | Catégorielle | 116     | Participation à des projets académiques/professionnels                | ✅        |
@@ -44,5 +44,7 @@
 
 Total variables : `37`, dont :
 
-- `8` variables de type numérique
-- `29` variables de type catégorielle
+- `9` variables de type numérique
+- `28` variables de type catégorielle
+
+[]
