@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 25/03/2025 à 04:41
+# Analyse des données - Généré le 25/03/2025 à 05:15
 
 ## Gestion des données
 
@@ -6,10 +6,10 @@
 
 |   |                | GENRE | TDLPU | PDMLDE | FDDRSPJ | QDS | NDLLPA | TDSP | AP | LP  | TEPDE | OB  | NDPSYNPS | NMDDSPN | MB  | NDDTPS | CDFVVPA | TPSLEPJ | MDVU | CAEPM | VD  | DMM | NDFELSCA | MP  | FD  | SPDR | MDL | TDL | NDDPS | PADPA | UD  | AGE | ADDB | MS1 | MS2 | MS3 | MS4 | MS5 |
 | - | -------------- | ----- | ----- | ------ | ------- | --- | ------ | ---- | -- | --- | ----- | --- | -------- | ------- | --- | ------ | ------- | ------- | ---- | ----- | --- | --- | -------- | --- | --- | ---- | --- | --- | ----- | ----- | --- | --- | ---- | --- | --- | --- | --- | --- |
-| N | VALIDE         | 116   | 150   | 116    | 29      | 116 | 116    | 131  | 87 | 138 | 116   | 116 | 116      | 27      | 116 | 99     | 111     | 116     | 118  | 110   | 116 | 114 | 116      | 130 | 116 | 162  | 143 | 115 | 107   | 116   | 116 | 116 | 115  | 112 | 112 | 112 | 112 | 113 |
+| N | VALIDE         | 116   | 150   | 116    | 116     | 116 | 116    | 131  | 87 | 138 | 116   | 116 | 116      | 115     | 116 | 96     | 111     | 116     | 119  | 110   | 116 | 114 | 116      | 130 | 116 | 162  | 143 | 115 | 107   | 116   | 116 | 116 | 115  | 112 | 112 | 112 | 112 | 113 |
 |   | OUTLIER        |       |       |        |         |     |        |      |    |     |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     |      |     |     |       |       |     |     |      |     |     |     |     |     |
 |   | MISSING        |       |       |        |         |     |        | 1    |    | 1   |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     | 1    |     |     | 8     |       |     |     | 1    | 4   | 4   | 4   | 4   | 3   |
-|   | INVALID_FORMAT |       |       |        | 87      |     |        | 1    | 29 | 1   |       |     |          | 89      |     | 17     | 5       |         | 2    | 6     |     | 2   |          | 2   |     |      |     | 1   | 1     |       |     |     |      |     |     |     |     |     |
+|   | INVALID_FORMAT |       |       |        |         |     |        | 1    | 29 | 1   |       |     |          | 1       |     | 20     | 5       |         | 1    | 6     |     | 2   |          | 2   |     |      |     | 1   | 1     |       |     |     |      |     |     |     |     |     |
 
 #### Genre [GENRE]
 
@@ -49,9 +49,12 @@
 
 |          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
 | -------- | ------- | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | 7 ET +  | 29        | 25.00%      | 100.00%            | 100.00%            |
-|          | Total   | 29        | 25.00%      | 100.00%            |                    |
-| Manquant | Système | 87        | 75.00%      |                    |                    |
+| Valide   | 7 ET +  | 29        | 25.00%      | 25.00%             | 25.00%             |
+|          | 4-6     | 43        | 37.07%      | 37.07%             | 62.07%             |
+|          | 1-3     | 41        | 35.34%      | 35.34%             | 97.41%             |
+|          | 1       | 3         | 2.59%       | 2.59%              | 100.00%            |
+|          | Total   | 116       | 100.00%     | 100.00%            |                    |
+| Manquant | Système | 0         | 0.00%       |                    |                    |
 | Total    |         | 116       | 100.00%     |                    |                    |
 
 #### Qualité du sommeil  [QDS]
@@ -240,14 +243,14 @@
 
 #### Nombre moyen d’heures de sommeil par nuit [NMDDSPN]
 
-|          |                | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
-| -------- | -------------- | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | MOINS DE 5     | 22        | 18.97%      | 81.48%             | 81.48%             |
-|          | JE NE SAIS PAS | 1         | 0.86%       | 3.70%              | 85.19%             |
-|          | PLUS DE 10     | 4         | 3.45%       | 14.81%             | 100.00%            |
-|          | Total          | 27        | 23.28%      | 100.00%            |                    |
-| Manquant | Système        | 89        | 76.72%      |                    |                    |
-| Total    |                | 116       | 100.00%     |                    |                    |
+|          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
+| -------- | ------- | --------- | ----------- | ------------------ | ------------------ |
+| Valide   | 10      | 4         | 3.42%       | 3.45%              | 3.45%              |
+|          | 5       | 84        | 71.79%      | 72.41%             | 75.86%             |
+|          | 7       | 27        | 23.08%      | 23.28%             | 99.14%             |
+|          | Total   | 116       | 98.29%      | 99.14%             |                    |
+| Manquant | Système | 1         | 0.85%       |                    |                    |
+| Total    |         | 117       | 99.14%      |                    |                    |
 
 #### Mention Bac [MB]
 
@@ -263,26 +266,14 @@
 
 #### Nombre d’heures de travail par semaine [NDDTPS]
 
-|          |                     | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
-| -------- | ------------------- | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | JE NE TRAVAILLE PAS | 5         | 4.31%       | 5.05%              | 5.05%              |
-|          | MOINS DE 10         | 56        | 48.28%      | 56.57%             | 61.62%             |
-|          | PLUS DE 20H         | 6         | 5.17%       | 6.06%              | 67.68%             |
-|          | 10-20H              | 14        | 12.07%      | 14.14%             | 81.82%             |
-|          | AUCUN TRAVAIL       | 1         | 0.86%       | 1.01%              | 82.83%             |
-|          | 0H                  | 2         | 1.72%       | 2.02%              | 84.85%             |
-|          | AUCUN               | 4         | 3.45%       | 4.04%              | 88.89%             |
-|          | NON                 | 2         | 1.72%       | 2.02%              | 90.91%             |
-|          | AUCUNE              | 1         | 0.86%       | 1.01%              | 91.92%             |
-|          | JE TRAVAILLE PAS    | 2         | 1.72%       | 2.02%              | 93.94%             |
-|          | RIEN                | 2         | 1.72%       | 2.02%              | 95.96%             |
-|          | PAS TRAVAILLE       | 1         | 0.86%       | 1.01%              | 96.97%             |
-|          | PAS DE TRAVAIL      | 1         | 0.86%       | 1.01%              | 97.98%             |
-|          | 0 H                 | 1         | 0.86%       | 1.01%              | 98.99%             |
-|          | 0HEURE              | 1         | 0.86%       | 1.01%              | 100.00%            |
-|          | Total               | 99        | 85.34%      | 100.00%            |                    |
-| Manquant | Système             | 17        | 14.66%      |                    |                    |
-| Total    |                     | 116       | 100.00%     |                    |                    |
+|          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
+| -------- | ------- | --------- | ----------- | ------------------ | ------------------ |
+| Valide   | 0       | 20        | 14.71%      | 17.24%             | 17.24%             |
+|          | 10      | 70        | 51.47%      | 60.34%             | 77.59%             |
+|          | 20      | 6         | 4.41%       | 5.17%              | 82.76%             |
+|          | Total   | 116       | 70.59%      | 82.76%             |                    |
+| Manquant | Système | 20        | 14.71%      |                    |                    |
+| Total    |         | 136       | 82.76%      |                    |                    |
 
 #### •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans [CDFVVPA]
 
@@ -314,14 +305,15 @@
 
 |          |          | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
 | -------- | -------- | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | AVION    | 63        | 52.50%      | 53.39%             | 53.39%             |
-|          | AUTOCARE | 33        | 27.50%      | 27.97%             | 81.36%             |
-|          | AUCUN    | 1         | 0.83%       | 0.85%              | 82.20%             |
-|          | VOITURE  | 18        | 15.00%      | 15.25%             | 97.46%             |
-|          | TRAIN    | 1         | 0.83%       | 0.85%              | 98.31%             |
-|          | TAXI     | 2         | 1.67%       | 1.69%              | 100.00%            |
-|          | Total    | 118       | 98.33%      | 100.00%            |                    |
-| Manquant | Système  | 2         | 1.67%       |                    |                    |
+| Valide   | AVION    | 63        | 52.50%      | 52.94%             | 52.94%             |
+|          | AUTOCARE | 33        | 27.50%      | 27.73%             | 80.67%             |
+|          | AUCUN    | 1         | 0.83%       | 0.84%              | 81.51%             |
+|          | VOITURE  | 18        | 15.00%      | 15.13%             | 96.64%             |
+|          | 0        | 1         | 0.83%       | 0.84%              | 97.48%             |
+|          | TRAIN    | 1         | 0.83%       | 0.84%              | 98.32%             |
+|          | TAXI     | 2         | 1.67%       | 1.68%              | 100.00%            |
+|          | Total    | 119       | 99.17%      | 100.00%            |                    |
+| Manquant | Système  | 1         | 0.83%       |                    |                    |
 | Total    |          | 120       | 100.00%     |                    |                    |
 
 #### capacité à économiser par moins ( MAD) [CAEPM]
@@ -664,6 +656,14 @@
 #### •Nombre de livres lus par an [NDLLPA]
 
 ![](../assets/boxplot_NDLLPA.png)
+
+#### Nombre moyen d’heures de sommeil par nuit [NMDDSPN]
+
+![](../assets/boxplot_NMDDSPN.png)
+
+#### Nombre d’heures de travail par semaine [NDDTPS]
+
+![](../assets/boxplot_NDDTPS.png)
 
 #### capacité à économiser par moins ( MAD) [CAEPM]
 

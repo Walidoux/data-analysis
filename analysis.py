@@ -390,7 +390,7 @@ class StoreCollection(DataManager):
 
         if not value or self.is_unknown(value):
             return unresolved(value, UnwantedDataType.MISSING)
-        elif value and not re.search(r"[a-zA-Z]", value.strip()):
+        elif value and not re.search(r"[a-zA-Z]", value.strip()) and not re.fullmatch(r"\d+(?:\s*-\s*\d+)?", value.strip()):
             return unresolved(value, UnwantedDataType.INVALID_FORMAT)
 
         if self.recursive and len(possible_values := self.in_depth(value)) > 1:
@@ -489,7 +489,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         doc_headers.pop(index)
         file = [row[:index] + row[index + 1:] for row in file]
 
-    # Traitement des données numériques et alphanumériques
+    # Traitement des données numériques et alphanumériques (catégorielles)
     ages_set = StoreSet(headers.index("AGE"), verified=True)
     city_dict = StoreCollection(headers.index("VD"), method="approx", verified=True)
     mentions_dicts = [StoreCollection(headers.index(f"MS{i}"), verified=True) for i in range(1, 6)]
@@ -501,7 +501,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     studyfield_dict = StoreCollection(headers.index("FD"), method="approx", verified=True)
     optionbac_dict = StoreCollection(headers.index("OB"), verified=True)
     excel_dict = StoreCollection(headers.index("UD"), verified=True)
-    logiciels_dict = StoreCollection(headers.index("MDL"), recursive=True)
+    logiciels_dict = StoreCollection(headers.index("MDL"), recursive=True, verified=True)
     nddps_dict = StoreSet(headers.index("NDDPS"), verified=True)
     tdl_dict = StoreCollection(headers.index("TDL"), method="approx", verified=True)
     mp_dict = StoreCollection(headers.index("MP"), method="approx", recursive=True, verified=True)
@@ -509,16 +509,16 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     mdvu_dict = StoreCollection(headers.index("MDVU"), method="approx", recursive=True, verified=True)
     cdfvvpa_dict = StoreSet(headers.index("CDFVVPA"), verified=True)
     caepm_dict = StoreSet(headers.index("CAEPM"), verified=True)
-    nddtps_dict = StoreCollection(headers.index("NDDTPS"))
+    nddtps_dict = StoreSet(headers.index("NDDTPS"), verified=False)
     tepde_dict = StoreCollection(headers.index("TEPDE"), verified=True)
     spdr_dict = StoreCollection(headers.index("SPDR"), recursive=True, verified=True)
     qds_dict = StoreSet(headers.index("QDS"), verified=True)
     dmm_dict = StoreSet(headers.index("DMM"), verified=True)
-    lp_dict = StoreCollection(headers.index("LP"), recursive=True)
+    lp_dict = StoreCollection(headers.index("LP"), recursive=True, verified=True)
     ndllpa_dict = StoreSet(headers.index("NDLLPA"), verified=True)
     tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True, verified=True)
     ap_dict = StoreSet(headers.index("AP"), verified=True)
-    nmddspn_dict = StoreCollection(headers.index("NMDDSPN"), verified=True)
+    nmddspn_dict = StoreSet(headers.index("NMDDSPN"), verified=True)
     ndpsynps_dict = StoreCollection(headers.index("NDPSYNPS"), verified=True)
     pdmlde_dict = StoreCollection(headers.index("PDMLDE"), verified=True)
     tdlpu_dict = StoreCollection(headers.index("TDLPU"), recursive=True, verified=True)
