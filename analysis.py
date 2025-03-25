@@ -87,6 +87,9 @@ class DataManager:
         self.name = {}
         self.invalid_subsets = []
 
+    def length(self) -> int:
+        raise NotImplementedError("Subclasses must implement the 'length' method")
+
     def is_unknown(self, value) -> bool:
         return value in ["N.V", "UNKNOWN"] or value is None
 
@@ -96,7 +99,7 @@ class DataManager:
         return missing_data < 5
 
     def removable(self) -> bool:
-        percent = (len(self.invalid_subsets) / dict.length()) * 100
+        percent = (len(self.invalid_subsets) / self.length()) * 100
         return self.is_applicable() and 30 <= percent <= 40
 
     #  Interquartile Range (IQR)
