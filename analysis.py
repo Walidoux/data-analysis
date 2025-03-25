@@ -1,4 +1,5 @@
 from statistics import correlation, linear_regression, median
+import unicodedata
 from scipy.stats import chi2_contingency, shapiro, kstest, norm, chisquare
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,6 +23,12 @@ MD_DIR = "markdown"
 time_generated = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
 for markdown in [doc, data, stats]:
     markdown.add_heading(f"Analyse des données - Généré le {time_generated}")
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
+parser.add_argument("--skip-geolocation", action="store_true", help="Ne pas générer de carte choroplèthe")
+args = parser.parse_args()
 
 
 class Listable(enum.Enum):
@@ -370,45 +377,52 @@ class DataManager:
 
     def analyze(self, store):
         # Generate choropleth map
-        if (store.name["format"] == "VD"):
+        if store.name["format"] == "VD" and not args.skip_geolocation:
             import plotly.express as pexp
             import plotly.graph_objects as go
-            from geopy.geocoders import Nominatim
-            from geopy.exc import GeocoderTimedOut
+            import time
 
-            def get_location_data(city_name):
+            from geopy.geocoders import Nominatim
+            from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
+
+            def get_location_data(city_name: str, retries: int = 3, delay: int = 5):
                 geolocator = Nominatim(user_agent="geoapi")
-                try:
-                    location = geolocator.geocode(city_name)
-                    if location:
-                        return location.latitude, location.longitude, location.address.split(",")[-1].strip()
-                except GeocoderTimedOut:
-                    pass
+                for attempt in range(retries):
+                    try:
+                        if location := geolocator.geocode(city_name):
+                            query = location.address.split(",")[0].strip()  # type: ignore
+                            residence = re.sub(r"[^a-zA-ZÀ-ÿ\s'-]", "", query).strip()
+                            return location.latitude, location.longitude, residence  # type: ignore
+                    except (GeocoderTimedOut, GeocoderUnavailable) as e:
+                        if attempt < retries - 1:
+                            time.sleep(delay)
+                        else:
+                            print(f"Error: {e}. City: {city_name}. Attempts exhausted.")
                 return None, None, None
 
             city_names = [store["name"] for store in store.data.values()]
-            city_lats, city_lons, countries = [], [], []
+            city_lats, city_lons, areas = [], [], []
 
             for city in city_names:
                 lat, lon, country = get_location_data(city)
                 if lat and lon and country:
                     city_lats.append(lat)
                     city_lons.append(lon)
-                    countries.append(country)
+                    areas.append(country)
 
             fig = pexp.choropleth(
-                locations=list(set(countries)),
+                locations=list(set(areas)),
                 locationmode="country names",
-                color=[countries.count(country) for country in set(countries)],
+                color=[areas.count(country) for country in set(areas)],
                 scope="africa"
             )
 
             fig.add_trace(go.Scattergeo(
                 lon=city_lons,
                 lat=city_lats,
-                text=city_names,
+                text=areas,
                 marker=dict(
-                    size=8,
+                    size=6,
                     color='red',
                     line=dict(
                         width=1,
@@ -421,7 +435,7 @@ class DataManager:
             ))
 
             fig.update_geos(
-                resolution=50,
+                resolution=110,
                 showcountries=True,
                 countrycolor="Black",
                 showsubunits=True,
@@ -435,7 +449,7 @@ class DataManager:
 
             filename = f"./assets/choropleth_{store.name["format"]}"
 
-            fig.write_image(f"{filename}.png")  # Image simple
+            fig.write_image(f"{filename}.png", scale=3, height=2600, width=2200)  # Image simple
             fig.write_html(f"{filename}.html")  # Page interactive
 
 
@@ -724,10 +738,6 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     for store in dicts:
         if not store.removable():
             store.analyze(store)
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
-    args = parser.parse_args()
 
     for arg in args.write.split(","):
         match arg:

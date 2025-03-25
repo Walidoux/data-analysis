@@ -87,6 +87,8 @@ python3 ./analysis.py # Linux/MacOS
 
 _Vous pouvez optionnellement spécifier l'argument `--write="xyz"` pour choisir sur quel type de fichier écrire la documentation générée à l'exécution du programme._
 
+_Vous pouvez aussi spécifier l'argument `--skip-geolocation` pour ne pas regénérer une carte choroplèthe car le service de géolication des villes/pays prend plus du temps à s'exécuter_
+
 ## Roadmap
 
 - [x] Codification de chaque variable + Documenter le processus
