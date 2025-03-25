@@ -1,9 +1,9 @@
-# Analyse des données - Généré le 25/03/2025 à 04:29
+# Analyse des données - Généré le 25/03/2025 à 04:41
 
 Total variables (avant traitement) : `37`, dont :
 
-- `9` variables de type numérique
-- `28` variables de type catégorielle
+- `10` variables de type numérique
+- `27` variables de type catégorielle
 
 Variables supprimées par identification des données manquantes :
 
@@ -20,7 +20,7 @@ Variables supprimées par identification des données manquantes :
 | QDS      | Numérique    | 116     | Qualité du sommeil                                                    | ✅        |
 | NDLLPA   | Numérique    | 116     | •Nombre de livres lus par an                                          | ✅        |
 | TDSP     | Catégorielle | 131     | Type de sport pratiqué                                                | ✅        |
-| AP       | Numérique    | 87      | Activité physique (heures par semaine)                                | ❌        |
+| AP       | Numérique    | 87      | Activité physique (heures par semaine)                                | ✅        |
 | LP       | Catégorielle | 138     | Loisir préféré                                                        | ❌        |
 | TEPDE    | Catégorielle | 116     | •Travail en parallèle des études                                      | ✅        |
 | OB       | Catégorielle | 116     | Option Bac                                                            | ✅        |
@@ -30,8 +30,8 @@ Variables supprimées par identification des données manquantes :
 | NDDTPS   | Catégorielle | 99      | Nombre d’heures de travail par semaine                                | ❌        |
 | CDFVVPA  | Numérique    | 111     | •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans | ✅        |
 | TPSLEPJ  | Catégorielle | 116     | Temps passé sur les écrans par jour                                   | ✅        |
-| MDVU     | Catégorielle | 118     | Moyen de voyage Utiliser                                              | ❌        |
-| CAEPM    | Catégorielle | 17      | capacité à économiser par moins ( MAD)                                | ❌        |
+| MDVU     | Catégorielle | 118     | Moyen de voyage Utiliser                                              | ✅        |
+| CAEPM    | Numérique    | 110     | capacité à économiser par moins ( MAD)                                | ✅        |
 | VD       | Catégorielle | 116     | Ville d’origine                                                       | ✅        |
 | DMM      | Numérique    | 114     | Dépenses mensuelles moyennes (en MAD)                                 | ✅        |
 | NDFELSCA | Numérique    | 116     | Nombre de formations en ligne suivies cette année                     | ✅        |
