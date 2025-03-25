@@ -587,6 +587,21 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
         i += 1
 
+    doc.add_paragraph(f"Total variables (avant traitement) : `{str(sum(1 for _ in dicts))}`, dont :")
+    doc.add_unordered_list(
+        [
+            f"`{sum(1 for d in dicts if isinstance(d, StoreSet) and not d.removable())}` variables de type numérique",
+            f"`{sum(1 for d in dicts if isinstance(d, StoreCollection) and not d.removable())}` variables de type catégorielle",
+        ]
+    )
+
+    removable_dicts = []
+    for dict in dicts:
+        if dict.removable():
+            removable_dicts.append(dict.name["default"])
+    doc.add_paragraph(f"Variables supprimées par identification des données manquantes :")
+    doc.add_unordered_list(removable_dicts)
+
     doc.add_heading("Vue d'ensemble des variables", level=2)
     doc.add_table(
         ["Nom", "Type", "Largeur", "Libellé", "Vérifiée"],
@@ -602,28 +617,15 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         ],
     )
 
-    doc.add_paragraph(f"Total variables : `{str(sum(1 for _ in dicts))}`, dont :")
-    doc.add_unordered_list(
-        [
-            f"`{sum(1 for d in dicts if isinstance(d, StoreSet) and not d.removable())}` variables de type numérique",
-            f"`{sum(1 for d in dicts if isinstance(d, StoreCollection) and not d.removable())}` variables de type catégorielle",
-        ]
-    )
-
-    test = [d for d in dicts if d.removable()]
-    print(test)
-    doc.add_paragraph(str(test))
-
     data.add_heading("Gestion des données", level=2)
     data.add_heading("Identification des données manquantes", level=3)
     rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
-    headers = [d.name["format"] for d in dicts if not d.removable()]
+    headers = [d.name["format"] for d in dicts]
     for dict in dicts:
-        if not dict.removable():
-            rows[0].append(str(dict.length()))
-            for i, type in enumerate(UnwantedDataType.get()):
-                subset = [v for v in dict.invalid_subsets if v["type"] == UnwantedDataType[type]]
-                rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
+        rows[0].append(str(dict.length()))
+        for i, type in enumerate(UnwantedDataType.get()):
+            subset = [v for v in dict.invalid_subsets if v["type"] == UnwantedDataType[type]]
+            rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
     data.add_table(["", "", *headers], rows)
 
     for dict in dicts:

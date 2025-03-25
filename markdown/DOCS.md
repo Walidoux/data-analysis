@@ -1,4 +1,13 @@
-# Analyse des données - Généré le 23/03/2025 à 18:08
+# Analyse des données - Généré le 25/03/2025 à 04:29
+
+Total variables (avant traitement) : `37`, dont :
+
+- `9` variables de type numérique
+- `28` variables de type catégorielle
+
+Variables supprimées par identification des données manquantes :
+
+- Activité physique (heures par semaine)
 
 ## Vue d'ensemble des variables
 
@@ -41,10 +50,3 @@
 | MS3      | Catégorielle | 112     | Mentions S3                                                           | ✅        |
 | MS4      | Catégorielle | 112     | Mentions S4                                                           | ✅        |
 | MS5      | Catégorielle | 113     | Mentions S5                                                           | ✅        |
-
-Total variables : `37`, dont :
-
-- `9` variables de type numérique
-- `28` variables de type catégorielle
-
-[]
