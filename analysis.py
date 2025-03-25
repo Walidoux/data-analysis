@@ -113,7 +113,7 @@ class DataManager:
         outliers = array[(array <= lower_bound) | (array >= upper_bound)]
         return list(map(int, outliers))
 
-    def handle_outliers(self, outliers: list[int]):
+    def handle_outliers(self):
         filename = f"assets/boxplot_{dict.name["format"]}.png"
 
         bp = plt.boxplot(dict.data)
@@ -143,6 +143,12 @@ class DataManager:
             outliers = dict.outliers(y)
             has_outliers = len(outliers) > 0
 
+            for outlier in outliers:
+                self.invalid_subsets.append({
+                    "pos": dict.data.index(outlier),
+                    "type": UnwantedDataType.OUTLIER,
+                })
+
             # Régression linéaire (Hypothèse de linéarité)
             if abs(correlation(X, y)) > 0.5:
                 slope, intercept = linear_regression(X, y)
@@ -157,7 +163,7 @@ class DataManager:
                         dict.data[k] = (median(y) if has_outliers else int(round(sum(y) / len(y))))
 
             if has_outliers:
-                self.handle_outliers(outliers)
+                self.handle_outliers()
 
         # Mode (VF)
         elif isinstance(dict, StoreCollection):
@@ -389,21 +395,17 @@ class StoreCollection(DataManager):
     def subscribe(self, value: str | None):
         value = utils.normalize(value).upper() if value else value
 
-        def unresolved(v, type):
+        def unresolved(type):
             self.data[len(self.data)] = None
-            self.invalid_subsets.append(
-                {
-                    "var_name": self.name,
-                    "unresolved_value": v,
-                    "pos": len(self.data),
-                    "type": type,
-                }
-            )
+            self.invalid_subsets.append({
+                "pos": len(self.data),
+                "type": type,
+            })
 
         if not value or self.is_unknown(value):
-            return unresolved(value, UnwantedDataType.MISSING)
+            return unresolved(UnwantedDataType.MISSING)
         elif value and not re.search(r"[a-zA-Z]", value.strip()) and not re.fullmatch(r"\d+(?:\s*-\s*\d+)?", value.strip()):
-            return unresolved(value, UnwantedDataType.INVALID_FORMAT)
+            return unresolved(UnwantedDataType.INVALID_FORMAT)
 
         if self.recursive and len(possible_values := self.in_depth(value)) > 1:
             for p_value in possible_values:
@@ -441,19 +443,15 @@ class StoreSet(DataManager):
     def collect(self, value: int | str | None):
         value = value.strip() if isinstance(value, str) else value
 
-        def unresolved(v, type):
+        def unresolved(type):
             self.data.append(None)
-            self.invalid_subsets.append(
-                {
-                    "var_name": self.name,
-                    "unresolved_value": v,
-                    "pos": len(self.data),
-                    "type": type,
-                }
-            )
+            self.invalid_subsets.append({
+                "pos": len(self.data),
+                "type": type,
+            })
 
         if self.is_unknown(value):
-            return unresolved(value, UnwantedDataType.MISSING)
+            return unresolved(UnwantedDataType.MISSING)
 
         if isinstance(value, int):
             return self.data.append(value)
@@ -462,7 +460,7 @@ class StoreSet(DataManager):
                 value = int(match.group(1))
                 return self.data.append(value)
             else:
-                unresolved(match, UnwantedDataType.INVALID_FORMAT)
+                unresolved(UnwantedDataType.INVALID_FORMAT)
 
     def length(self) -> int:
         return len([item for item in self.data if item is not None])
@@ -622,7 +620,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         ["Nom", "Type", "Largeur", "Libellé", "Vérifiée"],
         [
             [
-                dict.name["format"],
+                f"🗑️ {dict.name['format']}" if dict.removable() else dict.name["format"],
                 "Numérique" if isinstance(dict, StoreSet) else "Catégorielle",
                 str(dict.length()),
                 dict.name["default"],
@@ -632,25 +630,24 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         ],
     )
 
-    data.add_heading("Gestion des données", level=2)
-    data.add_heading("Identification des données manquantes", level=3)
-    rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
-    headers = [d.name["format"] for d in dicts]
-    for dict in dicts:
-        rows[0].append(str(dict.length()))
-        for i, type in enumerate(UnwantedDataType.get()):
-            subset = [v for v in dict.invalid_subsets if v["type"] == UnwantedDataType[type]]
-            rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
-    data.add_table(["", "", *headers], rows)
-
     for dict in dicts:
         if not dict.removable():
             dict.generate_rapport(dict)
 
-    data.add_heading("Détection des valeurs aberrantes", level=3)
     for dict in dicts:
         if not dict.removable():
             dict.handle_missing_data(dict)
+
+    data.add_heading("Identification des données manquantes", level=3)
+    rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
+    headers = [d.name["format"] for d in dicts if not d.removable()]
+    for dict in dicts:
+        if not dict.removable():
+            rows[0].append(str(dict.length()))
+            for i, type in enumerate(UnwantedDataType.get()):
+                subset = [v for v in dict.invalid_subsets if v["type"] == UnwantedDataType[type]]
+                rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
+    data.add_table(["", "", *headers], rows)
 
     stats.add_heading("Statistiques descriptives", level=2)
     for dict in dicts:
@@ -659,7 +656,8 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     stats.add_heading("Analyse inférentielle", level=2)
     for dict in dicts:
-        dict.analyze(dict)
+        if not dict.removable():
+            dict.analyze(dict)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
