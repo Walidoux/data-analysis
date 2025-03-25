@@ -1,15 +1,4 @@
-# Analyse des données - Généré le 25/03/2025 à 05:38
-
-## Gestion des données
-
-### Identification des données manquantes
-
-|   |                | GENRE | TDLPU | PDMLDE | FDDRSPJ | QDS | NDLLPA | TDSP | AP | LP  | TEPDE | OB  | NDPSYNPS | NMDDSPN | MB  | NDDTPS | CDFVVPA | TPSLEPJ | MDVU | CAEPM | VD  | DMM | NDFELSCA | MP  | FD  | SPDR | MDL | TDL | NDDPS | PADPA | UD  | AGE | ADDB | MS1 | MS2 | MS3 | MS4 | MS5 |
-| - | -------------- | ----- | ----- | ------ | ------- | --- | ------ | ---- | -- | --- | ----- | --- | -------- | ------- | --- | ------ | ------- | ------- | ---- | ----- | --- | --- | -------- | --- | --- | ---- | --- | --- | ----- | ----- | --- | --- | ---- | --- | --- | --- | --- | --- |
-| N | VALIDE         | 116   | 150   | 116    | 116     | 116 | 116    | 131  | 87 | 138 | 116   | 116 | 116      | 115     | 116 | 115    | 111     | 116     | 119  | 110   | 116 | 114 | 116      | 130 | 116 | 162  | 143 | 115 | 107   | 116   | 116 | 116 | 115  | 112 | 112 | 112 | 112 | 113 |
-|   | OUTLIER        |       |       |        |         |     |        |      |    |     |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     |      |     |     |       |       |     |     |      |     |     |     |     |     |
-|   | MISSING        |       |       |        |         |     |        | 1    |    | 1   |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     | 1    |     |     |       |       |     |     | 1    | 4   | 4   | 4   | 4   | 3   |
-|   | INVALID_FORMAT |       |       |        |         |     |        | 1    | 29 | 1   |       |     |          | 1       |     | 1      | 5       |         | 1    | 6     |     | 2   |          | 2   |     |      |     | 1   | 9     |       |     |     |      |     |     |     |     |     |
+# Analyse des données - Généré le 25/03/2025 à 12:57
 
 #### Genre [GENRE]
 
@@ -77,16 +66,17 @@
 
 #### •Nombre de livres lus par an [NDLLPA]
 
-|          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
-| -------- | ------- | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | 0       | 2         | 1.72%       | 1.72%              | 1.72%              |
-|          | 1       | 97        | 83.62%      | 83.62%             | 85.34%             |
-|          | 5       | 7         | 6.03%       | 6.03%              | 91.38%             |
-|          | 70      | 1         | 0.86%       | 0.86%              | 92.24%             |
-|          | 10      | 9         | 7.76%       | 7.76%              | 100.00%            |
-|          | Total   | 116       | 100.00%     | 100.00%            |                    |
-| Manquant | Système | 0         | 0.00%       |                    |                    |
-| Total    |         | 116       | 100.00%     |                    |                    |
+|          |            | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
+| -------- | ---------- | --------- | ----------- | ------------------ | ------------------ |
+| Valide   | 1-5        | 65        | 56.03%      | 56.03%             | 56.03%             |
+|          | 5-10       | 7         | 6.03%       | 6.03%              | 62.07%             |
+|          | MOINS DE 1 | 32        | 27.59%      | 27.59%             | 89.66%             |
+|          | 10 ET PLUS | 9         | 7.76%       | 7.76%              | 97.41%             |
+|          | 0          | 2         | 1.72%       | 1.72%              | 99.14%             |
+|          | 70         | 1         | 0.86%       | 0.86%              | 100.00%            |
+|          | Total      | 116       | 100.00%     | 100.00%            |                    |
+| Manquant | Système    | 0         | 0.00%       |                    |                    |
+| Total    |            | 116       | 100.00%     |                    |                    |
 
 #### Type de sport pratiqué [TDSP]
 
@@ -647,15 +637,9 @@
 | Manquant | Système  | 3         | 2.59%       |                    |                    |
 | Total    |          | 116       | 100.00%     |                    |                    |
 
-### Détection des valeurs aberrantes
-
 #### Qualité du sommeil  [QDS]
 
 ![](../assets/boxplot_QDS.png)
-
-#### •Nombre de livres lus par an [NDLLPA]
-
-![](../assets/boxplot_NDLLPA.png)
 
 #### Nombre moyen d’heures de sommeil par nuit [NMDDSPN]
 
@@ -676,3 +660,12 @@
 #### Âge [AGE]
 
 ![](../assets/boxplot_AGE.png)
+
+### Identification des données manquantes
+
+|   |                | GENRE | TDLPU | PDMLDE | FDDRSPJ | QDS | NDLLPA | TDSP | LP  | TEPDE | OB  | NDPSYNPS | NMDDSPN | MB  | NDDTPS | CDFVVPA | TPSLEPJ | MDVU | CAEPM | VD  | DMM | NDFELSCA | MP  | FD  | SPDR | MDL | TDL | NDDPS | PADPA | UD  | AGE | ADDB | MS1 | MS2 | MS3 | MS4 | MS5 |
+| - | -------------- | ----- | ----- | ------ | ------- | --- | ------ | ---- | --- | ----- | --- | -------- | ------- | --- | ------ | ------- | ------- | ---- | ----- | --- | --- | -------- | --- | --- | ---- | --- | --- | ----- | ----- | --- | --- | ---- | --- | --- | --- | --- | --- |
+| N | VALIDE         | 116   | 150   | 116    | 116     | 116 | 116    | 133  | 140 | 116   | 116 | 116      | 116     | 116 | 116    | 116     | 116     | 120  | 116   | 116 | 116 | 116      | 132 | 116 | 163  | 143 | 116 | 116   | 116   | 116 | 116 | 116  | 116 | 116 | 116 | 116 | 116 |
+|   | OUTLIER        |       |       |        |         | 5   |        |      |     |       |     |          | 4       |     |        |         |         |      | 8     |     | 5   | 12       |     |     |      |     |     |       |       |     | 2   |      |     |     |     |     |     |
+|   | MISSING        |       |       |        |         |     |        | 1    | 1   |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     | 1    |     |     |       |       |     |     | 1    | 2   | 2   | 2   | 2   | 2   |
+|   | INVALID_FORMAT |       |       |        |         |     |        | 1    | 1   |       |     |          | 1       |     | 1      | 5       |         | 1    | 6     |     | 2   |          | 1   |     |      |     | 1   | 9     |       |     |     |      |     |     |     |     |     |

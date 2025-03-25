@@ -1,9 +1,9 @@
-# Analyse des données - Généré le 25/03/2025 à 05:38
+# Analyse des données - Généré le 25/03/2025 à 12:57
 
 Total variables (avant traitement) : `37`, dont :
 
-- `12` variables de type numérique
-- `25` variables de type catégorielle
+- `10` variables de type numérique
+- `26` variables de type catégorielle
 
 Variables supprimées par identification des données manquantes :
 
@@ -18,9 +18,9 @@ Variables supprimées par identification des données manquantes :
 | PDMLDE   | Catégorielle | 116     | Pratique du multitâche lors des études                                | ✅        |
 | FDDRSPJ  | Catégorielle | 116     | Fréquence d’utilisation des réseaux sociaux par jour                  | ✅        |
 | QDS      | Numérique    | 116     | Qualité du sommeil                                                    | ✅        |
-| NDLLPA   | Numérique    | 116     | •Nombre de livres lus par an                                          | ✅        |
+| NDLLPA   | Catégorielle | 116     | •Nombre de livres lus par an                                          | ✅        |
 | TDSP     | Catégorielle | 131     | Type de sport pratiqué                                                | ✅        |
-| AP       | Numérique    | 87      | Activité physique (heures par semaine)                                | ✅        |
+| 🗑️ AP    | Numérique    | 87      | Activité physique (heures par semaine)                                | ✅        |
 | LP       | Catégorielle | 138     | Loisir préféré                                                        | ✅        |
 | TEPDE    | Catégorielle | 116     | •Travail en parallèle des études                                      | ✅        |
 | OB       | Catégorielle | 116     | Option Bac                                                            | ✅        |

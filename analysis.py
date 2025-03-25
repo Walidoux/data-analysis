@@ -525,7 +525,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     qds_dict = StoreSet(headers.index("QDS"), verified=True)
     dmm_dict = StoreSet(headers.index("DMM"), verified=True)
     lp_dict = StoreCollection(headers.index("LP"), recursive=True, verified=True)
-    ndllpa_dict = StoreSet(headers.index("NDLLPA"), verified=True)
+    ndllpa_dict = StoreCollection(headers.index("NDLLPA"), verified=True)
     tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True, verified=True)
     ap_dict = StoreSet(headers.index("AP"), verified=True)
     nmddspn_dict = StoreSet(headers.index("NMDDSPN"), verified=True)
