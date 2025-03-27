@@ -1,5 +1,4 @@
 from statistics import correlation, linear_regression, median
-import unicodedata
 from scipy.stats import chi2_contingency, shapiro, kstest, norm, chisquare
 import matplotlib.pyplot as plt
 import numpy as np
@@ -382,6 +381,14 @@ class DataManager:
             import plotly.graph_objects as go
             import time
 
+            AFRICAN_COUNTRIES = [
+                'AO', 'BJ', 'BW', 'BF', 'BI', 'CM', 'CV', 'CF', 'TD', 'KM', 'CG',
+                'CD', 'DJ', 'EG', 'GQ', 'ER', 'SZ', 'ET', 'GA', 'GM', 'GH', 'GN', 'GW',
+                'CI', 'KE', 'LS', 'LR', 'LY', 'MG', 'MW', 'ML', 'MR', 'MU', 'MA', 'MZ',
+                'NA', 'NE', 'NG', 'RW', 'ST', 'SN', 'SC', 'SL', 'SO', 'ZA', 'SS', 'SD',
+                'TZ', 'TG', 'TN', 'UG', 'ZM', 'ZW'
+            ]
+
             from geopy.geocoders import Nominatim
             from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 
@@ -389,31 +396,31 @@ class DataManager:
                 geolocator = Nominatim(user_agent="geoapi")
                 for attempt in range(retries):
                     try:
-                        if location := geolocator.geocode(city_name):
-                            query = location.address.split(",")[0].strip()  # type: ignore
+                        if location := geolocator.geocode(city_name, country_codes=AFRICAN_COUNTRIES, namedetails=True):
+                            query = location.address.split(",")[0].strip()
                             residence = re.sub(r"[^a-zA-ZÀ-ÿ\s'-]", "", query).strip()
-                            return location.latitude, location.longitude, residence  # type: ignore
+                            return location.latitude, location.longitude, residence
                     except (GeocoderTimedOut, GeocoderUnavailable) as e:
                         if attempt < retries - 1:
                             time.sleep(delay)
                         else:
-                            print(f"Error: {e}. City: {city_name}. Attempts exhausted.")
+                            print(f"Erreur de géolocalisation pour : {e}. City: {city_name}. Trop de tentatives.")
                 return None, None, None
 
             city_names = [store["name"] for store in store.data.values()]
             city_lats, city_lons, areas = [], [], []
 
             for city in city_names:
-                lat, lon, country = get_location_data(city)
-                if lat and lon and country:
+                lat, lon, area = get_location_data(city)
+                if lat and lon and area:
                     city_lats.append(lat)
                     city_lons.append(lon)
-                    areas.append(country)
+                    areas.append(area)
 
             fig = pexp.choropleth(
                 locations=list(set(areas)),
-                locationmode="country names",
-                color=[areas.count(country) for country in set(areas)],
+                locationmode="area names",
+                color=[areas.count(area) for area in set(areas)],
                 scope="africa"
             )
 
