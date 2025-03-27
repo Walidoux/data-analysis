@@ -24,6 +24,12 @@ for markdown in [doc, data, stats]:
     markdown.add_heading(f"Analyse des données - Généré le {time_generated}")
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
+parser.add_argument("--skip-geolocation", action="store_true", help="Ne pas générer de carte choroplèthe")
+args = parser.parse_args()
+
+
 class Listable(enum.Enum):
     @classmethod
     def get(cls) -> list[str]:
@@ -114,13 +120,13 @@ class DataManager:
         return list(map(int, outliers))
 
     def handle_outliers(self):
-        filename = f"assets/boxplot_{dict.name["format"]}.png"
+        filename = f"assets/boxplot_{store.name["format"]}.png"
 
-        bp = plt.boxplot(dict.data)
+        bp = plt.boxplot(store.data)
         median = bp["medians"][0].get_ydata()[0]
 
         plt.figure(figsize=(10, 6))
-        plt.boxplot(dict.data, vert=True, patch_artist=True)
+        plt.boxplot(store.data, vert=True, patch_artist=True)
         plt.title(f"Boxplot : {self.name['default']}", fontsize=14)
         plt.ylabel("Valeurs", fontsize=12)
         plt.grid(axis="y", alpha=0.75)
@@ -368,9 +374,90 @@ class DataManager:
             if p < 0.05:
                 stats.add_block(mkdn.Quote("Il y a une relation significative entre les variables"))
 
-    # TODO: Analyse inférentielle
-    def analyze(self, dict):
-        return NotImplemented
+    def analyze(self, store):
+        # Generate choropleth map
+        if store.name["format"] == "VD" and not args.skip_geolocation:
+            import plotly.express as pexp
+            import plotly.graph_objects as go
+            import time
+
+            AFRICAN_COUNTRIES = [
+                'AO', 'BJ', 'BW', 'BF', 'BI', 'CM', 'CV', 'CF', 'TD', 'KM', 'CG',
+                'CD', 'DJ', 'EG', 'GQ', 'ER', 'SZ', 'ET', 'GA', 'GM', 'GH', 'GN', 'GW',
+                'CI', 'KE', 'LS', 'LR', 'LY', 'MG', 'MW', 'ML', 'MR', 'MU', 'MA', 'MZ',
+                'NA', 'NE', 'NG', 'RW', 'ST', 'SN', 'SC', 'SL', 'SO', 'ZA', 'SS', 'SD',
+                'TZ', 'TG', 'TN', 'UG', 'ZM', 'ZW'
+            ]
+
+            from geopy.geocoders import Nominatim
+            from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
+
+            def get_location_data(city_name: str, retries: int = 3, delay: int = 5):
+                geolocator = Nominatim(user_agent="geoapi")
+                for attempt in range(retries):
+                    try:
+                        if location := geolocator.geocode(city_name, country_codes=AFRICAN_COUNTRIES, namedetails=True):
+                            query = location.address.split(",")[0].strip()
+                            residence = re.sub(r"[^a-zA-ZÀ-ÿ\s'-]", "", query).strip()
+                            return location.latitude, location.longitude, residence
+                    except (GeocoderTimedOut, GeocoderUnavailable) as e:
+                        if attempt < retries - 1:
+                            time.sleep(delay)
+                        else:
+                            print(f"Erreur de géolocalisation pour : {e}. City: {city_name}. Trop de tentatives.")
+                return None, None, None
+
+            city_names = [store["name"] for store in store.data.values()]
+            city_lats, city_lons, areas = [], [], []
+
+            for city in city_names:
+                lat, lon, area = get_location_data(city)
+                if lat and lon and area:
+                    city_lats.append(lat)
+                    city_lons.append(lon)
+                    areas.append(area)
+
+            fig = pexp.choropleth(
+                locations=list(set(areas)),
+                locationmode="area names",
+                color=[areas.count(area) for area in set(areas)],
+                scope="africa"
+            )
+
+            fig.add_trace(go.Scattergeo(
+                lon=city_lons,
+                lat=city_lats,
+                text=areas,
+                marker=dict(
+                    size=6,
+                    color='red',
+                    line=dict(
+                        width=1,
+                        color='white'
+                    )
+                ),
+                name='Cities',
+                mode='markers+text',
+                textposition='top center'
+            ))
+
+            fig.update_geos(
+                resolution=110,
+                showcountries=True,
+                countrycolor="Black",
+                showsubunits=True,
+                subunitcolor="Blue"
+            )
+
+            fig.update_layout(
+                title_text='African Countries with City Markers',
+                showlegend=True
+            )
+
+            filename = f"./assets/choropleth_{store.name["format"]}"
+
+            fig.write_image(f"{filename}.png", scale=3, height=2600, width=2200)  # Image simple
+            fig.write_html(f"{filename}.html")  # Page interactive
 
 
 class StoreCollection(DataManager):
@@ -575,12 +662,12 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     while i < len(rows):
 
-        for dict in dicts:
-            if dict not in [anneebac_set, optionbac_dict, logiciels_dict, nddtps_dict]:
-                if isinstance(dict, StoreCollection):
-                    dict.subscribe(rows[i][dict.pos])
-                elif isinstance(dict, StoreSet):
-                    dict.collect(rows[i][dict.pos])
+        for store in dicts:
+            if store not in [anneebac_set, optionbac_dict, logiciels_dict, nddtps_dict]:
+                if isinstance(store, StoreCollection):
+                    store.subscribe(rows[i][store.pos])
+                elif isinstance(store, StoreSet):
+                    store.collect(rows[i][store.pos])
 
         match = re.search(r"(\d{4})[-/_\s]*(\d{4})?", rows[i][anneebac_set.pos])
         year = match.group(2) if match and match.group(2) else match and match.group(1)
@@ -609,9 +696,9 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     )
 
     removable_dicts = []
-    for dict in dicts:
-        if dict.removable():
-            removable_dicts.append(dict.name["default"])
+    for store in dicts:
+        if store.removable():
+            removable_dicts.append(store.name["default"])
     doc.add_paragraph(f"Variables supprimées par identification des données manquantes :")
     doc.add_unordered_list(removable_dicts)
 
@@ -630,38 +717,34 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         ],
     )
 
-    for dict in dicts:
-        if not dict.removable():
-            dict.generate_rapport(dict)
+    for store in dicts:
+        if not store.removable():
+            store.generate_rapport(store)
 
-    for dict in dicts:
-        if not dict.removable():
-            dict.handle_missing_data(dict)
+    for store in dicts:
+        if not store.removable():
+            store.handle_missing_data(store)
 
     data.add_heading("Identification des données manquantes", level=3)
     rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
     headers = [d.name["format"] for d in dicts if not d.removable()]
-    for dict in dicts:
-        if not dict.removable():
-            rows[0].append(str(dict.length()))
+    for store in dicts:
+        if not store.removable():
+            rows[0].append(str(store.length()))
             for i, type in enumerate(UnwantedDataType.get()):
-                subset = [v for v in dict.invalid_subsets if v["type"] == UnwantedDataType[type]]
+                subset = [v for v in store.invalid_subsets if v["type"] == UnwantedDataType[type]]
                 rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
     data.add_table(["", "", *headers], rows)
 
     stats.add_heading("Statistiques descriptives", level=2)
-    for dict in dicts:
-        if not dict.removable():
-            dict.generate_statistics(dict)
+    for store in dicts:
+        if not store.removable():
+            store.generate_statistics(store)
 
     stats.add_heading("Analyse inférentielle", level=2)
-    for dict in dicts:
-        if not dict.removable():
-            dict.analyze(dict)
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
-    args = parser.parse_args()
+    for store in dicts:
+        if not store.removable():
+            store.analyze(store)
 
     for arg in args.write.split(","):
         match arg:

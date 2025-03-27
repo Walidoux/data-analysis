@@ -1,3 +1,7 @@
 scipy
 snakemd
 matplotlib
+plotly
+kaleido # (for plotly static image export)
+pandas
+geopy
