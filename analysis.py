@@ -1,5 +1,7 @@
-from statistics import correlation, linear_regression, median
-from scipy.stats import chi2_contingency, shapiro, kstest, norm, chisquare
+from scipy.stats import chi2_contingency, shapiro, kstest, norm, chisquare, skew
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import numpy as np
 import snakemd as mkdn
@@ -117,16 +119,17 @@ class DataManager:
         lower_bound = q1 - (1.5 * iqr_region)
         array = np.array(data)
         outliers = array[(array <= lower_bound) | (array >= upper_bound)]
-        return list(map(int, outliers))
+        unique_outliers = np.unique(outliers)
+        return list(map(int, unique_outliers))
 
-    def handle_outliers(self):
+    def handle_outliers(self, values: list[int]):
         filename = f"assets/boxplot_{store.name["format"]}.png"
 
-        bp = plt.boxplot(store.data)
+        bp = plt.boxplot(values)
         median = bp["medians"][0].get_ydata()[0]
 
         plt.figure(figsize=(10, 6))
-        plt.boxplot(store.data, vert=True, patch_artist=True)
+        plt.boxplot(values, vert=True, patch_artist=True)
         plt.title(f"Boxplot : {self.name['default']}", fontsize=14)
         plt.ylabel("Valeurs", fontsize=12)
         plt.grid(axis="y", alpha=0.75)
@@ -140,36 +143,45 @@ class DataManager:
         data.add_heading(f"{self.name["default"]} [{self.name["format"]}]", level=4)
         data.add_block(mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")]))
 
-    # TODO : Kurtosis & Skewness
     def handle_missing_data(self, dict):
         if isinstance(dict, StoreSet):
-            X = [i for i, x in enumerate(dict.data) if x is not None]  # Indices VC
-            y = [x for x in dict.data if x is not None]  # VC
+            if len(dict.invalid_subsets) > 0:
+                X = [x for x in dict.data if x is not None]
 
-            outliers = dict.outliers(y)
-            has_outliers = len(outliers) > 0
+                outliers = dict.outliers(X)
+                has_outliers = len(outliers) > 0
 
-            for outlier in outliers:
-                self.invalid_subsets.append({
-                    "pos": dict.data.index(outlier),
-                    "type": UnwantedDataType.OUTLIER,
-                })
+                for outlier in outliers:
+                    self.invalid_subsets.append({
+                        "pos": dict.data.index(outlier),
+                        "type": UnwantedDataType.OUTLIER,
+                    })
 
-            # Régression linéaire (Hypothèse de linéarité)
-            if abs(correlation(X, y)) > 0.5:
-                slope, intercept = linear_regression(X, y)
-                for i, value in enumerate(dict.data):
-                    if value is None:
-                        value = slope * i + intercept  # y = ax + b
-                        dict.data[i] = value
-                        data.add_paragraph(f"La valeur numérique manquante de la variable {dict.name["format"]} a été estimée à {value}")
-            else:  # Moyenne/Médiane
-                for k in range(len(dict.data)):
-                    if dict.data[k] is None:
-                        dict.data[k] = (median(y) if has_outliers else int(round(sum(y) / len(y))))
+                if has_outliers:
+                    self.handle_outliers(X)
 
-            if has_outliers:
-                self.handle_outliers()
+                for subset in dict.invalid_subsets:  # TODO : Kurtosis & Skewness
+                    Y = None
+
+                    for d in dicts:
+                        if isinstance(d, StoreSet):
+                            corr, p_value = pearsonr(X, d)
+                            Y = d.data if p_value < 0.05 and abs(corr) > 0.3 else None
+
+                    if Y is None:
+                        dict.data[subset["pos"] - 1] = np.median(values) if has_outliers else np.mean(sum(values) / len(values))
+                    else:
+                        X = np.array(X).reshape(-1, 1)
+                        Y = np.array(Y)
+
+                        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+
+                        mean_pred = np.mean(Y_train) * np.ones(len(Y_test))
+                        median_pred = np.median(Y_train) * np.ones(len(Y_test))
+
+                        model = LinearRegression()
+                        model.fit(X_train, Y_train)
+                        lr_pred = model.predict(X_test)
 
         # Mode (VF)
         elif isinstance(dict, StoreCollection):
