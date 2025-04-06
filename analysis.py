@@ -143,49 +143,48 @@ class DataManager:
 
     def handle_missing_data(self, dict):
         if isinstance(dict, StoreSet):
-            if len(dict.invalid_subsets) > 0:
-                X = [x for x in dict.data if x is not None]
+            X = [x for x in dict.data if x is not None]
 
-                outliers = dict.outliers(X)
-                has_outliers = len(outliers) > 0
+            outliers = dict.outliers(X)
+            has_outliers = len(outliers) > 0
 
-                for outlier in outliers:
-                    self.invalid_subsets.append({
-                        "pos": dict.data.index(outlier),
-                        "type": UnwantedDataType.OUTLIER,
-                    })
+            for outlier in outliers:
+                self.invalid_subsets.append({
+                    "pos": dict.data.index(outlier),
+                    "type": UnwantedDataType.OUTLIER,
+                })
 
-                if has_outliers:
-                    self.handle_outliers(X)
+            if has_outliers:
+                self.handle_outliers(X)
 
-                for subset in dict.invalid_subsets:
-                    Y = None
-                    best_corr = 0
-                    best_Y = None
+            for subset in dict.invalid_subsets:
+                Y = None
+                best_corr = 0
+                best_Y = None
 
-                    for d in dicts:
-                        if isinstance(d, StoreSet):
-                            d_data_filtered = [val for val in d.data if val is not None][:len(X)]
+                for d in dicts:
+                    if isinstance(d, StoreSet):
+                        d_data_filtered = [val for val in d.data if val is not None][:len(X)]
 
-                            if len(d_data_filtered) == len(X):
-                                corr, p_value = pearsonr(X, d_data_filtered)
-                                if p_value < 0.05 and abs(corr) > 0.3 and abs(corr) > best_corr:
-                                    best_corr = abs(corr)
-                                    best_Y = d_data_filtered
+                        if len(d_data_filtered) == len(X):
+                            corr, p_value = pearsonr(X, d_data_filtered)
+                            if p_value < 0.05 and abs(corr) > 0.3 and abs(corr) > best_corr:
+                                best_corr = abs(corr)
+                                best_Y = d_data_filtered
 
-                    if best_Y is None:
-                        dict.data[subset["pos"] - 1] = np.median(X) if has_outliers else np.mean(sum(X) / len(X))
-                    else:  # Linear regression: X ~ Y
-                        Y = best_Y
-                        Y_reshaped = np.array(Y).reshape(-1, 1)  # bind Y to 2D array
-                        X_array = np.array(X)
+                if best_Y is None:
+                    dict.data[subset["pos"] - 1] = np.median(X) if has_outliers else np.mean(sum(X) / len(X))
+                else:  # Linear regression: X ~ Y
+                    Y = best_Y
+                    Y_reshaped = np.array(Y).reshape(-1, 1)  # bind Y to 2D array
+                    X_array = np.array(X)
 
-                        model = LinearRegression()
-                        model.fit(Y_reshaped, X_array)
+                    model = LinearRegression()
+                    model.fit(Y_reshaped, X_array)
 
-                        y_val = best_Y[subset["pos"] - 1]
-                        predicted_val = model.predict([[y_val]])[0]
-                        dict.data[subset["pos"] - 1] = round(predicted_val)
+                    y_val = best_Y[subset["pos"] - 1]
+                    predicted_val = model.predict([[y_val]])[0]
+                    dict.data[subset["pos"] - 1] = round(predicted_val)
 
         # Mode (VF)
         elif isinstance(dict, StoreCollection):

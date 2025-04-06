@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 22/03/2025 à 12:58
+# Analyse des données - Généré le 06/04/2025 à 19:32
 
 ## Statistiques descriptives
 
@@ -121,20 +121,6 @@
 
 > Il y a une relation significative entre les variables
 
-### Activité physique (heures par semaine) [AP]
-
-#### Dispersion des données
-
-#### Test de Khi-carré
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 63   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None | None  |
-
-> Il y a une relation significative entre les variables
-
 ### Loisir préféré [LP]
 
 #### Dispersion des données
@@ -195,15 +181,34 @@
 
 #### Dispersion des données
 
-#### Test de Khi-carré
+|                  | N   | Minimum | Maximum | Moyenne | Écart type |
+| ---------------- | --- | ------- | ------- | ------- | ---------- |
+| N Valide (liste) | 116 | 5.0     | 10.0    | 5.6552  | 1.1876     |
 
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 5    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None | None  |
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
-> Il y a une relation significative entre les variables
+#### Distribution des données et test de normalité
+
+
+<table>
+    <tr>
+        <th style='text-align: center;' colspan='3'>Kolmogrov-Smirnov</th><th style='text-align: center;' colspan='3'>Shapiro-Wilk</th>
+    </tr>
+    <tr>
+        <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
+    </tr>
+    <tr>
+        <td>0.4335</td>
+        <td>116</td>
+        <td>0.0</td>
+        <td>0.5768</td>
+        <td>116</td>
+        <td>0.0</td>
+    </tr>
+</table>
+
+
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
 ### Mention Bac [MB]
 
@@ -223,29 +228,67 @@
 
 #### Dispersion des données
 
-#### Test de Khi-carré
+|                  | N   | Minimum | Maximum | Moyenne | Écart type |
+| ---------------- | --- | ------- | ------- | ------- | ---------- |
+| N Valide (liste) | 116 | 0       | 20      | 7.2414  | 5.6854     |
 
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 16   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None | None  |
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
-> Il y a une relation significative entre les variables
+#### Distribution des données et test de normalité
+
+
+<table>
+    <tr>
+        <th style='text-align: center;' colspan='3'>Kolmogrov-Smirnov</th><th style='text-align: center;' colspan='3'>Shapiro-Wilk</th>
+    </tr>
+    <tr>
+        <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
+    </tr>
+    <tr>
+        <td>0.35</td>
+        <td>116</td>
+        <td>0.0</td>
+        <td>0.7327</td>
+        <td>116</td>
+        <td>0.0</td>
+    </tr>
+</table>
+
+
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
 ### •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans [CDFVVPA]
 
 #### Dispersion des données
 
-#### Test de Khi-carré
+|                  | N   | Minimum | Maximum | Moyenne | Écart type |
+| ---------------- | --- | ------- | ------- | ------- | ---------- |
+| N Valide (liste) | 116 | 0.0     | 6.0     | 3.1152  | 1.6927     |
 
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 13   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None | None  |
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
-> Il y a une relation significative entre les variables
+#### Distribution des données et test de normalité
+
+
+<table>
+    <tr>
+        <th style='text-align: center;' colspan='3'>Kolmogrov-Smirnov</th><th style='text-align: center;' colspan='3'>Shapiro-Wilk</th>
+    </tr>
+    <tr>
+        <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
+    </tr>
+    <tr>
+        <td>0.2795</td>
+        <td>116</td>
+        <td>0.0</td>
+        <td>0.8565</td>
+        <td>116</td>
+        <td>0.0</td>
+    </tr>
+</table>
+
+
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
 ### Temps passé sur les écrans par jour  [TPSLEPJ]
 
@@ -269,7 +312,7 @@
 
 |                          | Valeur | dll  | Sig.  |
 | ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 8    | 0.565 |
+| Khi-Carré de Pearson     | 4      | 7    | 0.565 |
 | Rapport de vraisemblance | 1.53   | 2    | 0.465 |
 | N d'observations valides | 1.0    | None | None  |
 
@@ -279,15 +322,34 @@
 
 #### Dispersion des données
 
-#### Test de Khi-carré
+|                  | N   | Minimum | Maximum | Moyenne  | Écart type |
+| ---------------- | --- | ------- | ------- | -------- | ---------- |
+| N Valide (liste) | 116 | 0.0     | 1000.0  | 388.5345 | 262.4575   |
 
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 22   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None | None  |
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
-> Il y a une relation significative entre les variables
+#### Distribution des données et test de normalité
+
+
+<table>
+    <tr>
+        <th style='text-align: center;' colspan='3'>Kolmogrov-Smirnov</th><th style='text-align: center;' colspan='3'>Shapiro-Wilk</th>
+    </tr>
+    <tr>
+        <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
+    </tr>
+    <tr>
+        <td>0.2852</td>
+        <td>116</td>
+        <td>0.0</td>
+        <td>0.8272</td>
+        <td>116</td>
+        <td>0.0</td>
+    </tr>
+</table>
+
+
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
 ### Ville d’origine [VD]
 
@@ -309,7 +371,7 @@
 
 |                  | N   | Minimum | Maximum | Moyenne   | Écart type |
 | ---------------- | --- | ------- | ------- | --------- | ---------- |
-| N Valide (liste) | 116 | 0.0     | 40000.0 | 2286.2069 | 3680.1441  |
+| N Valide (liste) | 116 | 0.0     | 40000.0 | 2293.9655 | 3678.6172  |
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
@@ -324,10 +386,10 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.3541</td>
+        <td>0.3549</td>
         <td>116</td>
         <td>0.0</td>
-        <td>0.2503</td>
+        <td>0.2496</td>
         <td>116</td>
         <td>0.0</td>
     </tr>
@@ -443,15 +505,34 @@
 
 #### Dispersion des données
 
-#### Test de Khi-carré
+|                  | N   | Minimum | Maximum | Moyenne | Écart type |
+| ---------------- | --- | ------- | ------- | ------- | ---------- |
+| N Valide (liste) | 116 | 2.0     | 32.0    | 16.5102 | 6.8353     |
 
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 16   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None | None  |
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
-> Il y a une relation significative entre les variables
+#### Distribution des données et test de normalité
+
+
+<table>
+    <tr>
+        <th style='text-align: center;' colspan='3'>Kolmogrov-Smirnov</th><th style='text-align: center;' colspan='3'>Shapiro-Wilk</th>
+    </tr>
+    <tr>
+        <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
+    </tr>
+    <tr>
+        <td>0.221</td>
+        <td>116</td>
+        <td>0.0</td>
+        <td>0.9086</td>
+        <td>116</td>
+        <td>0.0</td>
+    </tr>
+</table>
+
+
+> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
 ### Participation à des projets académiques/professionnels [PADPA]
 
