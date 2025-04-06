@@ -1,3 +1,4 @@
+from pandas import isnull
 from scipy.stats import chi2_contingency, shapiro, kstest, norm, pearsonr
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
@@ -11,6 +12,8 @@ import collections
 import datetime
 import enum
 import csv
+import os
+import shutil
 
 import utils
 
@@ -19,9 +22,14 @@ doc = mkdn.Document()
 data = mkdn.Document()
 stats = mkdn.Document()
 MD_DIR = "markdown"
+ASSETS_DIR_NAME = "assets"
 time_generated = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
 for markdown in [doc, data, stats]:
     markdown.add_heading(f"Analyse des données - Généré le {time_generated}")
+
+for item in os.listdir(ASSETS_DIR_NAME):
+    item_path = os.path.join(ASSETS_DIR_NAME, item)
+    shutil.rmtree(item_path) if os.path.isdir(item_path) else os.unlink(item_path)
 
 
 parser = argparse.ArgumentParser()
@@ -79,9 +87,9 @@ class MDL(Listable):
         return cls.AUTRE.name
 
 
-class NDDTPS():
+class Nullable():
     @classmethod
-    def classify(cls, value: str):
+    def classify(cls, value: str) -> str | int:
         if "PAS" in value or "AUCUN" in value or "NON" in value or "RIEN" in value:
             return 0
         else:
@@ -121,7 +129,7 @@ class DataManager:
         return list(map(int, unique_outliers))
 
     def handle_outliers(self, values: list[int]):
-        filename = f"assets/boxplot_{store.name["format"]}.png"
+        filename = f"{ASSETS_DIR_NAME}/boxplot_{store.name["format"]}.png"
 
         bp = plt.boxplot(values)
         median = bp["medians"][0].get_ydata()[0]
@@ -262,6 +270,9 @@ class DataManager:
 
         data.add_table(headers, [[str(cell) for cell in r] for r in row])
 
+        if dict.invalid_subsets:
+            data.add_block(mkdn.Quote(f"Les valeurs non valides sont les suivantes : {', '.join(f'`{subset['value']}`' for subset in dict.invalid_subsets)}"))
+
     def generate_statistics(self, dict):
         stats.add_heading(f"{dict.name["default"]} [{dict.name["format"]}]", level=3)
         stats.add_heading("Dispersion des données", level=4)
@@ -319,7 +330,7 @@ class DataManager:
 
             if p_value > sig:
                 message = "Une distribution normale"
-                filename = f"assets/hist_{dict.name["format"]}.png"
+                filename = f"{ASSETS_DIR_NAME}/hist_{dict.name["format"]}.png"
 
                 x_ticks = [
                     mean - 3 * std,
@@ -460,14 +471,14 @@ class DataManager:
                 showlegend=True
             )
 
-            filename = f"./assets/choropleth_{store.name["format"]}"
+            filename = f"./{ASSETS_DIR_NAME}/choropleth_{store.name["format"]}"
 
             fig.write_image(f"{filename}.png", scale=3, height=2600, width=2200)  # Image simple
             fig.write_html(f"{filename}.html")  # Page interactive
 
         elif store.name["format"] in ["UD", "MDL", "TDLPU"]:
             fig = plt.figure(figsize=(10, 7))
-            filename = f"assets/pie_{store.name["format"]}.png"
+            filename = f"{ASSETS_DIR_NAME}/pie_{store.name["format"]}.png"
 
             labels = [item["name"] for item in store.data.values()]
             data = [item["count"] for item in store.data.values()]
@@ -485,7 +496,7 @@ class DataManager:
 
 
 class StoreCollection(DataManager):
-    def __init__(self, pos, method: typing.Literal["exact", "approx"] = "exact", recursive=False, verified=False):
+    def __init__(self, pos, method: typing.Literal["exact", "approx"] = "exact", recursive=False, verified=False, nullish=False):
         self.pos = pos
         self.data = {}
         self.method = method
@@ -493,6 +504,16 @@ class StoreCollection(DataManager):
         self.invalid_subsets = []
         self.recursive = recursive
         self.verified = verified
+        self.nullish = nullish
+
+    def cleanup(self, value):
+        if value:
+            if self.nullish:
+                return str(Nullable.classify(value.upper()))
+            else:
+                return utils.normalize(value).upper()
+        else:
+            return 0
 
     def in_depth(self, value: str):
         parts = re.split(r"[;,/]| ET ", value)
@@ -504,19 +525,23 @@ class StoreCollection(DataManager):
         return matches
 
     def subscribe(self, value: str | None):
-        value = utils.normalize(value).upper() if value else value
+        value = self.cleanup(value)
 
-        def unresolved(type):
+        if value == "0":
+            value = "AUCUN"
+
+        def unresolved(type, v):
             self.data[len(self.data)] = None
             self.invalid_subsets.append({
                 "pos": len(self.data),
                 "type": type,
+                "value": v
             })
 
         if not value or self.is_unknown(value):
-            return unresolved(UnwantedDataType.MISSING)
+            return unresolved(UnwantedDataType.MISSING, value)
         elif value and not re.search(r"[a-zA-Z]", value.strip()) and not re.fullmatch(r"\d+(?:\s*-\s*\d+)?", value.strip()):
-            return unresolved(UnwantedDataType.INVALID_FORMAT)
+            return unresolved(UnwantedDataType.INVALID_FORMAT, value)
 
         if self.recursive and len(possible_values := self.in_depth(value)) > 1:
             for p_value in possible_values:
@@ -544,25 +569,36 @@ class StoreCollection(DataManager):
 
 
 class StoreSet(DataManager):
-    def __init__(self, pos, verified=False):
+    def __init__(self, pos, verified=False, nullish=False):
         self.pos = pos
         self.data = []
         self.name = doc_headers[pos]
         self.invalid_subsets = []
         self.verified = verified
+        self.nullish = nullish
+
+    def cleanup(self, value):
+        if isinstance(value, str):
+            if self.nullish:
+                return Nullable.classify(value.upper())
+            else:
+                return value.strip()
+        else:
+            return value
 
     def collect(self, value: int | str | None):
-        value = value.strip() if isinstance(value, str) else value
+        value = self.cleanup(value)
 
-        def unresolved(type):
+        def unresolved(type, v):
             self.data.append(None)
             self.invalid_subsets.append({
                 "pos": len(self.data),
                 "type": type,
+                "value": v
             })
 
         if self.is_unknown(value):
-            return unresolved(UnwantedDataType.MISSING)
+            return unresolved(UnwantedDataType.MISSING, value)
 
         if isinstance(value, int):
             return self.data.append(value)
@@ -571,7 +607,7 @@ class StoreSet(DataManager):
                 value = int(match.group(1))
                 return self.data.append(value)
             else:
-                unresolved(UnwantedDataType.INVALID_FORMAT)
+                unresolved(UnwantedDataType.INVALID_FORMAT, value)
 
     def length(self) -> int:
         return len([item for item in self.data if item is not None])
@@ -627,17 +663,17 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     tdl_dict = StoreCollection(headers.index("TDL"), method="approx", verified=True)
     mp_dict = StoreCollection(headers.index("MP"), method="approx", recursive=True, verified=True)
     tpslepj_dict = StoreCollection(headers.index("TPSLEPJ"), verified=True)
-    mdvu_dict = StoreCollection(headers.index("MDVU"), method="approx", recursive=True, verified=True)
-    cdfvvpa_dict = StoreSet(headers.index("CDFVVPA"), verified=True)
+    mdvu_dict = StoreCollection(headers.index("MDVU"), method="approx", recursive=True, verified=True, nullish=True)
+    cdfvvpa_dict = StoreSet(headers.index("CDFVVPA"), verified=True, nullish=True)
     caepm_dict = StoreSet(headers.index("CAEPM"), verified=True)
-    nddtps_dict = StoreSet(headers.index("NDDTPS"), verified=False)
+    nddtps_dict = StoreSet(headers.index("NDDTPS"), verified=False, nullish=True)
     tepde_dict = StoreCollection(headers.index("TEPDE"), verified=True)
     spdr_dict = StoreCollection(headers.index("SPDR"), recursive=True, verified=True)
     qds_dict = StoreSet(headers.index("QDS"), verified=True)
     dmm_dict = StoreSet(headers.index("DMM"), verified=True)
     lp_dict = StoreCollection(headers.index("LP"), recursive=True, verified=True)
     ndllpa_dict = StoreCollection(headers.index("NDLLPA"), verified=True)
-    tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True, verified=True)
+    tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True, verified=True, nullish=True)
     ap_dict = StoreSet(headers.index("AP"), verified=True)
     nmddspn_dict = StoreSet(headers.index("NMDDSPN"), verified=True)
     ndpsynps_dict = StoreCollection(headers.index("NDPSYNPS"), verified=True)
@@ -687,7 +723,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     while i < len(rows):
 
         for store in dicts:
-            if store not in [anneebac_set, optionbac_dict, logiciels_dict, nddtps_dict]:
+            if store not in [anneebac_set, optionbac_dict, logiciels_dict]:
                 if isinstance(store, StoreCollection):
                     store.subscribe(rows[i][store.pos])
                 elif isinstance(store, StoreSet):
@@ -696,9 +732,6 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         match = re.search(r"(\d{4})[-/_\s]*(\d{4})?", rows[i][anneebac_set.pos])
         year = match.group(2) if match and match.group(2) else match and match.group(1)
         anneebac_set.collect(year)
-
-        nddtps = NDDTPS.classify(rows[i][nddtps_dict.pos].upper())
-        nddtps_dict.collect(nddtps)
 
         branche = Option.classify(utils.normalize(rows[i][optionbac_dict.pos]).upper())
         optionbac_dict.subscribe(branche)
