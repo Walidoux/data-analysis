@@ -466,6 +466,24 @@ class DataManager:
             fig.write_image(f"{filename}.png", scale=3, height=2600, width=2200)  # Image simple
             fig.write_html(f"{filename}.html")  # Page interactive
 
+        elif store.name["format"] in ["UD", "MDL", "TDLPU"]:
+            fig = plt.figure(figsize=(10, 7))
+            filename = f"assets/pie_{store.name["format"]}.png"
+
+            labels = [item["name"] for item in store.data.values()]
+            data = [item["count"] for item in store.data.values()]
+
+            max_index = data.index(max(data))
+            explode = [0] * len(data)
+            explode[max_index] = 0.1
+
+            wedges, _, autotexts = plt.pie(data, labels=labels, explode=explode, autopct='%1.1f%%')
+
+            fig.legend(wedges, labels, loc="upper right")
+            plt.setp(autotexts, size=12, weight="bold")
+            plt.title(store.name["default"])
+            plt.savefig(filename)
+
 
 class StoreCollection(DataManager):
     def __init__(self, pos, method: typing.Literal["exact", "approx"] = "exact", recursive=False, verified=False):
