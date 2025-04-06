@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 06/04/2025 à 19:32
+# Analyse des données - Généré le 06/04/2025 à 20:38
 
 #### Genre [GENRE]
 
@@ -72,7 +72,7 @@
 |          | 5-10       | 7         | 6.03%       | 6.03%              | 62.07%             |
 |          | MOINS DE 1 | 32        | 27.59%      | 27.59%             | 89.66%             |
 |          | 10 ET PLUS | 9         | 7.76%       | 7.76%              | 97.41%             |
-|          | 0          | 2         | 1.72%       | 1.72%              | 99.14%             |
+|          | AUCUN      | 2         | 1.72%       | 1.72%              | 99.14%             |
 |          | 70         | 1         | 0.86%       | 0.86%              | 100.00%            |
 |          | Total      | 116       | 100.00%     | 100.00%            |                    |
 | Manquant | Système    | 0         | 0.00%       |                    |                    |
@@ -83,43 +83,44 @@
 |          |                                           | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
 | -------- | ----------------------------------------- | --------- | ----------- | ------------------ | ------------------ |
 | Valide   | LA MUSCULATION                            | 17        | 12.78%      | 12.98%             | 12.98%             |
-|          | KARATE                                    | 3         | 2.26%       | 2.29%              | 15.27%             |
-|          | ATHLETISME                                | 2         | 1.50%       | 1.53%              | 16.79%             |
-|          | RIEN                                      | 8         | 6.02%       | 6.11%              | 22.90%             |
-|          | VOLEY BALL                                | 1         | 0.75%       | 0.76%              | 23.66%             |
-|          | GYM                                       | 6         | 4.51%       | 4.58%              | 28.24%             |
-|          | FOOTBALL                                  | 27        | 20.30%      | 20.61%             | 48.85%             |
-|          | NATATION                                  | 10        | 7.52%       | 7.63%              | 56.49%             |
-|          | LA MARCHE                                 | 16        | 12.03%      | 12.21%             | 68.70%             |
-|          | FITNESS                                   | 2         | 1.50%       | 1.53%              | 70.23%             |
-|          | L'ANNEE DERNIERE J'AI FAIT DU VOLLEY-BALL | 1         | 0.75%       | 0.76%              | 70.99%             |
-|          | D'AUTRES...                               | 1         | 0.75%       | 0.76%              | 71.76%             |
-|          | JUSTE MARCHER                             | 1         | 0.75%       | 0.76%              | 72.52%             |
-|          | TENNIS                                    | 3         | 2.26%       | 2.29%              | 74.81%             |
-|          | COURSE A PIED                             | 8         | 6.02%       | 6.11%              | 80.92%             |
-|          | AIEROBIC                                  | 1         | 0.75%       | 0.76%              | 81.68%             |
-|          | ZOMBA                                     | 1         | 0.75%       | 0.76%              | 82.44%             |
-|          | BOXING                                    | 2         | 1.50%       | 1.53%              | 83.97%             |
-|          | TECKWANDO                                 | 2         | 1.50%       | 1.53%              | 85.50%             |
-|          | PILATES                                   | 1         | 0.75%       | 0.76%              | 86.26%             |
-|          | JE NE FAIS PAS DU SPORT                   | 1         | 0.75%       | 0.76%              | 87.02%             |
-|          | E-SPORT                                   | 1         | 0.75%       | 0.76%              | 87.79%             |
-|          | LA DANSE                                  | 1         | 0.75%       | 0.76%              | 88.55%             |
-|          | DANCE                                     | 1         | 0.75%       | 0.76%              | 89.31%             |
-|          | LA BOXE                                   | 1         | 0.75%       | 0.76%              | 90.08%             |
-|          | LES SPORT PHYSIQUE                        | 1         | 0.75%       | 0.76%              | 90.84%             |
-|          | EN COURS D'EXECUTION                      | 1         | 0.75%       | 0.76%              | 91.60%             |
-|          | CARDIO                                    | 1         | 0.75%       | 0.76%              | 92.37%             |
-|          | BASKET-BALL                               | 4         | 3.01%       | 3.05%              | 95.42%             |
+|          | KARATÉ                                    | 3         | 2.26%       | 2.29%              | 15.27%             |
+|          | ATHLÉTISME                                | 2         | 1.50%       | 1.53%              | 16.79%             |
+|          | AUCUN                                     | 11        | 8.27%       | 8.40%              | 25.19%             |
+|          | VOLEY BALL                                | 1         | 0.75%       | 0.76%              | 25.95%             |
+|          | GYM                                       | 6         | 4.51%       | 4.58%              | 30.53%             |
+|          | FOOTBALL                                  | 27        | 20.30%      | 20.61%             | 51.15%             |
+|          | NATATION                                  | 10        | 7.52%       | 7.63%              | 58.78%             |
+|          | LA MARCHE                                 | 16        | 12.03%      | 12.21%             | 70.99%             |
+|          | FITNESS                                   | 2         | 1.50%       | 1.53%              | 72.52%             |
+|          | L'ANNÉE DERNIÈRE J'AI FAIT DU VOLLEY-BALL | 1         | 0.75%       | 0.76%              | 73.28%             |
+|          | D'AUTRES...                               | 1         | 0.75%       | 0.76%              | 74.05%             |
+|          | JUSTE MARCHER                             | 1         | 0.75%       | 0.76%              | 74.81%             |
+|          | TENNIS                                    | 3         | 2.26%       | 2.29%              | 77.10%             |
+|          | COURSE À PIED                             | 8         | 6.02%       | 6.11%              | 83.21%             |
+|          | AIEROBIC                                  | 1         | 0.75%       | 0.76%              | 83.97%             |
+|          | ZOMBA                                     | 1         | 0.75%       | 0.76%              | 84.73%             |
+|          | BOXING                                    | 2         | 1.50%       | 1.53%              | 86.26%             |
+|          | TECKWANDO                                 | 2         | 1.50%       | 1.53%              | 87.79%             |
+|          | PILATES                                   | 1         | 0.75%       | 0.76%              | 88.55%             |
+|          | E-SPORT                                   | 1         | 0.75%       | 0.76%              | 89.31%             |
+|          | LA DANSE                                  | 1         | 0.75%       | 0.76%              | 90.08%             |
+|          | DANCE                                     | 1         | 0.75%       | 0.76%              | 90.84%             |
+|          | LA BOXE                                   | 1         | 0.75%       | 0.76%              | 91.60%             |
+|          | LES SPORT PHYSIQUE                        | 1         | 0.75%       | 0.76%              | 92.37%             |
+|          | EN COURS D'EXÉCUTION                      | 1         | 0.75%       | 0.76%              | 93.13%             |
+|          | CARDIO                                    | 1         | 0.75%       | 0.76%              | 93.89%             |
+|          | BASKET-BALL                               | 2         | 1.50%       | 1.53%              | 95.42%             |
 |          | YOGA                                      | 1         | 0.75%       | 0.76%              | 96.18%             |
 |          | COLLECTIF                                 | 1         | 0.75%       | 0.76%              | 96.95%             |
-|          | AUCUN                                     | 1         | 0.75%       | 0.76%              | 97.71%             |
+|          | BASKET                                    | 1         | 0.75%       | 0.76%              | 97.71%             |
 |          | KANG-FU                                   | 1         | 0.75%       | 0.76%              | 98.47%             |
 |          | LA COURSE                                 | 1         | 0.75%       | 0.76%              | 99.24%             |
-|          | JE NE PRATIQUE PAS LE SPORT               | 1         | 0.75%       | 0.76%              | 100.00%            |
+|          | BASCKET BALL                              | 1         | 0.75%       | 0.76%              | 100.00%            |
 |          | Total                                     | 131       | 98.50%      | 100.00%            |                    |
 | Manquant | Système                                   | 2         | 1.50%       |                    |                    |
 | Total    |                                           | 133       | 100.00%     |                    |                    |
+
+> Les valeurs non valides sont les suivantes : `0`, `_`
 
 #### Loisir préféré [LP]
 
@@ -198,6 +199,8 @@
 | Manquant | Système                                              | 2         | 1.43%       |                    |                    |
 | Total    |                                                      | 140       | 100.00%     |                    |                    |
 
+> Les valeurs non valides sont les suivantes : `.`, `0`
+
 #### •Travail en parallèle des études [TEPDE]
 
 |          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
@@ -242,6 +245,8 @@
 | Manquant | Système | 1         | 0.85%       |                    |                    |
 | Total    |         | 117       | 99.14%      |                    |                    |
 
+> Les valeurs non valides sont les suivantes : `Je ne sais pas`
+
 #### Mention Bac [MB]
 
 |          |          | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
@@ -265,19 +270,23 @@
 | Manquant | Système | 1         | 0.85%       |                    |                    |
 | Total    |         | 117       | 99.14%      |                    |                    |
 
+> Les valeurs non valides sont les suivantes : `??`
+
 #### •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans [CDFVVPA]
 
 |          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
 | -------- | ------- | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | 1       | 12        | 9.92%       | 10.34%             | 10.34%             |
-|          | 2       | 48        | 39.67%      | 41.38%             | 51.72%             |
-|          | 0       | 2         | 1.65%       | 1.72%              | 53.45%             |
-|          | 4       | 28        | 23.14%      | 24.14%             | 77.59%             |
-|          | 3       | 1         | 0.83%       | 0.86%              | 78.45%             |
-|          | 6       | 20        | 16.53%      | 17.24%             | 95.69%             |
-|          | Total   | 116       | 91.74%      | 95.69%             |                    |
-| Manquant | Système | 5         | 4.13%       |                    |                    |
-| Total    |         | 121       | 95.69%      |                    |                    |
+| Valide   | 0       | 3         | 2.50%       | 2.59%              | 2.59%              |
+|          | 1       | 12        | 10.00%      | 10.34%             | 12.93%             |
+|          | 2       | 48        | 40.00%      | 41.38%             | 54.31%             |
+|          | 4       | 28        | 23.33%      | 24.14%             | 78.45%             |
+|          | 3       | 1         | 0.83%       | 0.86%              | 79.31%             |
+|          | 6       | 20        | 16.67%      | 17.24%             | 96.55%             |
+|          | Total   | 116       | 93.33%      | 96.55%             |                    |
+| Manquant | Système | 4         | 3.33%       |                    |                    |
+| Total    |         | 120       | 96.55%      |                    |                    |
+
+> Les valeurs non valides sont les suivantes : `MON ORIGINE C’EST DAKHLA`, `UNE SEULE FOIS`, `MA VILLE EST DAKHLA `, `SA DÉPEND LES CONDITIONS`
 
 #### Temps passé sur les écrans par jour  [TPSLEPJ]
 
@@ -297,14 +306,15 @@
 | -------- | -------- | --------- | ----------- | ------------------ | ------------------ |
 | Valide   | AVION    | 63        | 52.50%      | 52.94%             | 52.94%             |
 |          | AUTOCARE | 33        | 27.50%      | 27.73%             | 80.67%             |
-|          | AUCUN    | 1         | 0.83%       | 0.84%              | 81.51%             |
-|          | VOITURE  | 18        | 15.00%      | 15.13%             | 96.64%             |
-|          | 0        | 1         | 0.83%       | 0.84%              | 97.48%             |
+|          | AUCUN    | 2         | 1.67%       | 1.68%              | 82.35%             |
+|          | VOITURE  | 18        | 15.00%      | 15.13%             | 97.48%             |
 |          | TRAIN    | 1         | 0.83%       | 0.84%              | 98.32%             |
 |          | TAXI     | 2         | 1.67%       | 1.68%              | 100.00%            |
 |          | Total    | 119       | 99.17%      | 100.00%            |                    |
 | Manquant | Système  | 1         | 0.83%       |                    |                    |
 | Total    |          | 120       | 100.00%     |                    |                    |
+
+> Les valeurs non valides sont les suivantes : `.`
 
 #### capacité à économiser par moins ( MAD) [CAEPM]
 
@@ -322,6 +332,8 @@
 |          | Total   | 116       | 90.16%      | 94.83%             |                    |
 | Manquant | Système | 6         | 4.92%       |                    |                    |
 | Total    |         | 122       | 94.83%      |                    |                    |
+
+> Les valeurs non valides sont les suivantes : `Rien`, `Aucun`, `Aucun`, `Rien`, `rien`, `pas d'économie`
 
 #### Ville d’origine [VD]
 
@@ -406,6 +418,8 @@
 | Manquant | Système | 2         | 1.69%       |                    |                    |
 | Total    |         | 118       | 98.28%      |                    |                    |
 
+> Les valeurs non valides sont les suivantes : `Rien`, `N'est précisé`
+
 #### Nombre de formations en ligne suivies cette année [NDFELSCA]
 
 |          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
@@ -461,6 +475,8 @@
 | Manquant | Système                                    | 2         | 1.52%       |                    |                    |
 | Total    |                                            | 132       | 100.00%     |                    |                    |
 
+> Les valeurs non valides sont les suivantes : `...`, `..`
+
 #### Filière d’étude [FD]
 
 |          |          | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
@@ -482,6 +498,8 @@
 |          | Total          | 162       | 99.39%      | 100.00%            |                    |
 | Manquant | Système        | 1         | 0.61%       |                    |                    |
 | Total    |                | 163       | 100.00%     |                    |                    |
+
+> Les valeurs non valides sont les suivantes : `0`
 
 #### Maîtrise d’autres logiciels  [MDL]
 
@@ -509,6 +527,8 @@
 | Manquant | Système     | 1         | 0.86%       |                    |                    |
 | Total    |             | 116       | 100.00%     |                    |                    |
 
+> Les valeurs non valides sont les suivantes : `.`
+
 #### Nombre d'heures d'étude par semaine  [NDDPS]
 
 |          |         | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
@@ -529,6 +549,8 @@
 |          | Total   | 116       | 85.60%      | 92.24%             |                    |
 | Manquant | Système | 9         | 7.20%       |                    |                    |
 | Total    |         | 125       | 92.24%      |                    |                    |
+
+> Les valeurs non valides sont les suivantes : ``, ``, ``, `j'arrive à completer la formation pendant quelque jours`, ``, ``, ``, ``, ``
 
 #### Participation à des projets académiques/professionnels [PADPA]
 
@@ -577,6 +599,8 @@
 | Manquant | Système | 1         | 0.85%       |                    |                    |
 | Total    |         | 117       | 99.14%      |                    |                    |
 
+> Les valeurs non valides sont les suivantes : `None`
+
 #### Mentions S1 [MS1]
 
 |          |          | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
@@ -588,6 +612,8 @@
 |          | Total    | 112       | 96.55%      | 100.00%            |                    |
 | Manquant | Système  | 4         | 3.45%       |                    |                    |
 | Total    |          | 116       | 100.00%     |                    |                    |
+
+> Les valeurs non valides sont les suivantes : `N.V`, `N.V`, `N.V`, `N.V`
 
 #### Mentions S2 [MS2]
 
@@ -601,6 +627,8 @@
 | Manquant | Système  | 4         | 3.45%       |                    |                    |
 | Total    |          | 116       | 100.00%     |                    |                    |
 
+> Les valeurs non valides sont les suivantes : `N.V`, `N.V`, `N.V`, `N.V`
+
 #### Mentions S3 [MS3]
 
 |          |          | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
@@ -612,6 +640,8 @@
 |          | Total    | 112       | 96.55%      | 100.00%            |                    |
 | Manquant | Système  | 4         | 3.45%       |                    |                    |
 | Total    |          | 116       | 100.00%     |                    |                    |
+
+> Les valeurs non valides sont les suivantes : `N.V`, `N.V`, `N.V`, `N.V`
 
 #### Mentions S4 [MS4]
 
@@ -625,6 +655,8 @@
 | Manquant | Système  | 4         | 3.45%       |                    |                    |
 | Total    |          | 116       | 100.00%     |                    |                    |
 
+> Les valeurs non valides sont les suivantes : `N.V`, `N.V`, `N.V`, `N.V`
+
 #### Mentions S5 [MS5]
 
 |          |          | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
@@ -636,6 +668,8 @@
 |          | Total    | 113       | 97.41%      | 100.00%            |                    |
 | Manquant | Système  | 3         | 2.59%       |                    |                    |
 | Total    |          | 116       | 100.00%     |                    |                    |
+
+> Les valeurs non valides sont les suivantes : `N.V`, `N.V`, `N.V`
 
 #### Qualité du sommeil  [QDS]
 
@@ -668,4 +702,4 @@
 | N | VALIDE         | 116   | 150   | 116    | 116     | 116 | 116    | 133  | 140 | 116   | 116 | 116      | 116     | 116 | 116    | 116     | 116     | 120  | 116   | 116 | 116 | 116      | 132 | 116 | 163  | 143 | 116 | 116   | 116   | 116 | 116 | 116  | 116 | 116 | 116 | 116 | 116 |
 |   | OUTLIER        |       |       |        |         | 1   |        |      |     |       |     |          | 1       |     |        |         |         |      | 1     |     | 3   | 4        |     |     |      |     |     |       |       |     | 2   |      |     |     |     |     |     |
 |   | MISSING        |       |       |        |         |     |        | 1    | 1   |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     | 1    |     |     |       |       |     |     | 1    | 2   | 2   | 2   | 2   | 2   |
-|   | INVALID_FORMAT |       |       |        |         |     |        | 1    | 1   |       |     |          | 1       |     | 1      | 5       |         | 1    | 6     |     | 2   |          | 1   |     |      |     | 1   | 9     |       |     |     |      |     |     |     |     |     |
+|   | INVALID_FORMAT |       |       |        |         |     |        | 1    | 1   |       |     |          | 1       |     | 1      | 4       |         | 1    | 6     |     | 2   |          | 1   |     |      |     | 1   | 9     |       |     |     |      |     |     |     |     |     |
