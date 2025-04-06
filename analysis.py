@@ -1,7 +1,5 @@
-from scipy.stats import chi2_contingency, shapiro, kstest, norm, chisquare, skew
+from scipy.stats import chi2_contingency, shapiro, kstest, norm, pearsonr
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import numpy as np
 import snakemd as mkdn
@@ -160,28 +158,34 @@ class DataManager:
                 if has_outliers:
                     self.handle_outliers(X)
 
-                for subset in dict.invalid_subsets:  # TODO : Kurtosis & Skewness
+                for subset in dict.invalid_subsets:
                     Y = None
+                    best_corr = 0
+                    best_Y = None
 
                     for d in dicts:
                         if isinstance(d, StoreSet):
-                            corr, p_value = pearsonr(X, d)
-                            Y = d.data if p_value < 0.05 and abs(corr) > 0.3 else None
+                            d_data_filtered = [val for val in d.data if val is not None][:len(X)]
 
-                    if Y is None:
-                        dict.data[subset["pos"] - 1] = np.median(values) if has_outliers else np.mean(sum(values) / len(values))
-                    else:
-                        X = np.array(X).reshape(-1, 1)
-                        Y = np.array(Y)
+                            if len(d_data_filtered) == len(X):
+                                corr, p_value = pearsonr(X, d_data_filtered)
+                                if p_value < 0.05 and abs(corr) > 0.3 and abs(corr) > best_corr:
+                                    best_corr = abs(corr)
+                                    best_Y = d_data_filtered
 
-                        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
-
-                        mean_pred = np.mean(Y_train) * np.ones(len(Y_test))
-                        median_pred = np.median(Y_train) * np.ones(len(Y_test))
+                    if best_Y is None:
+                        dict.data[subset["pos"] - 1] = np.median(X) if has_outliers else np.mean(sum(X) / len(X))
+                    else:  # Linear regression: X ~ Y
+                        Y = best_Y
+                        Y_reshaped = np.array(Y).reshape(-1, 1)  # bind Y to 2D array
+                        X_array = np.array(X)
 
                         model = LinearRegression()
-                        model.fit(X_train, Y_train)
-                        lr_pred = model.predict(X_test)
+                        model.fit(Y_reshaped, X_array)
+
+                        y_val = best_Y[subset["pos"] - 1]
+                        predicted_val = model.predict([[y_val]])[0]
+                        dict.data[subset["pos"] - 1] = round(predicted_val)
 
         # Mode (VF)
         elif isinstance(dict, StoreCollection):
@@ -271,16 +275,7 @@ class DataManager:
             mean = np.mean(dict.data)
             std = np.std(dict.data, ddof=1)
 
-            rows = [
-                [
-                    "N Valide (liste)",
-                    len(dict.data),
-                    min,
-                    max,
-                    round(mean, 4),
-                    round(std, 4),
-                ]
-            ]
+            rows = [["N Valide (liste)", len(dict.data), min, max, round(mean, 4),    round(std, 4)]]
 
             stats.add_table(headers, rows)
 
