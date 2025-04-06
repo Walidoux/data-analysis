@@ -771,17 +771,19 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         if not store.removable():
             store.analyze(store)
 
-    for arg in args.write.split(","):
-        match arg:
-            case "DOCS":
-                doc.dump(arg, directory=MD_DIR)
-            case "DATA":
-                data.dump(arg, directory=MD_DIR)
-            case "STATS":
-                stats.dump(arg, directory=MD_DIR)
-            case "NONE":
-                pass
-            case _:
-                doc.dump("DOCS", directory=MD_DIR)
-                data.dump("DATA", directory=MD_DIR)
-                stats.dump("STATS", directory=MD_DIR)
+    if args.write:
+        for arg in args.write.split(","):
+            match arg:
+                case "DOCS":
+                    doc.dump(arg, directory=MD_DIR)
+                case "DATA":
+                    data.dump(arg, directory=MD_DIR)
+                case "STATS":
+                    stats.dump(arg, directory=MD_DIR)
+                case _:
+                    print(f"Erreur : {arg} n'est pas un argument valide")
+                    pass
+    else:
+        doc.dump("DOCS", directory=MD_DIR)
+        data.dump("DATA", directory=MD_DIR)
+        stats.dump("STATS", directory=MD_DIR)
