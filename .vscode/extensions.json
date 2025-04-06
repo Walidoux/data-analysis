@@ -6,6 +6,7 @@
         "ms-python.autopep8",
         "ms-python.debugpy",
         "mechatroner.rainbow-csv",
-        "ms-vscode-remote.remote-wsl"
+        "ms-vscode-remote.remote-wsl",
+        "eamodio.gitlens"
     ]
 }
