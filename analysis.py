@@ -372,7 +372,7 @@ class DataManager:
                 message = "Une distribution non normale"
 
         else:
-            stats.add_heading("Test de Khi-carré", level=4)
+            stats.add_heading("Test du Khi-deux", level=5)
             headers = ["", "Valeur", "dll", "Sig."]
 
             observed = [dict.data[key]["count"] for key in dict.data]
@@ -381,7 +381,7 @@ class DataManager:
             rows = [
                 ["Khi-Carré de Pearson", 4, len(dict.data), 0.565],
                 ["Rapport de vraisemblance", 1.530, 2, 0.465],
-                ["N d'observations valides", p_value, None, None],
+                ["N d'observations valides", p_value, None, ""],
             ]
 
             p = 0  # coef de corr ?
@@ -476,7 +476,7 @@ class DataManager:
             fig.write_image(f"{filename}.png", scale=3, height=2600, width=2200)  # Image simple
             fig.write_html(f"{filename}.html")  # Page interactive
 
-        elif store.name["format"] in ["UD", "MDL", "TDLPU"]:
+        elif store.name["format"] in ["UD", "MDL", "TDLPU", "GENRE", "FDDRSPJ", "NDPSYNPS", "MB", "TPSLEPJ", "MDVU", "SPDR", "TDL"]:
             fig = plt.figure(figsize=(10, 7))
             filename = f"{ASSETS_DIR_NAME}/pie_{store.name["format"]}.png"
 
@@ -639,8 +639,10 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         doc_headers.append({"format": formatted_header, "default": header})
         headers[i] = formatted_header
 
+    useless_dicts = ["ND", "AD", "HORODATEUR"]
+
     # Suppression des données sensibles et/ou inutiles
-    for i in ["ND", "AD", "HORODATEUR"]:
+    for i in useless_dicts:
         index = headers.index(i)
         headers.pop(index)
         doc_headers.pop(index)
@@ -752,6 +754,8 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         ]
     )
 
+
+
     removable_dicts = []
     for store in dicts:
         if store.removable():
@@ -813,7 +817,6 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
                 case "STATS":
                     stats.dump(arg, directory=MD_DIR)
                 case _:
-                    print(f"Erreur : {arg} n'est pas un argument valide")
                     pass
     else:
         doc.dump("DOCS", directory=MD_DIR)
