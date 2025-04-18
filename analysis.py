@@ -144,7 +144,7 @@ class DataManager:
             [f"Médiane : {median}", "IQR"],
         )
 
-        plt.savefig(filename, bbox_inches="tight")
+        plt.savefig(filename)
 
         data.add_heading(f"{self.name["default"]} [{self.name["format"]}]", level=4)
         data.add_block(mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")]))
@@ -363,7 +363,7 @@ class DataManager:
                 plt.title(f"Histogramme avec une courbe de distribution normale")
                 plt.xlabel(dict.name["default"])
                 plt.ylabel("Probabilité de densité")
-                plt.savefig(filename, bbox_inches="tight")
+                plt.savefig(filename)
 
                 stats.add_block(mkdn.Quote(message))
                 stats.add_block(mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")]))
@@ -394,7 +394,7 @@ class DataManager:
     def analyze(self, store):
         # Generate choropleth map
         if store.name["format"] == "VD" and not args.skip_geolocation:
-            import plotly.express as pexp
+            import plotly.express as px
             import plotly.graph_objects as go
             import time
 
@@ -409,7 +409,7 @@ class DataManager:
             from geopy.geocoders import Nominatim
             from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 
-            def get_location_data(city_name: str, retries: int = 3, delay: int = 5):
+            def get_location_data(city_name: str, retries: int = 10, delay: int = 10):
                 geolocator = Nominatim(user_agent="geoapi")
                 for attempt in range(retries):
                     try:
@@ -421,7 +421,7 @@ class DataManager:
                         if attempt < retries - 1:
                             time.sleep(delay)
                         else:
-                            print(f"Erreur de géolocalisation pour : {e}. City: {city_name}. Trop de tentatives.")
+                            print(f"Erreur de géolocalisation en raison de : {e}. City: {city_name}. Trop de tentatives.")
                 return None, None, None
 
             city_lats, city_lons, areas, intensities = [], [], [], []
@@ -434,37 +434,50 @@ class DataManager:
                     areas.append(area)
                     intensities.append(city["count"])
 
-            fig = go.Figure()
+            fig = px.choropleth(
+                locations=list(set(areas)),
+                locationmode="ISO-3",
+                color=[areas.count(area) for area in set(areas)],
+                scope="africa",
+            )
 
             fig.add_trace(go.Scattergeo(
                 name='Cities',
                 mode='markers+text',
-                text=areas,
                 textposition='top center',
                 lon=city_lons,
                 lat=city_lats,
+                text=[f"{city} ({count}) {'👥' if count > 1 else '👤'}" for city, count in zip(areas, intensities)],
                 marker=dict(
-                    size=[i * 4 for i in intensities],
+                    size=[i * 6 for i in intensities],
                     color=intensities,
-                    colorscale='Reds',
-                    colorbar=dict(title='Intensity'),
-                    reversescale=False,
-                    opacity=0.8
+                    colorscale="YlOrRd",
+                    colorbar=dict(title="City Intensity"),
+                    cmin=min(intensities),
+                    cmax=max(intensities),
+                    showscale=True,
+                    opacity=0.8,
+                    line=dict(width=0.5, color='black')
                 )
             ))
 
-            fig.update_geos(
-                scope="africa",
-                resolution=110,
-                showcountries=True,
-                countrycolor="Black",
-                showsubunits=True,
-                subunitcolor="Blue",
-            )
-
             fig.update_layout(
-                title_text='City-level Intensity Map in Africa',
-                showlegend=True
+                margin=dict(l=0, r=0, t=0, b=0),
+                title_text="Carte choroplèthe de la VAR > Ville d'origine",
+                showlegend=True,
+                geo=dict(
+                    resolution=110,
+                    showsubunits=True,
+                    subunitcolor="Blue",
+                    showframe=False,
+                    showcoastlines=False,
+                    showland=True,
+                    landcolor="whitesmoke",
+                    showocean=True,
+                    oceancolor="lightblue",
+                    showcountries=True,
+                    countrycolor="gray",
+                ),
             )
 
             filename = f"./{ASSETS_DIR_NAME}/choropleth_{store.name["format"]}"
@@ -474,7 +487,6 @@ class DataManager:
 
         elif store.name["format"] in ["UD", "MDL", "TDLPU", "FDDRSPJ", "NDPSYNPS", "MB", "TPSLEPJ", "MDVU", "SPDR", "TDL"]:
             fig = plt.figure(figsize=(10, 7))
-            filename = f"{ASSETS_DIR_NAME}/pie_{store.name["format"]}.png"
 
             labels = [item["name"] for item in store.data.values()]
             data = [item["count"] for item in store.data.values()]
@@ -488,7 +500,69 @@ class DataManager:
             fig.legend(wedges, labels, loc="upper right")
             plt.setp(autotexts, size=12, weight="bold")
             plt.title(store.name["default"])
-            plt.savefig(filename)
+            plt.savefig(f"{ASSETS_DIR_NAME}/pie_{store.name["format"]}.png")
+
+        elif store.name["format"] == "QDS":
+            from matplotlib.colors import LinearSegmentedColormap
+
+            scores = list(range(1, 11))
+            frequencies = [collections.Counter(store.data).get(i, 0) for i in range(1, 11)]
+            total = sum(frequencies)
+            percentages = [f / total * 100 for f in frequencies]
+
+            categories = {
+                'BAD': [1, 2],
+                'POOR': [3, 4],
+                'AVERAGE': [5, 6],
+                'GOOD': [7, 8],
+                'HAPPY': [9, 10]
+            }
+
+            emojis = {
+                'BAD': '😴',
+                'POOR': '😔',
+                'AVERAGE': '😐',
+                'GOOD': '🙂',
+                'HAPPY': '😊'
+            }
+
+            colors = LinearSegmentedColormap.from_list('sleep_quality', ['red', 'yellow', 'green'])
+            color_values = [colors(i/9) for i in range(10)]
+
+            # Create the figure
+            fig, ax = plt.subplots(figsize=(12, 6))
+
+            # Plot bars with color gradient
+            bars = ax.bar(scores, frequencies, color=color_values)
+
+            # Add percentage labels on top of bars
+            for i, (score, freq, percent) in enumerate(zip(scores, frequencies, percentages)):
+                ax.text(score, freq + 0.5, f'{percent:.1f}%', ha='center', va='bottom')
+
+            # Add category labels and emojis
+            y_pos = max(frequencies) * 1.1
+            for cat, scores in categories.items():
+                first = scores[0]
+                last = scores[-1]
+                center = (first + last) / 2
+                ax.text(center, y_pos, f'{cat}\n{emojis[cat]}', ha='center', va='center',
+                        fontsize=12, fontweight='bold', fontfamily='Noto Color Emoji')
+
+            # Customize the plot
+            ax.set_title('Sleep Quality Distribution (1-10 Scale)', fontsize=14, pad=20)
+            ax.set_xlabel('Sleep Quality Score', fontsize=12)
+            ax.set_ylabel('Frequency', fontsize=12)
+            ax.set_xticks(scores)
+            ax.set_ylim(0, max(frequencies) * 1.2)
+            ax.grid(axis='y', linestyle='--', alpha=0.7)
+
+            # Add a colorbar to show the quality scale
+            sm = plt.cm.ScalarMappable(cmap=colors, norm=plt.Normalize(1, 10))
+            sm.set_array([])
+            cbar = plt.colorbar(sm, ax=ax, orientation='horizontal', pad=0.05)
+            cbar.set_label('Sleep Quality (1 = Worst, 10 = Best)')
+
+            plt.savefig(f"{ASSETS_DIR_NAME}/scale_{store.name["format"]}.png")
 
 
 class StoreCollection(DataManager):
