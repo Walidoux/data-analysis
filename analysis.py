@@ -424,50 +424,46 @@ class DataManager:
                             print(f"Erreur de géolocalisation pour : {e}. City: {city_name}. Trop de tentatives.")
                 return None, None, None
 
-            city_names = [store["name"] for store in store.data.values()]
-            city_lats, city_lons, areas = [], [], []
+            city_lats, city_lons, areas, intensities = [], [], [], []
 
-            for city in city_names:
-                lat, lon, area = get_location_data(city)
+            for city in store.data.values():
+                lat, lon, area = get_location_data(city["name"])
                 if lat and lon and area:
                     city_lats.append(lat)
                     city_lons.append(lon)
                     areas.append(area)
+                    intensities.append(city["count"])
 
-            fig = pexp.choropleth(
-                locations=list(set(areas)),
-                locationmode="area names",
-                color=[areas.count(area) for area in set(areas)],
-                scope="africa"
-            )
+            fig = go.Figure()
 
             fig.add_trace(go.Scattergeo(
-                lon=city_lons,
-                lat=city_lats,
-                text=areas,
-                marker=dict(
-                    size=6,
-                    color='red',
-                    line=dict(
-                        width=1,
-                        color='white'
-                    )
-                ),
                 name='Cities',
                 mode='markers+text',
-                textposition='top center'
+                text=areas,
+                textposition='top center',
+                lon=city_lons,
+                lat=city_lats,
+                marker=dict(
+                    size=[i * 4 for i in intensities],
+                    color=intensities,
+                    colorscale='Reds',
+                    colorbar=dict(title='Intensity'),
+                    reversescale=False,
+                    opacity=0.8
+                )
             ))
 
             fig.update_geos(
+                scope="africa",
                 resolution=110,
                 showcountries=True,
                 countrycolor="Black",
                 showsubunits=True,
-                subunitcolor="Blue"
+                subunitcolor="Blue",
             )
 
             fig.update_layout(
-                title_text='African Countries with City Markers',
+                title_text='City-level Intensity Map in Africa',
                 showlegend=True
             )
 
@@ -476,7 +472,7 @@ class DataManager:
             fig.write_image(f"{filename}.png", scale=3, height=2600, width=2200)  # Image simple
             fig.write_html(f"{filename}.html")  # Page interactive
 
-        elif store.name["format"] in ["UD", "MDL", "TDLPU", "GENRE", "FDDRSPJ", "NDPSYNPS", "MB", "TPSLEPJ", "MDVU", "SPDR", "TDL"]:
+        elif store.name["format"] in ["UD", "MDL", "TDLPU", "FDDRSPJ", "NDPSYNPS", "MB", "TPSLEPJ", "MDVU", "SPDR", "TDL"]:
             fig = plt.figure(figsize=(10, 7))
             filename = f"{ASSETS_DIR_NAME}/pie_{store.name["format"]}.png"
 
@@ -753,8 +749,6 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
             f"`{sum(1 for d in dicts if isinstance(d, StoreCollection) and not d.removable())}` variables de type catégorielle",
         ]
     )
-
-
 
     removable_dicts = []
     for store in dicts:
