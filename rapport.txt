@@ -1,8 +1,0 @@
-Les idées et hypothèses sur lesquelles on va travailler : 
-- Si il y a une relation significative entre le genre et la filière d’étude
-- ⁠est-ce que le gouvernement ou le ministère de l’éducation suivent une politique de désengorgement
-des métropoles suite à une pression démographique sur la base de la variable ville d’origine
-- ⁠est-ce que la qualité de sommeil impacte la performance académique sur la base des mentions
-- ⁠ est-ce que les gens participent aux projets académiques ou professionnels ? Si oui, combien
-peuvent-ils économiser moyennement ?
-- ⁠ est-ce que les étudiants sont multitâches (sur la base du nombre d’heures d’études) ?

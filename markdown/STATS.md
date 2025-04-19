@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 18/04/2025 à 21:55
+# Analyse des données - Généré le 19/04/2025 à 15:13
 
 ## Statistiques descriptives
 
@@ -324,7 +324,7 @@
 
 |                  | N   | Minimum | Maximum | Moyenne  | Écart type |
 | ---------------- | --- | ------- | ------- | -------- | ---------- |
-| N Valide (liste) | 116 | 0.0     | 1000.0  | 388.5345 | 262.4575   |
+| N Valide (liste) | 116 | 0       | 1000    | 362.6724 | 274.6582   |
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
@@ -339,10 +339,10 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.2852</td>
+        <td>0.2604</td>
         <td>116</td>
         <td>0.0</td>
-        <td>0.8272</td>
+        <td>0.8356</td>
         <td>116</td>
         <td>0.0</td>
     </tr>
@@ -369,9 +369,9 @@
 
 #### Dispersion des données
 
-|                  | N   | Minimum | Maximum | Moyenne   | Écart type |
-| ---------------- | --- | ------- | ------- | --------- | ---------- |
-| N Valide (liste) | 116 | 0.0     | 40000.0 | 2293.9655 | 3678.6172  |
+|                  | N   | Minimum | Maximum | Moyenne  | Écart type |
+| ---------------- | --- | ------- | ------- | -------- | ---------- |
+| N Valide (liste) | 116 | 0.0     | 40000.0 | 2287.069 | 3683.6072  |
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
@@ -386,10 +386,10 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.3549</td>
+        <td>0.3543</td>
         <td>116</td>
         <td>0.0</td>
-        <td>0.2496</td>
+        <td>0.254</td>
         <td>116</td>
         <td>0.0</td>
     </tr>

@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 19/04/2025 à 14:54
+# Analyse des données - Généré le 19/04/2025 à 15:13
 
 Total variables traitées : `36`, dont :
 
@@ -37,9 +37,9 @@ Variables non-pertinentes dans notre analyse :
 | CDFVVPA  | Numérique    | 112     | •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans | ✅        |
 | TPSLEPJ  | Catégorielle | 116     | Temps passé sur les écrans par jour                                   | ✅        |
 | MDVU     | Catégorielle | 119     | Moyen de voyage Utiliser                                              | ✅        |
-| CAEPM    | Numérique    | 110     | capacité à économiser par moins ( MAD)                                | ✅        |
+| CAEPM    | Numérique    | 116     | capacité à économiser par moins ( MAD)                                | ✅        |
 | VD       | Catégorielle | 116     | Ville d’origine                                                       | ✅        |
-| DMM      | Numérique    | 114     | Dépenses mensuelles moyennes (en MAD)                                 | ✅        |
+| DMM      | Numérique    | 115     | Dépenses mensuelles moyennes (en MAD)                                 | ✅        |
 | NDFELSCA | Numérique    | 116     | Nombre de formations en ligne suivies cette année                     | ✅        |
 | MP       | Catégorielle | 130     | Matière préfère                                                       | ✅        |
 | FD       | Catégorielle | 116     | Filière d’étude                                                       | ✅        |
