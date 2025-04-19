@@ -1,6 +1,6 @@
-# Analyse des données - Généré le 18/04/2025 à 21:55
+# Analyse des données - Généré le 19/04/2025 à 14:54
 
-Total variables (avant traitement) : `37`, dont :
+Total variables traitées : `36`, dont :
 
 - `10` variables de type numérique
 - `26` variables de type catégorielle
@@ -8,6 +8,12 @@ Total variables (avant traitement) : `37`, dont :
 Variables supprimées par identification des données manquantes :
 
 - Activité physique (heures par semaine)
+
+Variables non-pertinentes dans notre analyse :
+
+- Horodateur
+- Nom d'utilisateur
+- Année d’étude
 
 ## Vue d'ensemble des variables
 

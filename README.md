@@ -17,6 +17,7 @@ Un rapport final de ce projet est consultable via [ce lien.](https://walid-proje
       - [Windows](#windows)
       - [Linux/MacOS](#linuxmacos)
     - [Exécution](#exécution)
+    - [Arguments (paramètres)](#arguments-paramètres)
 
 ## Spécificités
 
@@ -84,6 +85,10 @@ py.exe .\analysis.py # Windows
 python3 ./analysis.py # Linux/MacOS
 ```
 
-_Vous pouvez optionnellement spécifier l'argument `--write="xyz"` pour choisir sur quel type de fichier écrire la documentation générée à l'exécution du programme._
+### Arguments (paramètres)
 
-_Vous pouvez aussi spécifier l'argument `--skip-geolocation` pour ne pas regénérer à chaque fois une carte choroplèthe car le service de géolication des villes/pays prend plus du temps à s'exécuter._
+- `--write="NONE"` : Ajouter cet argument permet de spécifier sur quel type de fichier écrire la documentation générée à l'exécution du programme qui peut prend les valeurs correpondant aux noms des fichiers sur le dossier [markdown ici](./markdown). `NONE` veut dire aucune écriture. Vous pouvez spécifier plusieurs types de fichiers en séparant par une virgule.
+
+- `--skip-geolocation` : Ignorer l'étape de génénaration de la carte choroplèthe. Le service externe de géolocalisation des villes prend beaucoup de temps à s'exécuter.
+
+- `--skip-visualization` : Ignorer l'étape de génération des représentations graphiques.

@@ -18,6 +18,12 @@ import shutil
 import utils
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
+parser.add_argument("--skip-geolocation", action="store_true", help="Ne pas générer de carte choroplèthe")
+parser.add_argument("--skip-visualization", action="store_true", help="Ne pas générer les représentations graphiques")
+args = parser.parse_args()
+
 doc = mkdn.Document()
 data = mkdn.Document()
 stats = mkdn.Document()
@@ -31,12 +37,6 @@ for markdown in [doc, data, stats]:
 for item in os.listdir(ASSETS_DIR_NAME):
     item_path = os.path.join(ASSETS_DIR_NAME, item)
     shutil.rmtree(item_path) if os.path.isdir(item_path) else os.unlink(item_path)
-
-
-parser = argparse.ArgumentParser()
-parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
-parser.add_argument("--skip-geolocation", action="store_true", help="Ne pas générer de carte choroplèthe")
-args = parser.parse_args()
 
 
 class Listable(enum.Enum):
@@ -713,6 +713,10 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         headers[i] = formatted_header
 
     useless_dicts = ["ND", "AD", "HORODATEUR"]
+    removed_headers = [
+        header["default"] for header in doc_headers
+        if header["format"] in useless_dicts
+    ]
 
     # Suppression des données sensibles et/ou inutiles
     for i in useless_dicts:
@@ -819,7 +823,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
         i += 1
 
-    doc.add_paragraph(f"Total variables (avant traitement) : `{str(sum(1 for _ in dicts))}`, dont :")
+    doc.add_paragraph(f"Total variables traitées : `{str(sum(1 for dict in dicts if not dict.removable()))}`, dont :")
     doc.add_unordered_list(
         [
             f"`{sum(1 for d in dicts if isinstance(d, StoreSet) and not d.removable())}` variables de type numérique",
@@ -833,6 +837,9 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
             removable_dicts.append(store.name["default"])
     doc.add_paragraph(f"Variables supprimées par identification des données manquantes :")
     doc.add_unordered_list(removable_dicts)
+
+    doc.add_paragraph(f"Variables non-pertinentes dans notre analyse :")
+    doc.add_unordered_list(removed_headers)
 
     doc.add_heading("Vue d'ensemble des variables", level=2)
     doc.add_table(
@@ -875,7 +882,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     stats.add_heading("Analyse inférentielle", level=2)
     for store in dicts:
-        if not store.removable():
+        if not store.removable() and not args.skip_visualization:
             store.analyze(store)
 
     if args.write:
