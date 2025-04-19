@@ -6,3 +6,4 @@ kaleido # (for plotly static image export)
 pandas
 geopy
 scikit-learn
+cairosvg

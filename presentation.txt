@@ -88,6 +88,6 @@ la valeur la plus fréquente.
 
 
 
-Le scope="africa" de px.choropleth utilise une carte prédéfinie avec une résolution grossière,
+Le seul inconv utilise une carte prédéfinie avec une résolution grossière,
 ce qui a tendance à ommettre les très petits pays insulaires, surtout les îles proches de l’équateur
 comme São Tomé-et-Principe. C'est une limite de rendu cartographique dans Plotly.

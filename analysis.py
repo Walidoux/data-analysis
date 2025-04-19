@@ -23,6 +23,7 @@ data = mkdn.Document()
 stats = mkdn.Document()
 MD_DIR = "markdown"
 ASSETS_DIR_NAME = "assets"
+RESOURCES_DIR_NAME = "resources"
 time_generated = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
 for markdown in [doc, data, stats]:
     markdown.add_heading(f"Analyse des données - Généré le {time_generated}")
@@ -503,66 +504,68 @@ class DataManager:
             plt.savefig(f"{ASSETS_DIR_NAME}/pie_{store.name["format"]}.png")
 
         elif store.name["format"] == "QDS":
-            from matplotlib.colors import LinearSegmentedColormap
+            from matplotlib.colors import LinearSegmentedColormap, BoundaryNorm
+            from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+            from io import BytesIO
 
-            scores = list(range(1, 11))
-            frequencies = [collections.Counter(store.data).get(i, 0) for i in range(1, 11)]
-            total = sum(frequencies)
-            percentages = [f / total * 100 for f in frequencies]
+            import cairosvg
+
+            def load_svg(svg_path, size=(30, 30)):
+                png_data = cairosvg.svg2png(url=svg_path, output_width=size[0], output_height=size[1])
+                return plt.imread(BytesIO(png_data))
 
             categories = {
-                'BAD': [1, 2],
-                'POOR': [3, 4],
-                'AVERAGE': [5, 6],
-                'GOOD': [7, 8],
-                'HAPPY': [9, 10]
+                'BAD': (1, 2),
+                'POOR': (3, 4),
+                'AVERAGE': (5, 6),
+                'GOOD': (7, 8),
+                'HAPPY': (9, 10)
             }
 
-            emojis = {
-                'BAD': '😴',
-                'POOR': '😔',
-                'AVERAGE': '😐',
-                'GOOD': '🙂',
-                'HAPPY': '😊'
-            }
+            scores = list(range(1, 11))
+            frequencies = [collections.Counter(store.data).get(score, 0) for score in scores]
+            total_responses = sum(frequencies)
+            percentages = [freq / total_responses * 100 for freq in frequencies]
+            max_freq = max(frequencies)
 
-            colors = LinearSegmentedColormap.from_list('sleep_quality', ['red', 'yellow', 'green'])
-            color_values = [colors(i/9) for i in range(10)]
+            category_colors = ['#ff0000', '#ff6600', '#ffcc00', '#66cc00', '#009900']
+            cmap = LinearSegmentedColormap.from_list('sleep_quality', category_colors, N=len(categories))
 
-            # Create the figure
+            bounds = [1, 3, 5, 7, 9, 11]
+            norm = BoundaryNorm(bounds, len(categories))
+
+            # Plot setup
             fig, ax = plt.subplots(figsize=(12, 6))
+            bars = ax.bar(scores, frequencies, color=[cmap(norm(score)) for score in scores])
 
-            # Plot bars with color gradient
-            bars = ax.bar(scores, frequencies, color=color_values)
-
-            # Add percentage labels on top of bars
-            for i, (score, freq, percent) in enumerate(zip(scores, frequencies, percentages)):
+            # Add percentage labels
+            for score, freq, percent in zip(scores, frequencies, percentages):
                 ax.text(score, freq + 0.5, f'{percent:.1f}%', ha='center', va='bottom')
 
-            # Add category labels and emojis
-            y_pos = max(frequencies) * 1.1
-            for cat, scores in categories.items():
-                first = scores[0]
-                last = scores[-1]
-                center = (first + last) / 2
-                ax.text(center, y_pos, f'{cat}\n{emojis[cat]}', ha='center', va='center',
-                        fontsize=12, fontweight='bold', fontfamily='Noto Color Emoji')
+            # Add category icons
+            y_pos = max_freq * 1.1
+            for category, (start, end) in categories.items():
+                center = (start + end) / 2
+                src = load_svg(f"./resources/{category}.svg")
+                imagebox = OffsetImage(src, zoom=1.0)
+                ax.add_artist(AnnotationBbox(imagebox, (center, y_pos), frameon=False))
 
-            # Customize the plot
-            ax.set_title('Sleep Quality Distribution (1-10 Scale)', fontsize=14, pad=20)
+            # Axes and titles
+            ax.set_title(f'Distribution: {store.name["default"]} (Scale 1-10)', fontsize=14, pad=20)
             ax.set_xlabel('Sleep Quality Score', fontsize=12)
             ax.set_ylabel('Frequency', fontsize=12)
             ax.set_xticks(scores)
-            ax.set_ylim(0, max(frequencies) * 1.2)
-            ax.grid(axis='y', linestyle='--', alpha=0.7)
+            ax.set_ylim(0, max_freq * 1.25)
 
-            # Add a colorbar to show the quality scale
-            sm = plt.cm.ScalarMappable(cmap=colors, norm=plt.Normalize(1, 10))
+            # Color bar (legend)
+            sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
             sm.set_array([])
-            cbar = plt.colorbar(sm, ax=ax, orientation='horizontal', pad=0.05)
-            cbar.set_label('Sleep Quality (1 = Worst, 10 = Best)')
+            cbar = plt.colorbar(sm, ax=ax, orientation='horizontal', pad=0.05,
+                                ticks=[2, 4, 6, 8, 10])
+            cbar.set_label('Sleep Quality Categories')
+            cbar.ax.set_xticklabels(['BAD', 'POOR', 'AVERAGE', 'GOOD', 'HAPPY'])
 
-            plt.savefig(f"{ASSETS_DIR_NAME}/scale_{store.name["format"]}.png")
+            plt.savefig(f"{ASSETS_DIR_NAME}/scale_{store.name['format']}.png", dpi=120, bbox_inches='tight')
 
 
 class StoreCollection(DataManager):
