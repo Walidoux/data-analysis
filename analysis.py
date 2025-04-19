@@ -145,7 +145,7 @@ class DataManager:
             [f"Médiane : {median}", "IQR"],
         )
 
-        plt.savefig(filename)
+        plt.savefig(filename, dpi=120, bbox_inches='tight')
 
         data.add_heading(f"{self.name["default"]} [{self.name["format"]}]", level=4)
         data.add_block(mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")]))
@@ -364,7 +364,7 @@ class DataManager:
                 plt.title(f"Histogramme avec une courbe de distribution normale")
                 plt.xlabel(dict.name["default"])
                 plt.ylabel("Probabilité de densité")
-                plt.savefig(filename)
+                plt.savefig(filename, dpi=120, bbox_inches='tight')
 
                 stats.add_block(mkdn.Quote(message))
                 stats.add_block(mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")]))
@@ -501,7 +501,7 @@ class DataManager:
             fig.legend(wedges, labels, loc="upper right")
             plt.setp(autotexts, size=12, weight="bold")
             plt.title(store.name["default"])
-            plt.savefig(f"{ASSETS_DIR_NAME}/pie_{store.name["format"]}.png")
+            plt.savefig(f"{ASSETS_DIR_NAME}/pie_{store.name["format"]}.png", dpi=120, bbox_inches='tight')
 
         elif store.name["format"] == "QDS":
             from matplotlib.colors import LinearSegmentedColormap, BoundaryNorm
