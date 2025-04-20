@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 20/04/2025 à 14:50
+# Analyse des données - Généré le 20/04/2025 à 19:12
 
 ## Statistiques descriptives
 
@@ -340,9 +340,9 @@
 
 |  | Sex    | COMMERCE | GESTION | Total |
 |  | ------ | -------- | ------- | ----- |
-|  | FEMALE | 0        | 0       | 0     |
-|  | MALE   | 0        | 0       | 0     |
-|  | Total  | 0        | 0       | 0     |
+|  | FEMALE | 22       | 59      | 81    |
+|  | MALE   | 13       | 22      | 35    |
+|  | Total  | 35       | 81      | 116   |
 
 #### Tableau du Khi-Carré (χ²)
 

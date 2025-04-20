@@ -550,14 +550,14 @@ class DataManager:
 
 
 class StoreCollection(DataManager):
-    def __init__(self, pos, method: typing.Literal["exact", "approx"] = "exact", recursive=False, verified=False, nullish=False):
+    def __init__(self, pos, method: typing.Literal["exact", "approx"] = "exact", recursive=False, nullish=False):
         self.pos = pos
         self.data = {}
         self.method = method
+        self.raw = []
         self.name = doc_headers[pos]
         self.invalid_subsets = []
         self.recursive = recursive
-        self.verified = verified
         self.nullish = nullish
 
     def cleanup(self, value):
@@ -592,6 +592,10 @@ class StoreCollection(DataManager):
                 "value": v
             })
 
+        def resolve(key):
+            self.raw.append(key)
+            self.data[key]["count"] += 1
+
         if not value or self.is_unknown(value):
             return unresolved(UnwantedDataType.MISSING, value)
         elif value and not re.search(r"[a-zA-Z]", value.strip()) and not re.fullmatch(r"\d+(?:\s*-\s*\d+)?", value.strip()):
@@ -606,29 +610,27 @@ class StoreCollection(DataManager):
             if info is None:
                 continue
             if self.method == "approx" and utils.matches_approx(value, info["name"]):
-                self.data[key]["count"] += 1
-                return
+                return resolve(key)
             elif self.method == "exact" and info["name"] == value:
                 self.data[key]["count"] += 1
-                return
+                return resolve(key)
             elif self.method != "exact" and (
                 info["name"] in value or value in info["name"]
             ):
-                self.data[key]["count"] += 1
-                return
+                return resolve(key)
         self.data[len(self.data)] = {"name": value, "count": 1}
+        self.raw.append(0)
 
     def length(self) -> int:
         return sum(item["count"] for item in self.data.values() if item is not None)
 
 
 class StoreSet(DataManager):
-    def __init__(self, pos, verified=False, nullish=False):
+    def __init__(self, pos, nullish=False):
         self.pos = pos
         self.data = []
         self.name = doc_headers[pos]
         self.invalid_subsets = []
-        self.verified = verified
         self.nullish = nullish
 
     def cleanup(self, value):
@@ -707,39 +709,39 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         file = [row[:index] + row[index + 1:] for row in file]
 
     # Traitement des données numériques et alphanumériques (catégorielles)
-    ages_set = StoreSet(headers.index("AGE"), verified=True)
-    city_dict = StoreCollection(headers.index("VD"), method="approx", verified=True)
-    mentions_dicts = [StoreCollection(headers.index(f"MS{i}"), verified=True) for i in range(1, 6)]
-    mentionbac_dict = StoreCollection(headers.index("MB"), verified=True)
-    padpa_dict = StoreCollection(headers.index("PADPA"), verified=True)
-    sex_dict = StoreCollection(headers.index("GENRE"), verified=True)
-    anneebac_set = StoreSet(headers.index("ADDB"), verified=True)
-    ndfelsca_dict = StoreSet(headers.index("NDFELSCA"), verified=True)
-    studyfield_dict = StoreCollection(headers.index("FD"), method="approx", verified=True)
-    optionbac_dict = StoreCollection(headers.index("OB"), verified=True)
-    excel_dict = StoreCollection(headers.index("UD"), verified=True)
-    logiciels_dict = StoreCollection(headers.index("MDL"), recursive=True, verified=True)
-    nddps_dict = StoreSet(headers.index("NDDPS"), verified=True)
-    tdl_dict = StoreCollection(headers.index("TDL"), method="approx", verified=True)
-    mp_dict = StoreCollection(headers.index("MP"), method="approx", recursive=True, verified=True)
-    tpslepj_dict = StoreCollection(headers.index("TPSLEPJ"), verified=True)
-    mdvu_dict = StoreCollection(headers.index("MDVU"), method="approx", recursive=True, verified=True, nullish=True)
-    cdfvvpa_dict = StoreSet(headers.index("CDFVVPA"), verified=True, nullish=True)
-    caepm_dict = StoreSet(headers.index("CAEPM"), verified=True, nullish=True)
-    nddtps_dict = StoreSet(headers.index("NDDTPS"), verified=False, nullish=True)
-    tepde_dict = StoreCollection(headers.index("TEPDE"), verified=True)
-    spdr_dict = StoreCollection(headers.index("SPDR"), recursive=True, verified=True)
-    qds_dict = StoreSet(headers.index("QDS"), verified=True)
-    dmm_dict = StoreSet(headers.index("DMM"), verified=True, nullish=True)
-    lp_dict = StoreCollection(headers.index("LP"), recursive=True, verified=True)
-    ndllpa_dict = StoreCollection(headers.index("NDLLPA"), verified=True)
-    tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True, verified=True, nullish=True)
-    ap_dict = StoreSet(headers.index("AP"), verified=True)
-    nmddspn_dict = StoreSet(headers.index("NMDDSPN"), verified=True)
-    ndpsynps_dict = StoreCollection(headers.index("NDPSYNPS"), verified=True)
-    pdmlde_dict = StoreCollection(headers.index("PDMLDE"), verified=True)
-    tdlpu_dict = StoreCollection(headers.index("TDLPU"), recursive=True, verified=True)
-    fddrspj_dict = StoreCollection(headers.index("FDDRSPJ"), verified=True)
+    ages_set = StoreSet(headers.index("AGE"))
+    city_dict = StoreCollection(headers.index("VD"), method="approx")
+    mentions_dicts = [StoreCollection(headers.index(f"MS{i}")) for i in range(1, 6)]
+    mentionbac_dict = StoreCollection(headers.index("MB"))
+    padpa_dict = StoreCollection(headers.index("PADPA"))
+    sex_dict = StoreCollection(headers.index("GENRE"))
+    anneebac_set = StoreSet(headers.index("ADDB"))
+    ndfelsca_dict = StoreSet(headers.index("NDFELSCA"))
+    studyfield_dict = StoreCollection(headers.index("FD"), method="approx")
+    optionbac_dict = StoreCollection(headers.index("OB"))
+    excel_dict = StoreCollection(headers.index("UD"))
+    logiciels_dict = StoreCollection(headers.index("MDL"), recursive=True)
+    nddps_dict = StoreSet(headers.index("NDDPS"))
+    tdl_dict = StoreCollection(headers.index("TDL"), method="approx")
+    mp_dict = StoreCollection(headers.index("MP"), method="approx", recursive=True)
+    tpslepj_dict = StoreCollection(headers.index("TPSLEPJ"))
+    mdvu_dict = StoreCollection(headers.index("MDVU"), method="approx", recursive=True, nullish=True)
+    cdfvvpa_dict = StoreSet(headers.index("CDFVVPA"), nullish=True)
+    caepm_dict = StoreSet(headers.index("CAEPM"), nullish=True)
+    nddtps_dict = StoreSet(headers.index("NDDTPS"), nullish=True)
+    tepde_dict = StoreCollection(headers.index("TEPDE"))
+    spdr_dict = StoreCollection(headers.index("SPDR"), recursive=True)
+    qds_dict = StoreSet(headers.index("QDS"))
+    dmm_dict = StoreSet(headers.index("DMM"), nullish=True)
+    lp_dict = StoreCollection(headers.index("LP"), recursive=True)
+    ndllpa_dict = StoreCollection(headers.index("NDLLPA"))
+    tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True, nullish=True)
+    ap_dict = StoreSet(headers.index("AP"))
+    nmddspn_dict = StoreSet(headers.index("NMDDSPN"))
+    ndpsynps_dict = StoreCollection(headers.index("NDPSYNPS"))
+    pdmlde_dict = StoreCollection(headers.index("PDMLDE"))
+    tdlpu_dict = StoreCollection(headers.index("TDLPU"), recursive=True)
+    fddrspj_dict = StoreCollection(headers.index("FDDRSPJ"))
 
     dicts = [
         sex_dict,
@@ -781,7 +783,6 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     rows = list(file)
 
     while i < len(rows):
-
         for store in dicts:
             if store not in [anneebac_set, optionbac_dict, logiciels_dict]:
                 if isinstance(store, StoreCollection):
@@ -824,14 +825,15 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     doc.add_heading("Vue d'ensemble des variables", level=2)
     doc.add_table(
-        ["Nom", "Type", "Largeur", "Libellé", "Vérifiée"],
+        ["Nom", "Type", "Largeur", "Libellé", "Méthode utilisée", "Récursive"],
         [
             [
                 f"🗑️ {dict.name['format']}" if dict.removable() else dict.name["format"],
                 "Numérique" if isinstance(dict, StoreSet) else "Catégorielle",
                 str(dict.length()),
                 dict.name["default"],
-                "✅" if dict.verified else "❌",
+                dict.method if isinstance(dict, StoreCollection) else  " ",
+                "✅" if isinstance(dict, StoreCollection) and dict.recursive else "❌",
             ]
             for _, dict in enumerate(dicts)
         ],
@@ -875,12 +877,14 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     cumul_sex_total = 0
 
     for sex_key, sex_value in sex_dict.data.items():
-        row = ["", sex_value["name"]]
+        sex_name = sex_value["name"]
+        row = ["", sex_name]
         sex_total = 0
 
         for i, (field_key, field_value) in enumerate(studyfield_dict.data.items()):
             field_name = field_value["name"]
-            count = sum(1 for row_data in rows if row_data[sex_dict.pos] == sex_value["name"] and row_data[studyfield_dict.pos] == field_name)
+            count = sum(1 for k, sex_raw in enumerate(sex_dict.raw) if sex_raw == sex_key and studyfield_dict.raw[k] == field_key)
+
             row.append(str(count))
             sex_total += count
             cumul_field_totals[i] += count
