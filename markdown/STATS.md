@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 20/04/2025 à 19:12
+# Analyse des données - Généré le 20/04/2025 à 19:43
 
 ## Statistiques descriptives
 
@@ -345,5 +345,15 @@
 |  | Total  | 35       | 81      | 116   |
 
 #### Tableau du Khi-Carré (χ²)
+
+|                          | Valeur | dll | Sig.  |
+| ------------------------ | ------ | --- | ----- |
+| Khi-Carré de Pearson     | 0.731  | 1   | 0.393 |
+| Rapport de vraisemblance |        | 1   |       |
+| N d'observations valides | 116    |     |       |
+
+a. 0 cellules (0.0%) ont un effectif théorique inférieur à 5. L'effectif théorique minimum est de 10.56.
+
+Signification (p-value) = 0.393 Le test du Khi-deux de Pearson indique une association non significative entre les variables (p = 0.393).
 
 ## Analyse inférentielle

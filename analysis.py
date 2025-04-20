@@ -898,6 +898,46 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     stats.add_heading("Tableau du Khi-Carré (χ²)", level=4)
 
+    headers = ["", "Valeur", "dll", "Sig."]
+
+    observed_data = []
+    for row in table_rows[:-1]:
+        observed_data.append([int(x) for x in row[2:-1]])
+
+    observed = np.array(observed_data)
+    chi2, p_value, dof, expected = chi2_contingency(observed)
+    print(observed)
+
+    n_valid = np.sum(observed)
+    n_cells = observed.size
+    min_expected = np.min(expected)
+    cells_under_5 = np.sum(expected < 5)
+    percent_under_5 = (cells_under_5 / n_cells) * 100
+
+    rows = [
+        ["Khi-Carré de Pearson", f"{chi2:.3f}", dof, f"{p_value:.3f}"],
+        ["Rapport de vraisemblance", "", dof, ""],
+        ["N d'observations valides", n_valid, "", ""],
+    ]
+
+    stats.add_table(headers, rows)
+
+    interpretation = (
+        f"Signification (p-value) = {p_value:.3f}\n\n"
+        f"Le test du Khi-deux de Pearson indique une association "
+        f"{'statistiquement significative' if p_value < 0.05 else 'non significative'} "
+        f"entre les variables."
+    )
+
+    if percent_under_5 > 20 or min_expected < 1:
+        interpretation += (
+            "\n\nAttention : Les conditions d'application du test ne sont pas pleinement respectées "
+            "(plus de 20% des effectifs théoriques < 5 ou effectif minimum < 1). "
+            "Les résultats doivent être interprétés avec prudence."
+        )
+
+    stats.add_paragraph(interpretation)
+
     stats.add_heading("Analyse inférentielle", level=2)
 
     for store in dicts:
