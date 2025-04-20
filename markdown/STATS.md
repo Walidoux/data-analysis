@@ -1,62 +1,6 @@
-# Analyse des données - Généré le 19/04/2025 à 15:13
+# Analyse des données - Généré le 20/04/2025 à 14:50
 
 ## Statistiques descriptives
-
-### Genre [GENRE]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 2    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Type d’application la plus utilisée  [TDLPU]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 6    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Pratique du multitâche lors des études [PDMLDE]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 2    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Fréquence d’utilisation des réseaux sociaux par jour [FDDRSPJ]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
 
 ### Qualité du sommeil  [QDS]
 
@@ -93,90 +37,6 @@
 
 ![](../assets/hist_QDS.png)
 
-### •Nombre de livres lus par an [NDLLPA]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 6    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Type de sport pratiqué [TDSP]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 34   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Loisir préféré [LP]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 69   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### •Travail en parallèle des études [TEPDE]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 2    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Option    Bac [OB]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 3    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Nombre d’heures passées sur YouTube, Netflix par semaine [NDPSYNPS]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
 ### Nombre moyen d’heures de sommeil par nuit [NMDDSPN]
 
 #### Dispersion des données
@@ -209,20 +69,6 @@
 
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
-
-### Mention Bac [MB]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
 
 ### Nombre d’heures de travail par semaine [NDDTPS]
 
@@ -290,34 +136,6 @@
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
-### Temps passé sur les écrans par jour  [TPSLEPJ]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Moyen de voyage Utiliser  [MDVU]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 6    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
 ### capacité à économiser par moins ( MAD) [CAEPM]
 
 #### Dispersion des données
@@ -350,20 +168,6 @@
 
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
-
-### Ville d’origine [VD]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 41   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
 
 ### Dépenses mensuelles moyennes (en MAD) [DMM]
 
@@ -431,76 +235,6 @@
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
-### Matière préfère  [MP]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 32   | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Filière d’étude [FD]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 2    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Source principale de revenu [SPDR]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Maîtrise d’autres logiciels  [MDL]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 5    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Type de logement ( à Dakhla ) [TDL]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 5    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
 ### Nombre d'heures d'étude par semaine  [NDDPS]
 
 #### Dispersion des données
@@ -533,34 +267,6 @@
 
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
-
-### Participation à des projets académiques/professionnels [PADPA]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 2    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Utilisation d’Excel  [UD]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 5    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
 
 ### Âge [AGE]
 
@@ -628,74 +334,16 @@
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
-### Mentions S1 [MS1]
+### Genre [GENRE] -> Filière d’étude [FD]
 
-#### Dispersion des données
+#### Tableau de contingence (croisé)
 
-##### Test du Khi-deux
+|  | Sex    | COMMERCE | GESTION | Total |
+|  | ------ | -------- | ------- | ----- |
+|  | FEMALE | 0        | 0       | 0     |
+|  | MALE   | 0        | 0       | 0     |
+|  | Total  | 0        | 0       | 0     |
 
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Mentions S2 [MS2]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Mentions S3 [MS3]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Mentions S4 [MS4]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
-
-### Mentions S5 [MS5]
-
-#### Dispersion des données
-
-##### Test du Khi-deux
-
-|                          | Valeur | dll  | Sig.  |
-| ------------------------ | ------ | ---- | ----- |
-| Khi-Carré de Pearson     | 4      | 4    | 0.565 |
-| Rapport de vraisemblance | 1.53   | 2    | 0.465 |
-| N d'observations valides | 1.0    | None |       |
-
-> Il y a une relation significative entre les variables
+#### Tableau du Khi-Carré (χ²)
 
 ## Analyse inférentielle

@@ -34,9 +34,10 @@ time_generated = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
 for markdown in [doc, data, stats]:
     markdown.add_heading(f"Analyse des données - Généré le {time_generated}")
 
-for item in os.listdir(ASSETS_DIR_NAME):
-    item_path = os.path.join(ASSETS_DIR_NAME, item)
-    shutil.rmtree(item_path) if os.path.isdir(item_path) else os.unlink(item_path)
+if not args.skip_visualization:
+    for item in os.listdir(ASSETS_DIR_NAME):
+        item_path = os.path.join(ASSETS_DIR_NAME, item)
+        shutil.rmtree(item_path) if os.path.isdir(item_path) else os.unlink(item_path)
 
 
 class Listable(enum.Enum):
@@ -275,10 +276,10 @@ class DataManager:
             data.add_block(mkdn.Quote(f"Les valeurs non valides sont les suivantes : {', '.join(f'`{subset['value']}`' for subset in dict.invalid_subsets)}"))
 
     def generate_statistics(self, dict):
-        stats.add_heading(f"{dict.name["default"]} [{dict.name["format"]}]", level=3)
-        stats.add_heading("Dispersion des données", level=4)
-
         if isinstance(dict, StoreSet):
+            stats.add_heading(f"{dict.name["default"]} [{dict.name["format"]}]", level=3)
+            stats.add_heading("Dispersion des données", level=4)
+
             headers = ["", "N", "Minimum", "Maximum", "Moyenne", "Écart type"]
 
             min = np.min(dict.data)
@@ -372,27 +373,7 @@ class DataManager:
                 stats.add_block(mkdn.Quote(message))
                 message = "Une distribution non normale"
 
-        else:
-            stats.add_heading("Test du Khi-deux", level=5)
-            headers = ["", "Valeur", "dll", "Sig."]
-
-            observed = [dict.data[key]["count"] for key in dict.data]
-            stat, p_value, dof, expected = chi2_contingency(observed)
-
-            rows = [
-                ["Khi-Carré de Pearson", 4, len(dict.data), 0.565],
-                ["Rapport de vraisemblance", 1.530, 2, 0.465],
-                ["N d'observations valides", p_value, None, ""],
-            ]
-
-            p = 0  # coef de corr ?
-
-            stats.add_table(headers, rows)
-
-            if p < 0.05:
-                stats.add_block(mkdn.Quote("Il y a une relation significative entre les variables"))
-
-    def analyze(self, store):
+    def visualize(self, store):
         # Generate choropleth map
         if store.name["format"] == "VD" and not args.skip_geolocation:
             import plotly.express as px
@@ -865,25 +846,59 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
             store.handle_missing_data(store)
 
     data.add_heading("Identification des données manquantes", level=3)
-    rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
+    table_rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
     headers = [d.name["format"] for d in dicts if not d.removable()]
     for store in dicts:
         if not store.removable():
-            rows[0].append(str(store.length()))
+            table_rows[0].append(str(store.length()))
             for i, type in enumerate(UnwantedDataType.get()):
                 subset = [v for v in store.invalid_subsets if v["type"] == UnwantedDataType[type]]
-                rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
-    data.add_table(["", "", *headers], rows)
+                table_rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
+    data.add_table(["", "", *headers], table_rows)
 
     stats.add_heading("Statistiques descriptives", level=2)
     for store in dicts:
         if not store.removable():
             store.generate_statistics(store)
 
+    # Hypothèse 1 : Genre et filière
+    stats.add_heading(f"{sex_dict.name["default"]} [{sex_dict.name["format"]}] -> {studyfield_dict.name["default"]} [{studyfield_dict.name["format"]}]", level=3)
+    stats.add_heading("Tableau de contingence (croisé)", level=4)
+
+    sex_labels = [v["name"] for v in sex_dict.data.values()]
+    studyfield_labels = [v["name"] for v in studyfield_dict.data.values()]
+
+    headers = ["", "Sex", *studyfield_labels, "Total"]
+    table_rows = []
+
+    cumul_field_totals = [0 for _ in studyfield_labels]
+    cumul_sex_total = 0
+
+    for sex_key, sex_value in sex_dict.data.items():
+        row = ["", sex_value["name"]]
+        sex_total = 0
+
+        for i, (field_key, field_value) in enumerate(studyfield_dict.data.items()):
+            field_name = field_value["name"]
+            count = sum(1 for row_data in rows if row_data[sex_dict.pos] == sex_value["name"] and row_data[studyfield_dict.pos] == field_name)
+            row.append(str(count))
+            sex_total += count
+            cumul_field_totals[i] += count
+
+        row.append(str(sex_total))
+        cumul_sex_total += sex_total
+        table_rows.append(row)
+
+    table_rows.append(["", "Total", *map(str, cumul_field_totals), str(cumul_sex_total)])
+    stats.add_table(headers, table_rows)
+
+    stats.add_heading("Tableau du Khi-Carré (χ²)", level=4)
+
     stats.add_heading("Analyse inférentielle", level=2)
+
     for store in dicts:
         if not store.removable() and not args.skip_visualization:
-            store.analyze(store)
+            store.visualize(store)
 
     if args.write:
         for arg in args.write.split(","):
