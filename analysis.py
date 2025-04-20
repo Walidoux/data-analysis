@@ -374,7 +374,7 @@ class DataManager:
                 message = "Une distribution non normale"
 
     def visualize(self, store):
-        # Generate choropleth map
+        # Génération d'une carte choroplèthe
         if store.name["format"] == "VD" and not args.skip_geolocation:
             import plotly.express as px
             import plotly.graph_objects as go
@@ -668,6 +668,80 @@ class StoreSet(DataManager):
     def length(self) -> int:
         return len([item for item in self.data if item is not None])
 
+class StatsManager():
+    def __init__(self, dep_var: StoreCollection, indep_var: StoreCollection):
+        self.dep_var = dep_var
+        self.indep_var = indep_var
+        self.table_rows = []
+
+    def gen_contingency_table(self):
+        stats.add_heading(f"{self.dep_var.name["default"]} [{self.indep_var.name["format"]}] -> {self.dep_var.name["default"]} [{self.indep_var.name["format"]}]", level=3)
+        stats.add_heading("Tableau de contingence (croisé)", level=4)
+
+        indep_var_labels = [v["name"] for v in self.indep_var.data.values()]
+
+        headers = ["", self.dep_var.name["format"], *indep_var_labels, "Total"]
+
+        cumul_indep_var_values = [0 for _ in indep_var_labels]
+        cumul_dep_var_values = 0
+
+        for key, value in self.dep_var.data.items():
+            row = ["", value["name"]]
+            count_dep_var = 0
+
+            for i, (field_key, _) in enumerate(self.indep_var.data.items()):
+                count = sum(1 for k, dep_var_raw in enumerate(self.dep_var.raw) if dep_var_raw == key and self.indep_var.raw[k] == field_key)
+
+                row.append(str(count))
+                count_dep_var += count
+                cumul_indep_var_values[i] += count
+
+            row.append(str(count_dep_var))
+            cumul_dep_var_values += count_dep_var
+            self.table_rows.append(row)
+
+        self.table_rows.append(["", "Total", *map(str, cumul_indep_var_values), str(cumul_dep_var_values)])
+        stats.add_table(headers, self.table_rows)
+
+    def gen_khi_square_table(self):
+        stats.add_heading("Tableau du Khi-Carré (χ²)", level=4)
+
+        headers = ["", "Valeur", "dll", "Sig."]
+
+        observed_data = []
+        for row in self.table_rows[:-1]:
+            observed_data.append([int(x) for x in row[2:-1]])
+
+        observed = np.array(observed_data)
+        chi2, p_value, dof, expected = chi2_contingency(observed)
+
+        min_expected = np.min(expected) # type: ignore
+        cells_under_5 = np.sum(expected < 5) # type: ignore
+        percent_under_5 = (cells_under_5 / observed.size) * 100
+
+        rows = [
+            ["Khi-Carré de Pearson", f"{chi2:.3f}", dof, f"{p_value:.3f}"],
+            ["Rapport de vraisemblance", "", dof, ""],
+            ["N d'observations valides", np.sum(observed), "", ""],
+        ]
+
+        stats.add_table(headers, rows)
+
+        interpretation = (
+            f"Le test du Khi-deux de Pearson indique une association "
+            f"__{'statistiquement significative' if p_value < 0.05 else 'non significative'}__ "
+            f"entre {self.dep_var.name["default"].lower()} et {self.indep_var.name["default"].lower()}"
+        )
+
+        if percent_under_5 > 20 or min_expected < 1:
+            interpretation += (
+                "Attention : Les conditions d'application du test ne sont pas pleinement respectées "
+                "(plus de 20% des effectifs théoriques < 5 ou effectif minimum < 1). "
+                "Les résultats doivent être interprétés avec prudence."
+            )
+
+        stats.add_paragraph(interpretation)
+
 
 # Importation des données
 with open(file="data.csv", mode="r", encoding="utf-8") as file:
@@ -863,80 +937,15 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         if not store.removable():
             store.generate_statistics(store)
 
-    # Hypothèse 1 : Genre et filière
-    stats.add_heading(f"{sex_dict.name["default"]} [{sex_dict.name["format"]}] -> {studyfield_dict.name["default"]} [{studyfield_dict.name["format"]}]", level=3)
-    stats.add_heading("Tableau de contingence (croisé)", level=4)
+    # Hypothèse 1 : Genre -> filière
+    hypothesis1 = StatsManager(sex_dict, studyfield_dict)
+    hypothesis1.gen_contingency_table()
+    hypothesis1.gen_khi_square_table()
 
-    sex_labels = [v["name"] for v in sex_dict.data.values()]
-    studyfield_labels = [v["name"] for v in studyfield_dict.data.values()]
-
-    headers = ["", "Sex", *studyfield_labels, "Total"]
-    table_rows = []
-
-    cumul_field_totals = [0 for _ in studyfield_labels]
-    cumul_sex_total = 0
-
-    for sex_key, sex_value in sex_dict.data.items():
-        sex_name = sex_value["name"]
-        row = ["", sex_name]
-        sex_total = 0
-
-        for i, (field_key, field_value) in enumerate(studyfield_dict.data.items()):
-            field_name = field_value["name"]
-            count = sum(1 for k, sex_raw in enumerate(sex_dict.raw) if sex_raw == sex_key and studyfield_dict.raw[k] == field_key)
-
-            row.append(str(count))
-            sex_total += count
-            cumul_field_totals[i] += count
-
-        row.append(str(sex_total))
-        cumul_sex_total += sex_total
-        table_rows.append(row)
-
-    table_rows.append(["", "Total", *map(str, cumul_field_totals), str(cumul_sex_total)])
-    stats.add_table(headers, table_rows)
-
-    stats.add_heading("Tableau du Khi-Carré (χ²)", level=4)
-
-    headers = ["", "Valeur", "dll", "Sig."]
-
-    observed_data = []
-    for row in table_rows[:-1]:
-        observed_data.append([int(x) for x in row[2:-1]])
-
-    observed = np.array(observed_data)
-    chi2, p_value, dof, expected = chi2_contingency(observed)
-    print(observed)
-
-    n_valid = np.sum(observed)
-    n_cells = observed.size
-    min_expected = np.min(expected)
-    cells_under_5 = np.sum(expected < 5)
-    percent_under_5 = (cells_under_5 / n_cells) * 100
-
-    rows = [
-        ["Khi-Carré de Pearson", f"{chi2:.3f}", dof, f"{p_value:.3f}"],
-        ["Rapport de vraisemblance", "", dof, ""],
-        ["N d'observations valides", n_valid, "", ""],
-    ]
-
-    stats.add_table(headers, rows)
-
-    interpretation = (
-        f"Signification (p-value) = {p_value:.3f}\n\n"
-        f"Le test du Khi-deux de Pearson indique une association "
-        f"{'statistiquement significative' if p_value < 0.05 else 'non significative'} "
-        f"entre les variables."
-    )
-
-    if percent_under_5 > 20 or min_expected < 1:
-        interpretation += (
-            "\n\nAttention : Les conditions d'application du test ne sont pas pleinement respectées "
-            "(plus de 20% des effectifs théoriques < 5 ou effectif minimum < 1). "
-            "Les résultats doivent être interprétés avec prudence."
-        )
-
-    stats.add_paragraph(interpretation)
+    # Hypothèse 2 : Option BAC -> Filière d'étude
+    hypothesis2 = StatsManager(optionbac_dict, studyfield_dict)
+    hypothesis2.gen_contingency_table()
+    hypothesis2.gen_khi_square_table()
 
     stats.add_heading("Analyse inférentielle", level=2)
 

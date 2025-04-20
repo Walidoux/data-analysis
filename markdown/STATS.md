@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 20/04/2025 à 19:43
+# Analyse des données - Généré le 20/04/2025 à 21:31
 
 ## Statistiques descriptives
 
@@ -334,11 +334,11 @@
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
-### Genre [GENRE] -> Filière d’étude [FD]
+### Genre [FD] -> Genre [FD]
 
 #### Tableau de contingence (croisé)
 
-|  | Sex    | COMMERCE | GESTION | Total |
+|  | GENRE  | COMMERCE | GESTION | Total |
 |  | ------ | -------- | ------- | ----- |
 |  | FEMALE | 22       | 59      | 81    |
 |  | MALE   | 13       | 22      | 35    |
@@ -352,8 +352,27 @@
 | Rapport de vraisemblance |        | 1   |       |
 | N d'observations valides | 116    |     |       |
 
-a. 0 cellules (0.0%) ont un effectif théorique inférieur à 5. L'effectif théorique minimum est de 10.56.
+Le test du Khi-deux de Pearson indique une association __non significative__ entre genre et filière d’étude
 
-Signification (p-value) = 0.393 Le test du Khi-deux de Pearson indique une association non significative entre les variables (p = 0.393).
+### Option    Bac [FD] -> Option    Bac [FD]
+
+#### Tableau de contingence (croisé)
+
+|  | OB    | COMMERCE | GESTION | Total |
+|  | ----- | -------- | ------- | ----- |
+|  | MATH  | 6        | 9       | 15    |
+|  | EXP   | 6        | 20      | 26    |
+|  | ECO   | 23       | 52      | 75    |
+|  | Total | 35       | 81      | 116   |
+
+#### Tableau du Khi-Carré (χ²)
+
+|                          | Valeur | dll | Sig.  |
+| ------------------------ | ------ | --- | ----- |
+| Khi-Carré de Pearson     | 1.318  | 2   | 0.517 |
+| Rapport de vraisemblance |        | 2   |       |
+| N d'observations valides | 116    |     |       |
+
+Le test du Khi-deux de Pearson indique une association __non significative__ entre option bac et filière d’étude
 
 ## Analyse inférentielle
