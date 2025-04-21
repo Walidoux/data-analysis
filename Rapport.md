@@ -1,4 +1,4 @@
-# Hypothèses à tester statistiquement
+# Hypothèses à tester statistiquement/graphiquement
 
 - [x] Est-ce qu'il y a une relation significative entre le genre et la filière d’étude ?
 

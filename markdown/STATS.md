@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 20/04/2025 à 21:31
+# Analyse des données - Généré le 21/04/2025 à 21:49
 
 ## Statistiques descriptives
 
@@ -334,45 +334,114 @@
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
-### Genre [FD] -> Genre [FD]
+### Genre [GENRE] -> Filière d’étude [FD]
 
 #### Tableau de contingence (croisé)
 
-|  | GENRE  | COMMERCE | GESTION | Total |
-|  | ------ | -------- | ------- | ----- |
-|  | FEMALE | 22       | 59      | 81    |
-|  | MALE   | 13       | 22      | 35    |
-|  | Total  | 35       | 81      | 116   |
+| Éléments | COMMERCE | GESTION | TOTAL |
+| -------- | -------- | ------- | ----- |
+| FEMALE   | 22       | 59      | 81    |
+| MALE     | 13       | 22      | 35    |
+| TOTAL    | 35       | 81      | 116   |
 
 #### Tableau du Khi-Carré (χ²)
 
 |                          | Valeur | dll | Sig.  |
 | ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 0.731  | 1   | 0.393 |
+| Khi-Carré de Pearson     | 0.718  | 1   | 0.397 |
 | Rapport de vraisemblance |        | 1   |       |
 | N d'observations valides | 116    |     |       |
 
 Le test du Khi-deux de Pearson indique une association __non significative__ entre genre et filière d’étude
 
-### Option    Bac [FD] -> Option    Bac [FD]
+### Option    Bac [OB] -> Filière d’étude [FD]
 
 #### Tableau de contingence (croisé)
 
-|  | OB    | COMMERCE | GESTION | Total |
-|  | ----- | -------- | ------- | ----- |
-|  | MATH  | 6        | 9       | 15    |
-|  | EXP   | 6        | 20      | 26    |
-|  | ECO   | 23       | 52      | 75    |
-|  | Total | 35       | 81      | 116   |
+| Éléments | COMMERCE | GESTION | TOTAL |
+| -------- | -------- | ------- | ----- |
+| MATH     | 6        | 9       | 15    |
+| EXP      | 6        | 20      | 26    |
+| ECO      | 23       | 52      | 75    |
+| TOTAL    | 35       | 81      | 116   |
 
 #### Tableau du Khi-Carré (χ²)
 
 |                          | Valeur | dll | Sig.  |
 | ------------------------ | ------ | --- | ----- |
-| Khi-Carré de Pearson     | 1.318  | 2   | 0.517 |
+| Khi-Carré de Pearson     | 1.316  | 2   | 0.518 |
 | Rapport de vraisemblance |        | 2   |       |
 | N d'observations valides | 116    |     |       |
 
 Le test du Khi-deux de Pearson indique une association __non significative__ entre option bac et filière d’étude
+
+### Fréquence d’utilisation des réseaux sociaux par jour [FDDRSPJ] -> Temps passé sur les écrans par jour  [TPSLEPJ]
+
+#### Tableau de contingence (croisé)
+
+| Éléments | 5H ET PLUS | 3-5H | 1-3H | MOINS DE 1H | TOTAL |
+| -------- | ---------- | ---- | ---- | ----------- | ----- |
+| 7 ET +   | 19         | 11   | 2    | 0           | 32    |
+| 4-6      | 16         | 16   | 10   | 0           | 42    |
+| 1-3      | 6          | 20   | 12   | 2           | 40    |
+| 1        | 0          | 1    | 0    | 1           | 2     |
+| TOTAL    | 41         | 48   | 24   | 3           | 116   |
+
+#### Tableau du Khi-Carré (χ²)
+
+|                          | Valeur | dll | Sig.  |
+| ------------------------ | ------ | --- | ----- |
+| Khi-Carré de Pearson     | 28.545 | 9   | 0.001 |
+| Rapport de vraisemblance |        | 9   |       |
+| N d'observations valides | 116    |     |       |
+
+Le test du Khi-deux de Pearson indique une association __statistiquement significative__ entre fréquence d’utilisation des réseaux sociaux par jour et temps passé sur les écrans par jour Attention : Les conditions d'application du test ne sont pas pleinement respectées (plus de 20% des effectifs théoriques < 5 ou effectif minimum < 1). Les résultats doivent être interprétés avec prudence.
+
+### Type de logement ( à Dakhla ) [TDL] -> Source principale de revenu [SPDR]
+
+#### Tableau de contingence (croisé)
+
+| Éléments    | AIDE FAMILIALE | BOURSE | TRAVAIL | PARENTS | TOTAL |
+| ----------- | -------------- | ------ | ------- | ------- | ----- |
+| APPARTEMENT | 48             | 22     | 5       | 0       | 75    |
+| CHAMBRE     | 24             | 7      | 1       | 0       | 32    |
+| FAMILLE     | 2              | 1      | 0       | 0       | 3     |
+| MAISON      | 2              | 2      | 1       | 0       | 5     |
+| MINI VILLA  | 0              | 0      | 0       | 0       | 0     |
+| TOTAL       | 76             | 32     | 7       | 0       | 115   |
+
+#### Tableau du Khi-Carré (χ²)
+
+|                          | Valeur | dll | Sig.  |
+| ------------------------ | ------ | --- | ----- |
+| Khi-Carré de Pearson     | 3.739  | 6   | 0.712 |
+| Rapport de vraisemblance |        | 6   |       |
+| N d'observations valides | 115    |     |       |
+
+Le test du Khi-deux de Pearson indique une association __non significative__ entre type de logement ( à dakhla ) et source principale de revenuAttention : Les conditions d'application du test ne sont pas pleinement respectées (plus de 20% des effectifs théoriques < 5 ou effectif minimum < 1). Les résultats doivent être interprétés avec prudence.
+
+### Type d’application la plus utilisée  [TDLPU] -> Temps passé sur les écrans par jour  [TPSLEPJ]
+
+#### Tableau de contingence (croisé)
+
+| Éléments        | 5H ET PLUS | 3-5H | 1-3H | MOINS DE 1H | TOTAL |
+| --------------- | ---------- | ---- | ---- | ----------- | ----- |
+| RESEAUX SOCIAUX | 32         | 31   | 20   | 3           | 86    |
+| BUREAUTIQUE     | 1          | 7    | 0    | 0           | 8     |
+| JEUX VIDEO      | 7          | 5    | 1    | 0           | 13    |
+| STREAMING       | 1          | 5    | 3    | 0           | 9     |
+| YOUTUBE         | 0          | 0    | 0    | 0           | 0     |
+| LES SERIES      | 0          | 0    | 0    | 0           | 0     |
+| TOTAL           | 41         | 48   | 24   | 3           | 116   |
+
+#### Tableau du Khi-Carré (χ²)
+
+|                          | Valeur | dll | Sig.  |
+| ------------------------ | ------ | --- | ----- |
+| Khi-Carré de Pearson     | 16.290 | 9   | 0.061 |
+| Rapport de vraisemblance |        | 9   |       |
+| N d'observations valides | 116    |     |       |
+
+Le test du Khi-deux de Pearson indique une association __non significative__ entre type d’application la plus utilisée et temps passé sur les écrans par jour Attention : Les conditions d'application du test ne sont pas pleinement respectées (plus de 20% des effectifs théoriques < 5 ou effectif minimum < 1). Les résultats doivent être interprétés avec prudence.
 
 ## Analyse inférentielle

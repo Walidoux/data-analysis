@@ -1,4 +1,3 @@
-from pandas import isnull
 from scipy.stats import chi2_contingency, shapiro, kstest, norm, pearsonr
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
@@ -675,22 +674,21 @@ class StatsManager():
         self.table_rows = []
 
     def gen_contingency_table(self):
-        stats.add_heading(f"{self.dep_var.name["default"]} [{self.indep_var.name["format"]}] -> {self.dep_var.name["default"]} [{self.indep_var.name["format"]}]", level=3)
+        stats.add_heading(f"{self.dep_var.name["default"]} [{self.dep_var.name["format"]}] -> {self.indep_var.name["default"]} [{self.indep_var.name["format"]}]", level=3)
         stats.add_heading("Tableau de contingence (croisé)", level=4)
 
         indep_var_labels = [v["name"] for v in self.indep_var.data.values()]
 
-        headers = ["", self.dep_var.name["format"], *indep_var_labels, "Total"]
-
         cumul_indep_var_values = [0 for _ in indep_var_labels]
         cumul_dep_var_values = 0
+        min_len = min(len(self.dep_var.raw), len(self.indep_var.raw))
 
         for key, value in self.dep_var.data.items():
-            row = ["", value["name"]]
+            row = [value["name"]]
             count_dep_var = 0
 
             for i, (field_key, _) in enumerate(self.indep_var.data.items()):
-                count = sum(1 for k, dep_var_raw in enumerate(self.dep_var.raw) if dep_var_raw == key and self.indep_var.raw[k] == field_key)
+                count = sum(1 for k in range(min_len) if self.dep_var.raw[k] == key and self.indep_var.raw[k] == field_key)
 
                 row.append(str(count))
                 count_dep_var += count
@@ -700,8 +698,8 @@ class StatsManager():
             cumul_dep_var_values += count_dep_var
             self.table_rows.append(row)
 
-        self.table_rows.append(["", "Total", *map(str, cumul_indep_var_values), str(cumul_dep_var_values)])
-        stats.add_table(headers, self.table_rows)
+        self.table_rows.append(["TOTAL", *map(str, cumul_indep_var_values), str(cumul_dep_var_values)])
+        stats.add_table(["Éléments", *indep_var_labels, "TOTAL"], self.table_rows)
 
     def gen_khi_square_table(self):
         stats.add_heading("Tableau du Khi-Carré (χ²)", level=4)
@@ -710,14 +708,14 @@ class StatsManager():
 
         observed_data = []
         for row in self.table_rows[:-1]:
-            observed_data.append([int(x) for x in row[2:-1]])
+            observed_data.append([int(x) for x in row[1:-1]])
 
         observed = np.array(observed_data)
-        chi2, p_value, dof, expected = chi2_contingency(observed)
+        non_zero_row_mask = np.any(observed != 0, axis=1)
+        non_zero_col_mask = np.any(observed != 0, axis=0)
+        filtered_observed = observed[non_zero_row_mask][:, non_zero_col_mask]
 
-        min_expected = np.min(expected) # type: ignore
-        cells_under_5 = np.sum(expected < 5) # type: ignore
-        percent_under_5 = (cells_under_5 / observed.size) * 100
+        chi2, p_value, dof, expected = chi2_contingency(filtered_observed, lambda_="log-likelihood") # avec fonction vraisemblance
 
         rows = [
             ["Khi-Carré de Pearson", f"{chi2:.3f}", dof, f"{p_value:.3f}"],
@@ -733,7 +731,9 @@ class StatsManager():
             f"entre {self.dep_var.name["default"].lower()} et {self.indep_var.name["default"].lower()}"
         )
 
-        if percent_under_5 > 20 or min_expected < 1:
+        percent_under_5 = (np.sum(expected < 5) / observed.size) * 100
+
+        if percent_under_5 > 20 or np.min(expected) < 1:
             interpretation += (
                 "Attention : Les conditions d'application du test ne sont pas pleinement respectées "
                 "(plus de 20% des effectifs théoriques < 5 ou effectif minimum < 1). "
@@ -938,14 +938,29 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
             store.generate_statistics(store)
 
     # Hypothèse 1 : Genre -> filière
-    hypothesis1 = StatsManager(sex_dict, studyfield_dict)
-    hypothesis1.gen_contingency_table()
-    hypothesis1.gen_khi_square_table()
+    hypothesis = StatsManager(sex_dict, studyfield_dict)
+    hypothesis.gen_contingency_table()
+    hypothesis.gen_khi_square_table()
 
     # Hypothèse 2 : Option BAC -> Filière d'étude
-    hypothesis2 = StatsManager(optionbac_dict, studyfield_dict)
-    hypothesis2.gen_contingency_table()
-    hypothesis2.gen_khi_square_table()
+    hypothesis = StatsManager(optionbac_dict, studyfield_dict)
+    hypothesis.gen_contingency_table()
+    hypothesis.gen_khi_square_table()
+
+    # Hypothèse 3 : Fréquence d'utilisation des réseaux sociaux par jour -> Temps passé sur les écrans par jour
+    hypothesis = StatsManager(fddrspj_dict, tpslepj_dict)
+    hypothesis.gen_contingency_table()
+    hypothesis.gen_khi_square_table()
+
+    # Hypothèse 4 : Source principale de revenu -> Type de logement
+    hypothesis = StatsManager(tdl_dict, spdr_dict)
+    hypothesis.gen_contingency_table()
+    hypothesis.gen_khi_square_table()
+
+    # Hypothèse 5 : Type d'application la plus utilisée -> Temps passé sur les écrans par jour
+    hypothesis = StatsManager(tdlpu_dict, tpslepj_dict)
+    hypothesis.gen_contingency_table()
+    hypothesis.gen_khi_square_table()
 
     stats.add_heading("Analyse inférentielle", level=2)
 
