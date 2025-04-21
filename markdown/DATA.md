@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 19/04/2025 à 15:13
+# Analyse des données - Généré le 21/04/2025 à 22:18
 
 #### Genre [GENRE]
 
@@ -80,45 +80,39 @@
 
 #### Type de sport pratiqué [TDSP]
 
-|          |                                           | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
-| -------- | ----------------------------------------- | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | LA MUSCULATION                            | 17        | 12.78%      | 12.98%             | 12.98%             |
-|          | KARATÉ                                    | 3         | 2.26%       | 2.29%              | 15.27%             |
-|          | ATHLÉTISME                                | 2         | 1.50%       | 1.53%              | 16.79%             |
-|          | AUCUN                                     | 11        | 8.27%       | 8.40%              | 25.19%             |
-|          | VOLEY BALL                                | 1         | 0.75%       | 0.76%              | 25.95%             |
-|          | GYM                                       | 6         | 4.51%       | 4.58%              | 30.53%             |
-|          | FOOTBALL                                  | 27        | 20.30%      | 20.61%             | 51.15%             |
-|          | NATATION                                  | 10        | 7.52%       | 7.63%              | 58.78%             |
-|          | LA MARCHE                                 | 16        | 12.03%      | 12.21%             | 70.99%             |
-|          | FITNESS                                   | 2         | 1.50%       | 1.53%              | 72.52%             |
-|          | L'ANNÉE DERNIÈRE J'AI FAIT DU VOLLEY-BALL | 1         | 0.75%       | 0.76%              | 73.28%             |
-|          | D'AUTRES...                               | 1         | 0.75%       | 0.76%              | 74.05%             |
-|          | JUSTE MARCHER                             | 1         | 0.75%       | 0.76%              | 74.81%             |
-|          | TENNIS                                    | 3         | 2.26%       | 2.29%              | 77.10%             |
-|          | COURSE À PIED                             | 8         | 6.02%       | 6.11%              | 83.21%             |
-|          | AIEROBIC                                  | 1         | 0.75%       | 0.76%              | 83.97%             |
-|          | ZOMBA                                     | 1         | 0.75%       | 0.76%              | 84.73%             |
-|          | BOXING                                    | 2         | 1.50%       | 1.53%              | 86.26%             |
-|          | TECKWANDO                                 | 2         | 1.50%       | 1.53%              | 87.79%             |
-|          | PILATES                                   | 1         | 0.75%       | 0.76%              | 88.55%             |
-|          | E-SPORT                                   | 1         | 0.75%       | 0.76%              | 89.31%             |
-|          | LA DANSE                                  | 1         | 0.75%       | 0.76%              | 90.08%             |
-|          | DANCE                                     | 1         | 0.75%       | 0.76%              | 90.84%             |
-|          | LA BOXE                                   | 1         | 0.75%       | 0.76%              | 91.60%             |
-|          | LES SPORT PHYSIQUE                        | 1         | 0.75%       | 0.76%              | 92.37%             |
-|          | EN COURS D'EXÉCUTION                      | 1         | 0.75%       | 0.76%              | 93.13%             |
-|          | CARDIO                                    | 1         | 0.75%       | 0.76%              | 93.89%             |
-|          | BASKET-BALL                               | 2         | 1.50%       | 1.53%              | 95.42%             |
-|          | YOGA                                      | 1         | 0.75%       | 0.76%              | 96.18%             |
-|          | COLLECTIF                                 | 1         | 0.75%       | 0.76%              | 96.95%             |
-|          | BASKET                                    | 1         | 0.75%       | 0.76%              | 97.71%             |
-|          | KANG-FU                                   | 1         | 0.75%       | 0.76%              | 98.47%             |
-|          | LA COURSE                                 | 1         | 0.75%       | 0.76%              | 99.24%             |
-|          | BASCKET BALL                              | 1         | 0.75%       | 0.76%              | 100.00%            |
-|          | Total                                     | 131       | 98.50%      | 100.00%            |                    |
-| Manquant | Système                                   | 2         | 1.50%       |                    |                    |
-| Total    |                                           | 133       | 100.00%     |                    |                    |
+|          |                      | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
+| -------- | -------------------- | --------- | ----------- | ------------------ | ------------------ |
+| Valide   | LA MUSCULATION       | 17        | 12.59%      | 12.78%             | 12.78%             |
+|          | KARATÉ               | 3         | 2.22%       | 2.26%              | 15.04%             |
+|          | ATHLÉTISME           | 3         | 2.22%       | 2.26%              | 17.29%             |
+|          | AUCUN                | 11        | 8.15%       | 8.27%              | 25.56%             |
+|          | VOLEY BALL           | 3         | 2.22%       | 2.26%              | 27.82%             |
+|          | GYM                  | 6         | 4.44%       | 4.51%              | 32.33%             |
+|          | FOOTBALL             | 27        | 20.00%      | 20.30%             | 52.63%             |
+|          | NATATION             | 10        | 7.41%       | 7.52%              | 60.15%             |
+|          | LA MARCHE            | 17        | 12.59%      | 12.78%             | 72.93%             |
+|          | FITNESS              | 2         | 1.48%       | 1.50%              | 74.44%             |
+|          | TENNIS               | 3         | 2.22%       | 2.26%              | 76.69%             |
+|          | COURSE À PIED        | 8         | 5.93%       | 6.02%              | 82.71%             |
+|          | AIEROBIC             | 1         | 0.74%       | 0.75%              | 83.46%             |
+|          | ZOMBA                | 1         | 0.74%       | 0.75%              | 84.21%             |
+|          | BOXING               | 2         | 1.48%       | 1.50%              | 85.71%             |
+|          | TECKWANDO            | 2         | 1.48%       | 1.50%              | 87.22%             |
+|          | PILATES              | 1         | 0.74%       | 0.75%              | 87.97%             |
+|          | SPORT                | 2         | 1.48%       | 1.50%              | 89.47%             |
+|          | DANSE                | 2         | 1.48%       | 1.50%              | 90.98%             |
+|          | LA BOXE              | 1         | 0.74%       | 0.75%              | 91.73%             |
+|          | EN COURS D'EXÉCUTION | 1         | 0.74%       | 0.75%              | 92.48%             |
+|          | CARDIO               | 1         | 0.74%       | 0.75%              | 93.23%             |
+|          | BASKET               | 4         | 2.96%       | 3.01%              | 96.24%             |
+|          | YOGA                 | 1         | 0.74%       | 0.75%              | 96.99%             |
+|          | COLLECTIF            | 1         | 0.74%       | 0.75%              | 97.74%             |
+|          | KANGFU               | 1         | 0.74%       | 0.75%              | 98.50%             |
+|          | LA COURSE            | 1         | 0.74%       | 0.75%              | 99.25%             |
+|          | BASCKET BALL         | 1         | 0.74%       | 0.75%              | 100.00%            |
+|          | Total                | 133       | 98.52%      | 100.00%            |                    |
+| Manquant | Système              | 2         | 1.48%       |                    |                    |
+| Total    |                      | 135       | 100.00%     |                    |                    |
 
 > Les valeurs non valides sont les suivantes : `0`, `_`
 
@@ -126,80 +120,68 @@
 
 |          |                                                      | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
 | -------- | ---------------------------------------------------- | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | LE SPORT                                             | 1         | 0.71%       | 0.72%              | 0.72%              |
-|          | DECOUVRIR NOUVEAU CHOSES                             | 1         | 0.71%       | 0.72%              | 1.45%              |
-|          | MUSIQUE                                              | 4         | 2.86%       | 2.90%              | 4.35%              |
-|          | LECTURE                                              | 12        | 8.57%       | 8.70%              | 13.04%             |
-|          | RIEN                                                 | 3         | 2.14%       | 2.17%              | 15.22%             |
-|          | BRODERIE                                             | 1         | 0.71%       | 0.72%              | 15.94%             |
-|          | CREATION DE CONTENU                                  | 1         | 0.71%       | 0.72%              | 16.67%             |
-|          | FOOTBALL                                             | 6         | 4.29%       | 4.35%              | 21.01%             |
-|          | ART                                                  | 1         | 0.71%       | 0.72%              | 21.74%             |
-|          | LA LECTURE                                           | 6         | 4.29%       | 4.35%              | 26.09%             |
-|          | NATATION                                             | 11        | 7.86%       | 7.97%              | 34.06%             |
-|          | LECTEUR                                              | 1         | 0.71%       | 0.72%              | 34.78%             |
-|          | COOKING                                              | 1         | 0.71%       | 0.72%              | 35.51%             |
-|          | APPRENTISSAGES DES LANGUE                            | 1         | 0.71%       | 0.72%              | 36.23%             |
-|          | NETWORKING                                           | 1         | 0.71%       | 0.72%              | 36.96%             |
-|          | CONDUIRE LA VOITURE                                  | 1         | 0.71%       | 0.72%              | 37.68%             |
-|          | SURF                                                 | 2         | 1.43%       | 1.45%              | 39.13%             |
-|          | DESSIN                                               | 6         | 4.29%       | 4.35%              | 43.48%             |
-|          | LA DANSE                                             | 2         | 1.43%       | 1.45%              | 44.93%             |
-|          | PODCAST                                              | 1         | 0.71%       | 0.72%              | 45.65%             |
-|          | SERIE                                                | 1         | 0.71%       | 0.72%              | 46.38%             |
-|          | PHOTOGRAPHIE                                         | 1         | 0.71%       | 0.72%              | 47.10%             |
-|          | LIRE DES ROMANS ARABES                               | 1         | 0.71%       | 0.72%              | 47.83%             |
-|          | REGARDER DES FILMS                                   | 1         | 0.71%       | 0.72%              | 48.55%             |
-|          | DESSINER UN PEU                                      | 1         | 0.71%       | 0.72%              | 49.28%             |
-|          | MONTER DES VIDEOS.                                   | 1         | 0.71%       | 0.72%              | 50.00%             |
-|          | DESSINER                                             | 2         | 1.43%       | 1.45%              | 51.45%             |
-|          | CUISINE                                              | 3         | 2.14%       | 2.17%              | 53.62%             |
-|          | EQUITATION                                           | 3         | 2.14%       | 2.17%              | 55.80%             |
-|          | PHOTOGRAPHE                                          | 1         | 0.71%       | 0.72%              | 56.52%             |
-|          | LE SPORT(FITNESS)                                    | 1         | 0.71%       | 0.72%              | 57.25%             |
-|          | PEINTURE                                             | 1         | 0.71%       | 0.72%              | 57.97%             |
-|          | SPORT                                                | 11        | 7.86%       | 7.97%              | 65.94%             |
-|          | LA NATATION                                          | 2         | 1.43%       | 1.45%              | 67.39%             |
-|          | JEUX VIDEO                                           | 3         | 2.14%       | 2.17%              | 69.57%             |
-|          | LECTUR                                               | 1         | 0.71%       | 0.72%              | 70.29%             |
-|          | GYM                                                  | 2         | 1.43%       | 1.45%              | 71.74%             |
-|          | CALIGRAPHIE                                          | 1         | 0.71%       | 0.72%              | 72.46%             |
-|          | COURSE                                               | 1         | 0.71%       | 0.72%              | 73.19%             |
-|          | FOUTBALL                                             | 1         | 0.71%       | 0.72%              | 73.91%             |
-|          | REGARDER DES SERIES OU DES FILM                      | 1         | 0.71%       | 0.72%              | 74.64%             |
-|          | CHANT                                                | 1         | 0.71%       | 0.72%              | 75.36%             |
-|          | CROCHET                                              | 1         | 0.71%       | 0.72%              | 76.09%             |
-|          | APPRENDRE DES NOUVEAUX COMPETENCES OU BIEN TECHNIQUE | 1         | 0.71%       | 0.72%              | 76.81%             |
-|          | REGARDER DES SERIE...                                | 1         | 0.71%       | 0.72%              | 77.54%             |
-|          | PRATIQUER DU SPORT                                   | 1         | 0.71%       | 0.72%              | 78.26%             |
-|          | POWER LIFTING                                        | 1         | 0.71%       | 0.72%              | 78.99%             |
-|          | CALISTHENICS                                         | 1         | 0.71%       | 0.72%              | 79.71%             |
-|          | MEDITATION                                           | 1         | 0.71%       | 0.72%              | 80.43%             |
-|          | DANCE                                                | 2         | 1.43%       | 1.45%              | 81.88%             |
-|          | LA DENSE                                             | 1         | 0.71%       | 0.72%              | 82.61%             |
-|          | JEUX VIDEOS                                          | 1         | 0.71%       | 0.72%              | 83.33%             |
-|          | VOYAGE                                               | 4         | 2.86%       | 2.90%              | 86.23%             |
-|          | DESSIN-FOOT                                          | 1         | 0.71%       | 0.72%              | 86.96%             |
-|          | PROGRAMMER DES LOGICIELS                             | 1         | 0.71%       | 0.72%              | 87.68%             |
-|          | VIDEOGRAPHIE                                         | 1         | 0.71%       | 0.72%              | 88.41%             |
-|          | MUSCULATION                                          | 2         | 1.43%       | 1.45%              | 89.86%             |
-|          | CHESS                                                | 2         | 1.43%       | 1.45%              | 91.30%             |
-|          | DORMIR                                               | 2         | 1.43%       | 1.45%              | 92.75%             |
-|          | SORTIES                                              | 1         | 0.71%       | 0.72%              | 93.48%             |
-|          | VOYAGES                                              | 1         | 0.71%       | 0.72%              | 94.20%             |
-|          | SHOPPING                                             | 1         | 0.71%       | 0.72%              | 94.93%             |
-|          | APPRENDRE A JOUER LES INSTRUMENTS DE MUSIQUE         | 1         | 0.71%       | 0.72%              | 95.65%             |
-|          | LA MARCHE                                            | 1         | 0.71%       | 0.72%              | 96.38%             |
-|          | DANSE                                                | 1         | 0.71%       | 0.72%              | 97.10%             |
-|          | LIRE                                                 | 1         | 0.71%       | 0.72%              | 97.83%             |
-|          | GUITAR - MODELING                                    | 1         | 0.71%       | 0.72%              | 98.55%             |
-|          | THEATRE                                              | 1         | 0.71%       | 0.72%              | 99.28%             |
-|          | REGARDER DES SERIES                                  | 1         | 0.71%       | 0.72%              | 100.00%            |
-|          | Total                                                | 138       | 98.57%      | 100.00%            |                    |
-| Manquant | Système                                              | 2         | 1.43%       |                    |                    |
-| Total    |                                                      | 140       | 100.00%     |                    |                    |
+| Valide   | LE SPORT                                             | 1         | 0.71%       | 0.71%              | 0.71%              |
+|          | DECOUVRIR NOUVEAU CHOSES                             | 1         | 0.71%       | 0.71%              | 1.43%              |
+|          | MUSIQUE                                              | 4         | 2.84%       | 2.86%              | 4.29%              |
+|          | LECTURE                                              | 16        | 11.35%      | 11.43%             | 15.71%             |
+|          | RIEN                                                 | 3         | 2.13%       | 2.14%              | 17.86%             |
+|          | BRODERIE                                             | 1         | 0.71%       | 0.71%              | 18.57%             |
+|          | CREATION DE CONTENU                                  | 1         | 0.71%       | 0.71%              | 19.29%             |
+|          | FOOTBALL                                             | 6         | 4.26%       | 4.29%              | 23.57%             |
+|          | ART                                                  | 1         | 0.71%       | 0.71%              | 24.29%             |
+|          | LA LECTURE                                           | 6         | 4.26%       | 4.29%              | 28.57%             |
+|          | NATATION                                             | 11        | 7.80%       | 7.86%              | 36.43%             |
+|          | CUISINE                                              | 4         | 2.84%       | 2.86%              | 39.29%             |
+|          | APPRENTISSAGES DES LANGUE                            | 1         | 0.71%       | 0.71%              | 40.00%             |
+|          | NETWORKING                                           | 1         | 0.71%       | 0.71%              | 40.71%             |
+|          | CONDUIRE LA VOITURE                                  | 1         | 0.71%       | 0.71%              | 41.43%             |
+|          | SURF                                                 | 2         | 1.42%       | 1.43%              | 42.86%             |
+|          | DESSIN                                               | 10        | 7.09%       | 7.14%              | 50.00%             |
+|          | DANSE                                                | 5         | 3.55%       | 3.57%              | 53.57%             |
+|          | PODCAST                                              | 1         | 0.71%       | 0.71%              | 54.29%             |
+|          | SERIE                                                | 1         | 0.71%       | 0.71%              | 55.00%             |
+|          | PHOTOGRAPHIE                                         | 1         | 0.71%       | 0.71%              | 55.71%             |
+|          | REGARDER DES SERIES FILMS                            | 4         | 2.84%       | 2.86%              | 58.57%             |
+|          | MONTER DES VIDEOS.                                   | 1         | 0.71%       | 0.71%              | 59.29%             |
+|          | EQUITATION                                           | 3         | 2.13%       | 2.14%              | 61.43%             |
+|          | PHOTOGRAPHE                                          | 1         | 0.71%       | 0.71%              | 62.14%             |
+|          | SPORT                                                | 12        | 8.51%       | 8.57%              | 70.71%             |
+|          | PEINTURE                                             | 1         | 0.71%       | 0.71%              | 71.43%             |
+|          | LA NATATION                                          | 2         | 1.42%       | 1.43%              | 72.86%             |
+|          | JEUX VIDEO                                           | 3         | 2.13%       | 2.14%              | 75.00%             |
+|          | GYM                                                  | 2         | 1.42%       | 1.43%              | 76.43%             |
+|          | CALIGRAPHIE                                          | 1         | 0.71%       | 0.71%              | 77.14%             |
+|          | COURSE                                               | 1         | 0.71%       | 0.71%              | 77.86%             |
+|          | FOUTBALL                                             | 1         | 0.71%       | 0.71%              | 78.57%             |
+|          | CHANT                                                | 1         | 0.71%       | 0.71%              | 79.29%             |
+|          | CROCHET                                              | 1         | 0.71%       | 0.71%              | 80.00%             |
+|          | APPRENDRE DES NOUVEAUX COMPETENCES OU BIEN TECHNIQUE | 1         | 0.71%       | 0.71%              | 80.71%             |
+|          | PRATIQUER DU SPORT                                   | 1         | 0.71%       | 0.71%              | 81.43%             |
+|          | POWER LIFTING                                        | 1         | 0.71%       | 0.71%              | 82.14%             |
+|          | CALISTHENICS                                         | 1         | 0.71%       | 0.71%              | 82.86%             |
+|          | MEDITATION                                           | 1         | 0.71%       | 0.71%              | 83.57%             |
+|          | LA DENSE                                             | 1         | 0.71%       | 0.71%              | 84.29%             |
+|          | JEUX VIDEOS                                          | 1         | 0.71%       | 0.71%              | 85.00%             |
+|          | VOYAGE                                               | 4         | 2.84%       | 2.86%              | 87.86%             |
+|          | FOOT                                                 | 1         | 0.71%       | 0.71%              | 88.57%             |
+|          | PROGRAMMER DES LOGICIELS                             | 1         | 0.71%       | 0.71%              | 89.29%             |
+|          | VIDEOGRAPHIE                                         | 1         | 0.71%       | 0.71%              | 90.00%             |
+|          | MUSCULATION                                          | 2         | 1.42%       | 1.43%              | 91.43%             |
+|          | CHESS                                                | 2         | 1.42%       | 1.43%              | 92.86%             |
+|          | DORMIR                                               | 2         | 1.42%       | 1.43%              | 94.29%             |
+|          | SORTIES                                              | 1         | 0.71%       | 0.71%              | 95.00%             |
+|          | VOYAGES                                              | 1         | 0.71%       | 0.71%              | 95.71%             |
+|          | SHOPPING                                             | 1         | 0.71%       | 0.71%              | 96.43%             |
+|          | APPRENDRE A JOUER LES INSTRUMENTS DE MUSIQUE         | 1         | 0.71%       | 0.71%              | 97.14%             |
+|          | LA MARCHE                                            | 1         | 0.71%       | 0.71%              | 97.86%             |
+|          | GUITAR                                               | 1         | 0.71%       | 0.71%              | 98.57%             |
+|          | MODELING                                             | 1         | 0.71%       | 0.71%              | 99.29%             |
+|          | THEATRE                                              | 1         | 0.71%       | 0.71%              | 100.00%            |
+|          | Total                                                | 140       | 99.29%      | 100.00%            |                    |
+| Manquant | Système                                              | 1         | 0.71%       |                    |                    |
+| Total    |                                                      | 141       | 100.00%     |                    |                    |
 
-> Les valeurs non valides sont les suivantes : `.`, `0`
+> Les valeurs non valides sont les suivantes : `.`
 
 #### •Travail en parallèle des études [TEPDE]
 
@@ -437,41 +419,42 @@
 
 |          |                                            | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
 | -------- | ------------------------------------------ | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | AUCUNE                                     | 1         | 0.76%       | 0.77%              | 0.77%              |
-|          | EPISTEMOLOGIE                              | 1         | 0.76%       | 0.77%              | 1.54%              |
-|          | COMPTABILITE                               | 34        | 25.76%      | 26.15%             | 27.69%             |
-|          | FRANCAIS                                   | 2         | 1.52%       | 1.54%              | 29.23%             |
-|          | GESTION DES RESSOURCES HUMAINES            | 2         | 1.52%       | 1.54%              | 30.77%             |
-|          | MARKETING                                  | 13        | 9.85%       | 10.00%             | 40.77%             |
-|          | TOUS LES MATIERES                          | 4         | 3.03%       | 3.08%              | 43.85%             |
-|          | TOUT CE QUI EST EN RELATION D'INFORMATIQUE | 4         | 3.03%       | 3.08%              | 46.92%             |
-|          | PROGRAMMATION                              | 6         | 4.55%       | 4.62%              | 51.54%             |
-|          | TOUTES                                     | 1         | 0.76%       | 0.77%              | 52.31%             |
-|          | COMPTA DES SOCIETES                        | 2         | 1.52%       | 1.54%              | 53.85%             |
-|          | CONTROL DE GESTION                         | 3         | 2.27%       | 2.31%              | 56.15%             |
-|          | GESTION BUDGETAIRE                         | 9         | 6.82%       | 6.92%              | 63.08%             |
-|          | GRH                                        | 5         | 3.79%       | 3.85%              | 66.92%             |
-|          | MATHEMATIQUE                               | 5         | 3.79%       | 3.85%              | 70.77%             |
-|          | SCM                                        | 1         | 0.76%       | 0.77%              | 71.54%             |
-|          | ADD                                        | 1         | 0.76%       | 0.77%              | 72.31%             |
-|          | COMPORTEMENT DE CONSOMMATEUR               | 1         | 0.76%       | 0.77%              | 73.08%             |
-|          | ANGLAIS                                    | 5         | 3.79%       | 3.85%              | 76.92%             |
-|          | ETUDE DE MARCHE                            | 3         | 2.27%       | 2.31%              | 79.23%             |
-|          | SUPPLY CHAIN                               | 5         | 3.79%       | 3.85%              | 83.08%             |
-|          | ALGORITHMES                                | 4         | 3.03%       | 3.08%              | 86.15%             |
-|          | ESPAGNOL                                   | 5         | 3.79%       | 3.85%              | 90.00%             |
-|          | MARCHE DE CAPITAUX                         | 3         | 2.27%       | 2.31%              | 92.31%             |
-|          | LOGISTIQUE                                 | 1         | 0.76%       | 0.77%              | 93.08%             |
-|          | PROGGRAMATION WEB                          | 1         | 0.76%       | 0.77%              | 93.85%             |
-|          | ANALYSE DES DONNEES                        | 2         | 1.52%       | 1.54%              | 95.38%             |
-|          | TRESORERIE                                 | 2         | 1.52%       | 1.54%              | 96.92%             |
-|          | INSTRUMENTS FINANCIERS                     | 1         | 0.76%       | 0.77%              | 97.69%             |
-|          | ENGLISH                                    | 1         | 0.76%       | 0.77%              | 98.46%             |
-|          | FISCALITE                                  | 1         | 0.76%       | 0.77%              | 99.23%             |
-|          | COMPTABITE DE SOCIETE                      | 1         | 0.76%       | 0.77%              | 100.00%            |
-|          | Total                                      | 130       | 98.48%      | 100.00%            |                    |
-| Manquant | Système                                    | 2         | 1.52%       |                    |                    |
-| Total    |                                            | 132       | 100.00%     |                    |                    |
+| Valide   | AUCUNE                                     | 1         | 0.75%       | 0.76%              | 0.76%              |
+|          | EPISTEMOLOGIE                              | 1         | 0.75%       | 0.76%              | 1.52%              |
+|          | COMPTABILITE                               | 34        | 25.37%      | 25.76%             | 27.27%             |
+|          | FRANCAIS                                   | 2         | 1.49%       | 1.52%              | 28.79%             |
+|          | GESTION DES RESSOURCES HUMAINES            | 2         | 1.49%       | 1.52%              | 30.30%             |
+|          | MARKETING                                  | 13        | 9.70%       | 9.85%              | 40.15%             |
+|          | TOUS LES MATIERES                          | 4         | 2.99%       | 3.03%              | 43.18%             |
+|          | TOUT CE QUI EST EN RELATION D'INFORMATIQUE | 4         | 2.99%       | 3.03%              | 46.21%             |
+|          | PROGRAMMATION                              | 6         | 4.48%       | 4.55%              | 50.76%             |
+|          | TOUTES                                     | 1         | 0.75%       | 0.76%              | 51.52%             |
+|          | COMPTA DES SOCIETES                        | 2         | 1.49%       | 1.52%              | 53.03%             |
+|          | CONTROL DE GESTION                         | 3         | 2.24%       | 2.27%              | 55.30%             |
+|          | GESTION BUDGETAIRE                         | 9         | 6.72%       | 6.82%              | 62.12%             |
+|          | GRH                                        | 5         | 3.73%       | 3.79%              | 65.91%             |
+|          | MATHEMATIQUE                               | 5         | 3.73%       | 3.79%              | 69.70%             |
+|          | SCM                                        | 1         | 0.75%       | 0.76%              | 70.45%             |
+|          | ADD                                        | 1         | 0.75%       | 0.76%              | 71.21%             |
+|          | COMPORTEMENT DE CONSOMMATEUR               | 1         | 0.75%       | 0.76%              | 71.97%             |
+|          | ANGLAIS                                    | 5         | 3.73%       | 3.79%              | 75.76%             |
+|          | ETUDE DE MARCHE                            | 3         | 2.24%       | 2.27%              | 78.03%             |
+|          | SUPPLY CHAIN                               | 5         | 3.73%       | 3.79%              | 81.82%             |
+|          | ALGORITHMES                                | 4         | 2.99%       | 3.03%              | 84.85%             |
+|          | ESPAGNOL                                   | 5         | 3.73%       | 3.79%              | 88.64%             |
+|          | MARCHE DE CAPITAUX                         | 4         | 2.99%       | 3.03%              | 91.67%             |
+|          | LOGISTIQUE                                 | 1         | 0.75%       | 0.76%              | 92.42%             |
+|          | PROGGRAMATION WEB                          | 1         | 0.75%       | 0.76%              | 93.18%             |
+|          | ANALYSE DES DONNEES                        | 2         | 1.49%       | 1.52%              | 94.70%             |
+|          | TRESORERIE                                 | 2         | 1.49%       | 1.52%              | 96.21%             |
+|          | INSTRUMENTS FINANCIERS                     | 1         | 0.75%       | 0.76%              | 96.97%             |
+|          | TEC DE COMM                                | 1         | 0.75%       | 0.76%              | 97.73%             |
+|          | ENGLISH                                    | 1         | 0.75%       | 0.76%              | 98.48%             |
+|          | FISCALITE                                  | 1         | 0.75%       | 0.76%              | 99.24%             |
+|          | COMPTABITE DE SOCIETE                      | 1         | 0.75%       | 0.76%              | 100.00%            |
+|          | Total                                      | 132       | 98.51%      | 100.00%            |                    |
+| Manquant | Système                                    | 2         | 1.49%       |                    |                    |
+| Total    |                                            | 134       | 100.00%     |                    |                    |
 
 > Les valeurs non valides sont les suivantes : `...`, `..`
 
@@ -503,14 +486,14 @@
 
 |          |          | Fréquence | Pourcentage | Pourcentage valide | Pourcentage cumulé |
 | -------- | -------- | --------- | ----------- | ------------------ | ------------------ |
-| Valide   | PYTHON   | 65        | 45.45%      | 45.45%             | 45.45%             |
-|          | SPSS     | 5         | 3.50%       | 3.50%              | 48.95%             |
-|          | POWER_BI | 4         | 2.80%       | 2.80%              | 51.75%             |
-|          | AUTRE    | 48        | 33.57%      | 33.57%             | 85.31%             |
-|          | R        | 21        | 14.69%      | 14.69%             | 100.00%            |
-|          | Total    | 143       | 100.00%     | 100.00%            |                    |
+| Valide   | PYTHON   | 65        | 45.14%      | 45.14%             | 45.14%             |
+|          | SPSS     | 5         | 3.47%       | 3.47%              | 48.61%             |
+|          | POWER_BI | 4         | 2.78%       | 2.78%              | 51.39%             |
+|          | AUTRE    | 49        | 34.03%      | 34.03%             | 85.42%             |
+|          | R        | 21        | 14.58%      | 14.58%             | 100.00%            |
+|          | Total    | 144       | 100.00%     | 100.00%            |                    |
 | Manquant | Système  | 0         | 0.00%       |                    |                    |
-| Total    |          | 143       | 100.00%     |                    |                    |
+| Total    |          | 144       | 100.00%     |                    |                    |
 
 #### Type de logement ( à Dakhla ) [TDL]
 
@@ -693,7 +676,7 @@
 
 |   |                | GENRE | TDLPU | PDMLDE | FDDRSPJ | QDS | NDLLPA | TDSP | LP  | TEPDE | OB  | NDPSYNPS | NMDDSPN | MB  | NDDTPS | CDFVVPA | TPSLEPJ | MDVU | CAEPM | VD  | DMM | NDFELSCA | MP  | FD  | SPDR | MDL | TDL | NDDPS | PADPA | UD  | AGE | ADDB | MS1 | MS2 | MS3 | MS4 | MS5 |
 | - | -------------- | ----- | ----- | ------ | ------- | --- | ------ | ---- | --- | ----- | --- | -------- | ------- | --- | ------ | ------- | ------- | ---- | ----- | --- | --- | -------- | --- | --- | ---- | --- | --- | ----- | ----- | --- | --- | ---- | --- | --- | --- | --- | --- |
-| N | VALIDE         | 116   | 150   | 116    | 116     | 116 | 116    | 133  | 140 | 116   | 116 | 116      | 116     | 116 | 116    | 116     | 116     | 120  | 116   | 116 | 116 | 116      | 132 | 116 | 163  | 143 | 116 | 116   | 116   | 116 | 116 | 116  | 116 | 116 | 116 | 116 | 116 |
+| N | VALIDE         | 116   | 150   | 116    | 116     | 116 | 116    | 135  | 141 | 116   | 116 | 116      | 116     | 116 | 116    | 116     | 116     | 120  | 116   | 116 | 116 | 116      | 134 | 116 | 163  | 144 | 116 | 116   | 116   | 116 | 116 | 116  | 116 | 116 | 116 | 116 | 116 |
 |   | OUTLIER        |       |       |        |         | 1   |        |      |     |       |     |          | 1       |     |        |         |         |      |       |     | 3   | 4        |     |     |      |     |     |       |       |     | 2   |      |     |     |     |     |     |
-|   | MISSING        |       |       |        |         |     |        | 1    | 1   |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     | 1    |     |     |       |       |     |     | 1    | 2   | 2   | 2   | 2   | 2   |
+|   | MISSING        |       |       |        |         |     |        | 1    |     |       |     |          |         |     |        |         |         |      |       |     |     |          |     |     | 1    |     |     |       |       |     |     | 1    | 2   | 2   | 2   | 2   | 2   |
 |   | INVALID_FORMAT |       |       |        |         |     |        | 1    | 1   |       |     |          | 1       |     | 1      | 4       |         | 1    |       |     | 1   |          | 1   |     |      |     | 1   | 9     |       |     |     |      |     |     |     |     |     |

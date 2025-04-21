@@ -569,7 +569,7 @@ class StoreCollection(DataManager):
             return 0
 
     def in_depth(self, value: str):
-        parts = re.split(r"[;,/]| ET ", value)
+        parts = re.split(r"[;,/-]| ET ", value)
         matches = []
 
         for v in parts:
@@ -611,11 +611,8 @@ class StoreCollection(DataManager):
             if self.method == "approx" and utils.matches_approx(value, info["name"]):
                 return resolve(key)
             elif self.method == "exact" and info["name"] == value:
-                self.data[key]["count"] += 1
                 return resolve(key)
-            elif self.method != "exact" and (
-                info["name"] in value or value in info["name"]
-            ):
+            elif self.method != "exact" and (info["name"] in value or value in info["name"]):
                 return resolve(key)
         self.data[len(self.data)] = {"name": value, "count": 1}
         self.raw.append(0)
