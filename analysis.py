@@ -767,7 +767,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         headers[i] = formatted_header
 
     useless_dicts = ["ND", "AD", "HORODATEUR"]
-    unreliable_dicts = ["MDL"]
+    unreliable_dicts = ["MDL", "MS5"]
     removed_headers = [header["default"] for header in doc_headers if header["format"] in useless_dicts]
 
     # Suppression des données sensibles et/ou inutiles

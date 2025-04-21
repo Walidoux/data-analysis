@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 21/04/2025 à 23:05
+# Analyse des données - Généré le 21/04/2025 à 23:10
 
 Total variables traitées : `36`, dont :
 
@@ -17,6 +17,7 @@ Variables non-pertinentes dans notre analyse :
 
 Variables biaisées :
 
+- Mentions S5
 - Maîtrise d’autres logiciels
 
 ## Vue d'ensemble des variables
