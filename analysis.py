@@ -466,7 +466,7 @@ class DataManager:
             fig.write_image(f"{filename}.png", scale=3, height=2600, width=2200)  # Image simple
             fig.write_html(f"{filename}.html")  # Page interactive
 
-        elif store.name["format"] in ["UD", "MDL", "TDLPU", "FDDRSPJ", "NDPSYNPS", "MB", "TPSLEPJ", "MDVU", "SPDR", "TDL"]:
+        elif store.name["format"] in ["UD", "MDL", "TDLPU", "FDDRSPJ", "NDPSYNPS", "MB", "TPSLEPJ", "MDVU", "SPDR", "TDL", "PDMLDE", "NDLLPA", "TEPDE", "FD", "PADPA", "MS1", "MS2", "MS3", "MS4", "MS5"]:
             fig = plt.figure(figsize=(10, 7))
 
             labels = [item["name"] for item in store.data.values()]
@@ -767,10 +767,8 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         headers[i] = formatted_header
 
     useless_dicts = ["ND", "AD", "HORODATEUR"]
-    removed_headers = [
-        header["default"] for header in doc_headers
-        if header["format"] in useless_dicts
-    ]
+    unreliable_dicts = ["MDL"]
+    removed_headers = [header["default"] for header in doc_headers if header["format"] in useless_dicts]
 
     # Suppression des données sensibles et/ou inutiles
     for i in useless_dicts:
@@ -894,6 +892,9 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     doc.add_paragraph(f"Variables non-pertinentes dans notre analyse :")
     doc.add_unordered_list(removed_headers)
 
+    doc.add_paragraph(f"Variables biaisées :")
+    doc.add_unordered_list([header["default"] for header in doc_headers if header["format"] in unreliable_dicts])
+
     doc.add_heading("Vue d'ensemble des variables", level=2)
     doc.add_table(
         ["Nom", "Type", "Largeur", "Libellé", "Méthode utilisée", "Récursive"],
@@ -962,7 +963,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     stats.add_heading("Analyse inférentielle", level=2)
 
     for store in dicts:
-        if not store.removable() and not args.skip_visualization:
+        if not store.removable() and args.skip_visualization:
             store.visualize(store)
 
     if args.write:

@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 21/04/2025 à 22:34
+# Analyse des données - Généré le 21/04/2025 à 23:05
 
 Total variables traitées : `36`, dont :
 
@@ -14,6 +14,10 @@ Variables non-pertinentes dans notre analyse :
 - Horodateur
 - Nom d'utilisateur
 - Année d’étude
+
+Variables biaisées :
+
+- Maîtrise d’autres logiciels
 
 ## Vue d'ensemble des variables
 
