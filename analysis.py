@@ -1,4 +1,4 @@
-from scipy.stats import chi2_contingency, shapiro, kstest, norm, pearsonr
+from scipy.stats import chi2_contingency, shapiro, kstest, norm, pearsonr, t, ttest_1samp
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,6 +10,7 @@ import typing
 import collections
 import datetime
 import enum
+import math
 import csv
 import os
 import shutil
@@ -961,6 +962,44 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     hypothesis.gen_khi_square_table()
 
     stats.add_heading("Analyse inférentielle", level=2)
+
+    theorical_value = 300
+    t_stat, p_value = ttest_1samp(caepm_dict.data, theorical_value)
+
+    stats.add_heading(f"Est-ce que la capacité moyenne à économiser par mois est différente de {theorical_value} DH (Valeur théorique) ?", level=3)
+    stats.add_unordered_list(["H0 : Moyenne observée = valeur théorique (u = u0)", "H1 : Moyenne observée != Valeur théorique (u != u0)"])
+    stats.add_heading("Statistiques sur échantillon uniques", level=4)
+
+    mean = np.mean(caepm_dict.data)
+    std = np.std(caepm_dict.data, ddof=1)
+    n_length = caepm_dict.length()
+    std_error = std / math.sqrt(n_length)
+
+    headers = ["", "N", "Moyenne", "Écart-type", "Moyenne erreur standard"]
+    row = [caepm_dict.name["format"], n_length, f"{mean:.3f}", f"{std:.3f}", f"{std_error:.3f}"]
+    stats.add_table(headers, [row])
+
+    stats.add_heading(f"Test sur échantillon unique ({theorical_value})", level=4)
+
+    mean_diff = mean - theorical_value
+    confidence_level = 0.95
+    t_critical = t.ppf(1 - (1 - confidence_level) / 2, n_length - 1) # ddof = n - 1
+    margin_error = t_critical * std_error
+    lower_bound = mean_diff - margin_error
+    upper_bound = mean_diff + margin_error
+
+    headers = ["", "t", "dll", "Sig. (bilatéral)", "Différence moyenne", "IDCD Inférieur", "IDCD Supérieur"]
+    row = [caepm_dict.name["format"], f"{t_stat:.3f}", n_length, f"{p_value:.3f}", f"{mean_diff:.3f}", f"{lower_bound:.3f}", f"{upper_bound:.3f}"]
+    stats.add_table(headers, [row])
+
+    stats.add_paragraph(f"(*) IDCD : Intervalle de confiance de la différence à {confidence_level * 100}%")
+
+    interpretation = (
+        f"{'La moyenne __diffère significativement__ de' if p_value < 0.05 else '__Aucune différence significative__ avec'} "
+            f"la valeur théorique (p {'<' if p_value < 0.05 else '>='} 0.05)"
+    )
+
+    stats.add_paragraph(interpretation)
 
     for store in dicts:
         if not store.removable() and args.skip_visualization:

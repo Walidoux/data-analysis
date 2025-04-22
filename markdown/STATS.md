@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 21/04/2025 à 23:05
+# Analyse des données - Généré le 22/04/2025 à 21:35
 
 ## Statistiques descriptives
 
@@ -445,3 +445,24 @@ Le test du Khi-deux de Pearson indique une association __non significative__ ent
 Le test du Khi-deux de Pearson indique une association __non significative__ entre type d’application la plus utilisée et temps passé sur les écrans par jour Attention : Les conditions d'application du test ne sont pas pleinement respectées (plus de 20% des effectifs théoriques < 5 ou effectif minimum < 1). Les résultats doivent être interprétés avec prudence.
 
 ## Analyse inférentielle
+
+### Est-ce que la capacité moyenne à économiser par mois est différente de 300 DH (Valeur théorique) ?
+
+- H0 : Moyenne observée = valeur théorique (u = u0)
+- H1 : Moyenne observée != Valeur théorique (u != u0)
+
+#### Statistiques sur échantillon uniques
+
+|       | N   | Moyenne | Écart-type | Moyenne erreur standard |
+| ----- | --- | ------- | ---------- | ----------------------- |
+| CAEPM | 116 | 362.672 | 274.658    | 25.501                  |
+
+#### Test sur échantillon unique (300)
+
+|       | t     | dll | Sig. (bilatéral) | Différence moyenne | IDCD Inférieur | IDCD Supérieur |
+| ----- | ----- | --- | ---------------- | ------------------ | -------------- | -------------- |
+| CAEPM | 2.458 | 116 | 0.015            | 62.672             | 12.159         | 113.186        |
+
+(*) IDCD : Intervalle de confiance de la différence à 95.0%
+
+La moyenne __diffère significativement__ de la valeur théorique (p < 0.05)
