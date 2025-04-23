@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 22/04/2025 à 21:35
+# Analyse des données - Généré le 23/04/2025 à 01:29
 
 ## Statistiques descriptives
 
@@ -466,3 +466,24 @@ Le test du Khi-deux de Pearson indique une association __non significative__ ent
 (*) IDCD : Intervalle de confiance de la différence à 95.0%
 
 La moyenne __diffère significativement__ de la valeur théorique (p < 0.05)
+
+### Y a-t'il une différence entre les dépenses mensuelles moyennes des garçons et filles ?
+
+- H0 : Aucune différence/relation entre les deux groupes
+- H1 : La différence/relation existe entre les deux groupes
+
+#### Statistiques de groupe
+
+|     | GENRE  | N  | Moyenne  | Écart-type | Moyenne erreur standard |
+| --- | ------ | -- | -------- | ---------- | ----------------------- |
+| DMM | FEMALE | 81 | 2390.741 | 4363.213   | 484.801                 |
+|     | MALE   | 35 | 2047.143 | 1007.833   | 170.355                 |
+
+#### Test des échantillons indépendants
+
+|     |                                 | F     | Sig.  | t     | dll   | Sig. (bilatéral) | Différence moyenne | Différence erreur standard | IDCD Inférieur | IDCD Supérieur |
+| --- | ------------------------------- | ----- | ----- | ----- | ----- | ---------------- | ------------------ | -------------------------- | -------------- | -------------- |
+| DMM | Hypothèse de variances égales   | 0.653 | 0.421 | 0.460 | 114.0 | 0.647            | 343.598            | 747.688                    | -1137.566      | 1824.762       |
+|     | Hypothèse de variances inégales |       |       | 0.669 | 97.5  | 0.505            | 343.598            | 513.861                    | -676.211       | 1363.407       |
+
+Il n'y a pas de différence significative entre les dépenses mensuelles moyennes des garçons et filles

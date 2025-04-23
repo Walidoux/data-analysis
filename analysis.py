@@ -1,4 +1,4 @@
-from scipy.stats import chi2_contingency, shapiro, kstest, norm, pearsonr, t, ttest_1samp
+from scipy.stats import chi2_contingency, levene, sem, shapiro, kstest, norm, pearsonr, t, ttest_1samp, ttest_ind
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import numpy as np
@@ -963,6 +963,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     stats.add_heading("Analyse inférentielle", level=2)
 
+    # Hypothèse 6 : Test t pour un échantillon (Si la moyenne de CAEPM est différente ou pas d'une valeur théorique)
     theorical_value = 300
     t_stat, p_value = ttest_1samp(caepm_dict.data, theorical_value)
 
@@ -983,7 +984,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     mean_diff = mean - theorical_value
     confidence_level = 0.95
-    t_critical = t.ppf(1 - (1 - confidence_level) / 2, n_length - 1) # ddof = n - 1
+    t_critical = t.ppf(1 - (1 - confidence_level) / 2, n_length - 1) # ddof (sample) = n - 1
     margin_error = t_critical * std_error
     lower_bound = mean_diff - margin_error
     upper_bound = mean_diff + margin_error
@@ -997,6 +998,86 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     interpretation = (
         f"{'La moyenne __diffère significativement__ de' if p_value < 0.05 else '__Aucune différence significative__ avec'} "
             f"la valeur théorique (p {'<' if p_value < 0.05 else '>='} 0.05)"
+    )
+
+    stats.add_paragraph(interpretation)
+
+    # Hypothèse 7 : Test t pour échantillon indépendant (Si la moyenne de DMM est différente entre deux groupes sur la base du GENRE)
+
+    stats.add_heading("Y a-t'il une différence entre les dépenses mensuelles moyennes des garçons et filles ?", level=3)
+    stats.add_unordered_list(["H0 : Aucune différence/relation entre les deux groupes", "H1 : La différence/relation existe entre les deux groupes"])
+
+    stats.add_heading("Statistiques de groupe", level=4)
+
+    headers = ["", sex_dict.name["format"], "N", "Moyenne", "Écart-type", "Moyenne erreur standard"]
+    rows = []
+
+    for k, value in sex_dict.data.items():
+        group_data = [val for val, sex in zip(dmm_dict.data, sex_dict.raw) if sex == k]
+
+        n = len(group_data)
+        mean = np.mean(group_data)
+        std = np.std(group_data, ddof=1)
+        std_error = std / math.sqrt(n)
+
+        rows.append(["" if k != 0 else dmm_dict.name["format"], value["name"], n, f"{mean:.3f}", f"{std:.3f}", f"{std_error:.3f}"])
+
+    stats.add_table(headers, rows)
+
+    stats.add_heading("Test des échantillons indépendants", level=4)
+
+    group1 = [val for val, sex in zip(dmm_dict.data, sex_dict.raw) if sex == 0]
+    group2 = [val for val, sex in zip(dmm_dict.data, sex_dict.raw) if sex == 1]
+
+    levene_stat, levene_p = levene(group1, group2)
+
+    ttest_eq = ttest_ind(group1, group2, equal_var=True)
+    ttest_uneq = ttest_ind(group1, group2, equal_var=False)
+
+    mean_diff = np.mean(group1) - np.mean(group2)
+
+    var1, var2 = np.var(group1, ddof=1), np.var(group2, ddof=1)
+    n1, n2 = len(group1), len(group2)
+
+    pooled_var = ((n1 - 1) * var1 + (n2 - 1) * var2) / (n1 + n2 - 2)
+
+    std_err_eq = np.sqrt(pooled_var * (1 / n1 + 1 / n2))
+    std_err_uneq = np.sqrt(var1 / n1 + var2 / n2)
+
+    ddl_eq = n1 + n2 - 2
+    ddl_uneq = (var1 / n1 + var2 / n2) ** 2 / ((var1 / n1) ** 2 / (n1 - 1) + (var2 / n2) ** 2 / (n2 - 1))
+
+    t_critical_eq = t.ppf(0.975, ddl_eq)
+    t_critical_uneq = t.ppf(0.975, ddl_uneq)
+
+    margin_of_error_eq = t_critical_eq * std_err_eq
+    margin_of_error_uneq = t_critical_uneq * std_err_uneq
+
+    conf_int_eq = (mean_diff - margin_of_error_eq, mean_diff + margin_of_error_eq)
+    conf_int_uneq = (mean_diff - margin_of_error_uneq, mean_diff + margin_of_error_uneq)
+
+    headers = ["", "", "F", "Sig.", "t", "dll", "Sig. (bilatéral)", "Différence moyenne", "Différence erreur standard", "IDCD Inférieur", "IDCD Supérieur"]
+    rows = [
+        [dmm_dict.name["format"], "Hypothèse de variances égales",
+         f"{levene_stat:.3f}", f"{levene_p:.3f}",
+         f"{ttest_eq.statistic:.3f}", f"{ddl_eq:.1f}",
+         f"{ttest_eq.pvalue:.3f}", f"{mean_diff:.3f}",
+         f"{std_err_eq:.3f}", f"{conf_int_eq[0]:.3f}",
+         f"{conf_int_eq[1]:.3f}"],
+        ["", "Hypothèse de variances inégales", "", "",
+         f"{ttest_uneq.statistic:.3f}", f"{ddl_uneq:.1f}",
+         f"{ttest_uneq.pvalue:.3f}", f"{mean_diff:.3f}",
+         f"{std_err_uneq:.3f}", f"{conf_int_uneq[0]:.3f}",
+         f"{conf_int_uneq[1]:.3f}"]
+    ]
+
+    stats.add_table(headers, rows)
+
+    ttest = ttest_eq if levene_p < 0.05 else ttest_uneq
+
+    interpretation = (
+        f"Il {"existe une différence statistiquement" if ttest.pvalue < 0.05 else "n'y a pas de différence"} "
+        "significative entre les dépenses mensuelles moyennes des garçons et filles"
     )
 
     stats.add_paragraph(interpretation)
