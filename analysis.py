@@ -1,4 +1,4 @@
-from scipy.stats import chi2_contingency, levene, sem, shapiro, kstest, norm, pearsonr, t, ttest_1samp, ttest_ind
+from scipy.stats import chi2_contingency, f_oneway, levene, sem, shapiro, kstest, norm, pearsonr, t, ttest_1samp, ttest_ind
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import numpy as np
@@ -665,7 +665,8 @@ class StoreSet(DataManager):
     def length(self) -> int:
         return len([item for item in self.data if item is not None])
 
-class StatsManager():
+
+class Khi2Test():
     def __init__(self, dep_var: StoreCollection, indep_var: StoreCollection):
         self.dep_var = dep_var
         self.indep_var = indep_var
@@ -713,7 +714,7 @@ class StatsManager():
         non_zero_col_mask = np.any(observed != 0, axis=0)
         filtered_observed = observed[non_zero_row_mask][:, non_zero_col_mask]
 
-        chi2, p_value, dof, expected = chi2_contingency(filtered_observed, lambda_="log-likelihood") # avec fonction vraisemblance
+        chi2, p_value, dof, expected = chi2_contingency(filtered_observed, lambda_="log-likelihood")  # fonction de vraisemblance
 
         rows = [
             ["Khi-Carré de Pearson", f"{chi2:.3f}", dof, f"{p_value:.3f}"],
@@ -905,7 +906,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
                 "Numérique" if isinstance(dict, StoreSet) else "Catégorielle",
                 str(dict.length()),
                 dict.name["default"],
-                dict.method if isinstance(dict, StoreCollection) else  " ",
+                dict.method if isinstance(dict, StoreCollection) else " ",
                 "✅" if isinstance(dict, StoreCollection) and dict.recursive else "❌",
             ]
             for _, dict in enumerate(dicts)
@@ -937,27 +938,27 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
             store.generate_statistics(store)
 
     # Hypothèse 1 : Genre -> filière
-    hypothesis = StatsManager(sex_dict, studyfield_dict)
+    hypothesis = Khi2Test(sex_dict, studyfield_dict)
     hypothesis.gen_contingency_table()
     hypothesis.gen_khi_square_table()
 
     # Hypothèse 2 : Option BAC -> Filière d'étude
-    hypothesis = StatsManager(optionbac_dict, studyfield_dict)
+    hypothesis = Khi2Test(optionbac_dict, studyfield_dict)
     hypothesis.gen_contingency_table()
     hypothesis.gen_khi_square_table()
 
     # Hypothèse 3 : Fréquence d'utilisation des réseaux sociaux par jour -> Temps passé sur les écrans par jour
-    hypothesis = StatsManager(fddrspj_dict, tpslepj_dict)
+    hypothesis = Khi2Test(fddrspj_dict, tpslepj_dict)
     hypothesis.gen_contingency_table()
     hypothesis.gen_khi_square_table()
 
     # Hypothèse 4 : Source principale de revenu -> Type de logement
-    hypothesis = StatsManager(tdl_dict, spdr_dict)
+    hypothesis = Khi2Test(tdl_dict, spdr_dict)
     hypothesis.gen_contingency_table()
     hypothesis.gen_khi_square_table()
 
     # Hypothèse 5 : Type d'application la plus utilisée -> Temps passé sur les écrans par jour
-    hypothesis = StatsManager(tdlpu_dict, tpslepj_dict)
+    hypothesis = Khi2Test(tdlpu_dict, tpslepj_dict)
     hypothesis.gen_contingency_table()
     hypothesis.gen_khi_square_table()
 
@@ -968,7 +969,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     t_stat, p_value = ttest_1samp(caepm_dict.data, theorical_value)
 
     stats.add_heading(f"Est-ce que la capacité moyenne à économiser par mois est différente de {theorical_value} DH (Valeur théorique) ?", level=3)
-    stats.add_unordered_list(["H0 : Moyenne observée = valeur théorique (u = u0)", "H1 : Moyenne observée != Valeur théorique (u != u0)"])
+    stats.add_unordered_list(["H0 : Moyenne observée = valeur théorique (u = u0)", "H1 : Moyenne observée ≠ Valeur théorique (u != u0)"])
     stats.add_heading("Statistiques sur échantillon uniques", level=4)
 
     mean = np.mean(caepm_dict.data)
@@ -984,7 +985,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     mean_diff = mean - theorical_value
     confidence_level = 0.95
-    t_critical = t.ppf(1 - (1 - confidence_level) / 2, n_length - 1) # ddof (sample) = n - 1
+    t_critical = t.ppf(1 - (1 - confidence_level) / 2, n_length - 1)  # ddof (sample) = n - 1
     margin_error = t_critical * std_error
     lower_bound = mean_diff - margin_error
     upper_bound = mean_diff + margin_error
@@ -997,7 +998,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     interpretation = (
         f"{'La moyenne __diffère significativement__ de' if p_value < 0.05 else '__Aucune différence significative__ avec'} "
-            f"la valeur théorique (p {'<' if p_value < 0.05 else '>='} 0.05)"
+        f"la valeur théorique (p {'<' if p_value < 0.05 else '>='} 0.05)"
     )
 
     stats.add_paragraph(interpretation)
@@ -1005,7 +1006,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     # Hypothèse 7 : Test t pour échantillon indépendant (Si la moyenne de DMM est différente entre deux groupes sur la base du GENRE)
 
     stats.add_heading("Y a-t'il une différence entre les dépenses mensuelles moyennes des garçons et filles ?", level=3)
-    stats.add_unordered_list(["H0 : Aucune différence/relation entre les deux groupes", "H1 : La différence/relation existe entre les deux groupes"])
+    stats.add_unordered_list(["H0 : Aucune différence/relation entre les deux groupes", "H1 : Une différence/relation existe entre les deux groupes"])
 
     stats.add_heading("Statistiques de groupe", level=4)
 
@@ -1081,6 +1082,59 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     )
 
     stats.add_paragraph(interpretation)
+
+    # Hypothèse 8 : ANOVA - Comparaison de plus de 2 groupes (2 moyennes)
+
+    stats.add_heading("Est-ce que le travail en parallèle des études influence le nombre d'heures d'étude par semaine ?", level=3)
+    stats.add_unordered_list(["H0 : Aucune différence/relation entre les deux groupes", "H1 : Une différence/relation existe entre les deux groupes"])
+
+    stats.add_heading("ANOVA à 1 facteur", level=4)
+
+    group1 = [val for val, typ in zip(dmm_dict.data, tepde_dict.raw) if typ == 0]
+    group2 = [val for val, typ in zip(dmm_dict.data, tepde_dict.raw) if typ == 1]
+
+    f_value, p_value = f_oneway(group1, group2)
+
+    mean_all = np.mean(group1 + group2)
+    ss_total = np.sum((np.concatenate([group1, group2]) - mean_all)**2)
+    ss_between = (len(group1) * (np.mean(group1) - mean_all) ** 2 + (len(group2)) * (np.mean(group2) - mean_all) ** 2)
+    ss_within = ss_total - ss_between
+
+    df_between = 1
+    df_within = len(group1) + len(group2) - 2
+    df_total = len(group1) + len(group2) - 1
+
+    ms_between = ss_between / df_between
+    ms_within = ss_within / df_within
+
+    headers = ["", "Somme des carrés", "dll", "Carré moyen", "F", "Sig."]
+    rows = [
+        ["Intergroupes", f"{ss_between:.3f}", df_between, f"{ms_between:.3f}", f"{f_value:.3f}", f"{p_value:.3f}"],
+        ["Intragroupes", f"{ss_within:.3f}", df_within, f"{ms_within:.3f}", "", ""],
+        ["Total", f"{ss_total:.3f}", df_total, "", "", ""]
+    ]
+
+    stats.add_table(headers, rows)
+
+    stats.add_paragraph(f"Résultat ANOVA: F({df_between},{df_within}) = {f_value:.3f}, p = {p_value:.3f}")
+
+    if p_value < 0.05:
+        mean1 = np.mean(group1)
+        mean2 = np.mean(group2)
+        stats.add_paragraph("Conclusion: Nous rejetons H0 (p < 0.05). Il existe une différence significative entre les groupes.")
+        stats.add_paragraph(f"Les étudiants qui ne travaillent pas étudient en moyenne {mean1:.1f} heures/semaine "
+                        f"contre {mean2:.1f} heures/semaine pour ceux qui travaillent.")
+    else:
+        stats.add_paragraph("Conclusion: Nous ne pouvons pas rejeter H0 (p ≥ 0.05). Aucune différence significative n'a été détectée.")
+
+    # Hypothèse 9 : Test du Chi-Deux (Association entre variables qualitatives)
+
+    stats.add_heading("Est-ce que le genre a une association avec la participation aux projets académiques/professionnels ?", level=3)
+    stats.add_unordered_list(["H0 : Aucune association entre les deux variables", "H1 : Une association significative existe entre les deux variables catégorielles"])
+
+    hypothesis = Khi2Test(sex_dict, padpa_dict)
+    hypothesis.gen_contingency_table()
+    hypothesis.gen_khi_square_table()
 
     for store in dicts:
         if not store.removable() and args.skip_visualization:

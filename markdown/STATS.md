@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 23/04/2025 à 01:29
+# Analyse des données - Généré le 26/04/2025 à 21:17
 
 ## Statistiques descriptives
 
@@ -449,7 +449,7 @@ Le test du Khi-deux de Pearson indique une association __non significative__ ent
 ### Est-ce que la capacité moyenne à économiser par mois est différente de 300 DH (Valeur théorique) ?
 
 - H0 : Moyenne observée = valeur théorique (u = u0)
-- H1 : Moyenne observée != Valeur théorique (u != u0)
+- H1 : Moyenne observée ≠ Valeur théorique (u != u0)
 
 #### Statistiques sur échantillon uniques
 
@@ -470,7 +470,7 @@ La moyenne __diffère significativement__ de la valeur théorique (p < 0.05)
 ### Y a-t'il une différence entre les dépenses mensuelles moyennes des garçons et filles ?
 
 - H0 : Aucune différence/relation entre les deux groupes
-- H1 : La différence/relation existe entre les deux groupes
+- H1 : Une différence/relation existe entre les deux groupes
 
 #### Statistiques de groupe
 
@@ -487,3 +487,45 @@ La moyenne __diffère significativement__ de la valeur théorique (p < 0.05)
 |     | Hypothèse de variances inégales |       |       | 0.669 | 97.5  | 0.505            | 343.598            | 513.861                    | -676.211       | 1363.407       |
 
 Il n'y a pas de différence significative entre les dépenses mensuelles moyennes des garçons et filles
+
+### Est-ce que le travail en parallèle des études influence le nombre d'heures d'étude par semaine ?
+
+- H0 : Aucune différence/relation entre les deux groupes
+- H1 : Une différence/relation existe entre les deux groupes
+
+#### ANOVA à 1 facteur
+
+|              | Somme des carrés | dll | Carré moyen  | F     | Sig.  |
+| ------------ | ---------------- | --- | ------------ | ----- | ----- |
+| Intergroupes | 3694365.537      | 1   | 3694365.537  | 0.271 | 0.604 |
+| Intragroupes | 1556736237.911   | 114 | 13655581.034 |       |       |
+| Total        | 1560430603.448   | 115 |              |       |       |
+
+Résultat ANOVA: F(1,114) = 0.271, p = 0.604
+
+Conclusion: Nous ne pouvons pas rejeter H0 (p ≥ 0.05). Aucune différence significative n'a été détectée.
+
+### Est-ce que le genre a une association avec la participation aux projets académiques/professionnels ?
+
+- H0 : Aucune association entre les deux variables
+- H1 : Une association significative existe entre les deux variables catégorielles
+
+### Genre [GENRE] -> Participation à des projets académiques/professionnels [PADPA]
+
+#### Tableau de contingence (croisé)
+
+| Éléments | NON | OUI | TOTAL |
+| -------- | --- | --- | ----- |
+| FEMALE   | 43  | 38  | 81    |
+| MALE     | 15  | 20  | 35    |
+| TOTAL    | 58  | 58  | 116   |
+
+#### Tableau du Khi-Carré (χ²)
+
+|                          | Valeur | dll | Sig.  |
+| ------------------------ | ------ | --- | ----- |
+| Khi-Carré de Pearson     | 0.656  | 1   | 0.418 |
+| Rapport de vraisemblance |        | 1   |       |
+| N d'observations valides | 116    |     |       |
+
+Le test du Khi-deux de Pearson indique une association __non significative__ entre genre et participation à des projets académiques/professionnels
