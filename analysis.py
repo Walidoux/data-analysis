@@ -1,5 +1,16 @@
-from scipy.stats import chi2_contingency, f_oneway, levene, sem, shapiro, kstest, norm, pearsonr, t, ttest_1samp, ttest_ind
-from sklearn.linear_model import LinearRegression
+from scipy.stats import (
+    chi2_contingency,
+    f_oneway,
+    levene,
+    linregress,
+    shapiro,
+    kstest,
+    norm,
+    pearsonr,
+    t,
+    ttest_1samp,
+    ttest_ind,
+)
 import matplotlib.pyplot as plt
 import numpy as np
 import snakemd as mkdn
@@ -20,8 +31,16 @@ import utils
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
-parser.add_argument("--skip-geolocation", action="store_true", help="Ne pas générer de carte choroplèthe")
-parser.add_argument("--skip-visualization", action="store_true", help="Ne pas générer les représentations graphiques")
+parser.add_argument(
+    "--skip-geolocation",
+    action="store_true",
+    help="Ne pas générer de carte choroplèthe",
+)
+parser.add_argument(
+    "--skip-visualization",
+    action="store_true",
+    help="Ne pas générer les représentations graphiques",
+)
 args = parser.parse_args()
 
 doc = mkdn.Document()
@@ -89,7 +108,7 @@ class MDL(Listable):
         return cls.AUTRE.name
 
 
-class Nullable():
+class Nullable:
     @classmethod
     def classify(cls, value: str) -> str | int:
         if "PAS" in value or "AUCUN" in value or "NON" in value or "RIEN" in value:
@@ -131,7 +150,7 @@ class DataManager:
         return list(map(int, unique_outliers))
 
     def handle_outliers(self, values: list[int]):
-        filename = f"{ASSETS_DIR_NAME}/boxplot_{store.name["format"]}.png"
+        filename = f"{ASSETS_DIR_NAME}/boxplot_{store.name['format']}.png"
 
         bp = plt.boxplot(values)
         median = bp["medians"][0].get_ydata()[0]
@@ -146,12 +165,12 @@ class DataManager:
             [f"Médiane : {median}", "IQR"],
         )
 
-        plt.savefig(filename, dpi=120, bbox_inches='tight')
+        plt.savefig(filename, dpi=120, bbox_inches="tight")
 
-        data.add_heading(f"{self.name["default"]} [{self.name["format"]}]", level=4)
+        data.add_heading(f"{self.name['default']} [{self.name['format']}]", level=4)
         data.add_block(mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")]))
 
-    def handle_missing_data(self, dict):
+    def impute_data(self, dict):
         if isinstance(dict, StoreSet):
             X = [x for x in dict.data if x is not None]
 
@@ -167,34 +186,45 @@ class DataManager:
             if has_outliers:
                 self.handle_outliers(X)
 
+            def fallback_imputation(pos):
+                imputed_value = np.median(X) if has_outliers else round(np.mean(X))
+                dict.data[pos] = imputed_value
+
             for subset in dict.invalid_subsets:
-                Y = None
+                subset_pos = subset["pos"]
                 best_corr = 0
-                best_Y = None
+                best_predictor_data = None
 
                 for d in dicts:
                     if isinstance(d, StoreSet):
-                        d_data_filtered = [val for val in d.data if val is not None][:len(X)]
+                        d_data_filtered = [val for val in d.data if val is not None][
+                            : len(X)
+                        ]
 
                         if len(d_data_filtered) == len(X):
                             corr, p_value = pearsonr(X, d_data_filtered)
-                            if p_value < 0.05 and abs(corr) > 0.3 and abs(corr) > best_corr:
+                            if (
+                                p_value < 0.05
+                                and abs(corr) > 0.3
+                                and abs(corr) > best_corr
+                            ):
                                 best_corr = abs(corr)
-                                best_Y = d_data_filtered
+                                best_predictor_data = d_data_filtered
 
-                if best_Y is None:
-                    dict.data[subset["pos"] - 1] = np.median(X) if has_outliers else np.mean(sum(X) / len(X))
-                else:  # Linear regression: X ~ Y
-                    Y = best_Y
-                    Y_reshaped = np.array(Y).reshape(-1, 1)  # bind Y to 2D array
-                    X_array = np.array(X)
+                try:
+                    X_train = np.array(
+                        best_predictor_data
+                    )  # Independent variable (predictor)
+                    y_train = np.array(X)  # Dependent variable (target)
 
-                    model = LinearRegression()
-                    model.fit(Y_reshaped, X_array)
+                    slope, intercept, _, p_value, _ = linregress(X_train, y_train)
+                    predictor_value = best_predictor_data[subset_pos]
+                    value = round(intercept + slope * predictor_value)
 
-                    y_val = best_Y[subset["pos"] - 1]
-                    predicted_val = model.predict([[y_val]])[0]
-                    dict.data[subset["pos"] - 1] = round(predicted_val)
+                    # y = ax + b
+                    dict.data[subset_pos] = value
+                except (IndexError, ValueError, TypeError):
+                    fallback_imputation(subset_pos)
 
         # Mode (VF)
         elif isinstance(dict, StoreCollection):
@@ -204,24 +234,58 @@ class DataManager:
                     common_value = max(valid_data, key=lambda x: x["count"])
                     common_value["count"] += 1
                     dict.data.pop(k)
-                    self.invalid_subsets = [subset for subset in self.invalid_subsets if subset["pos"] != k]
+                    self.invalid_subsets = [
+                        subset for subset in self.invalid_subsets if subset["pos"] != k
+                    ]
 
     def generate_rapport(self, dict):
-        data.add_heading(f"{dict.name["default"]} [{dict.name["format"]}]", level=4)
-        headers = ["", "", "Fréquence", "Pourcentage", "Pourcentage valide", "Pourcentage cumulé"]
+        data.add_heading(f"{dict.name['default']} [{dict.name['format']}]", level=4)
+        headers = [
+            "",
+            "",
+            "Fréquence",
+            "Pourcentage",
+            "Pourcentage valide",
+            "Pourcentage cumulé",
+        ]
 
         missing_values = len(dict.invalid_subsets)
-        valid_values = (dict.length() if isinstance(dict, StoreCollection) else len(dict.data))
-        percent_missing_values = (missing_values / (valid_values + missing_values)) * 100
+        valid_values = (
+            dict.length() if isinstance(dict, StoreCollection) else len(dict.data)
+        )
+        percent_missing_values = (
+            missing_values / (valid_values + missing_values)
+        ) * 100
 
         row = collections.deque(
             [
                 # Données valides
-                ["", "Total", valid_values, "{percent_values}", "{percent_valid_values}", ""],
+                [
+                    "",
+                    "Total",
+                    valid_values,
+                    "{percent_values}",
+                    "{percent_valid_values}",
+                    "",
+                ],
                 # Données invalides
-                ["Manquant", "Système", missing_values, f"{percent_missing_values:.2f}%", "", ""],
+                [
+                    "Manquant",
+                    "Système",
+                    missing_values,
+                    f"{percent_missing_values:.2f}%",
+                    "",
+                    "",
+                ],
                 # Total des données
-                ["Total", "", missing_values + valid_values, "{percent_values}", "", ""],
+                [
+                    "Total",
+                    "",
+                    missing_values + valid_values,
+                    "{percent_values}",
+                    "",
+                    "",
+                ],
             ]
         )
 
@@ -229,9 +293,13 @@ class DataManager:
         cumul_percent_valid = 0
         data_rows = []
         first_row = True
-        stores = (dict.data.values() if isinstance(dict, StoreCollection) else list(set(dict.data)))
+        stores = (
+            dict.data.values()
+            if isinstance(dict, StoreCollection)
+            else list(set(dict.data))
+        )
 
-        for k, value in enumerate(stores):
+        for value in stores:
             if value is None:
                 continue
 
@@ -273,28 +341,48 @@ class DataManager:
         data.add_table(headers, [[str(cell) for cell in r] for r in row])
 
         if dict.invalid_subsets:
-            data.add_block(mkdn.Quote(f"Les valeurs non valides sont les suivantes : {', '.join(f'`{subset['value']}`' for subset in dict.invalid_subsets)}"))
+            data.add_block(
+                mkdn.Quote(
+                    f"Les valeurs non valides sont les suivantes : {', '.join(f'`{subset["value"]}`' for subset in dict.invalid_subsets)}"
+                )
+            )
 
     def generate_statistics(self, dict):
         if isinstance(dict, StoreSet):
-            stats.add_heading(f"{dict.name["default"]} [{dict.name["format"]}]", level=3)
+            stats.add_heading(
+                f"{dict.name['default']} [{dict.name['format']}]", level=3
+            )
             stats.add_heading("Dispersion des données", level=4)
 
             headers = ["", "N", "Minimum", "Maximum", "Moyenne", "Écart type"]
+
+            if any(x is None for x in dict.data):
+                message = f"None values still exist in {dict.name["format"]} after handling missing data"
+                raise ValueError(message, dict.data)
 
             min = np.min(dict.data)
             max = np.max(dict.data)
             mean = np.mean(dict.data)
             std = np.std(dict.data, ddof=1)
+            cv = (std / mean) * 100
 
-            rows = [["N Valide (liste)", len(dict.data), min, max, round(mean, 4),    round(std, 4)]]
+            rows = [
+                [
+                    "N Valide (liste)",
+                    len(dict.data),
+                    min,
+                    max,
+                    round(mean, 4),
+                    round(std, 4),
+                ]
+            ]
 
             stats.add_table(headers, rows)
 
-            if std > max - min:
-                message = f"L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données"
+            if cv > 20:
+                message = "L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données"
             else:
-                message = f"L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne"
+                message = "L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne"
 
             stats.add_block(mkdn.Quote(message))
 
@@ -304,7 +392,9 @@ class DataManager:
             header_styles = "style='text-align: center;' colspan='3'"
 
             shapiro_dn, shapiro_pvalue = shapiro(dict.data)
-            kolmogrov_dn, kolmogorov_pvalue = kstest(dict.data, "norm", args=(mean, std))
+            kolmogrov_dn, kolmogorov_pvalue = kstest(
+                dict.data, "norm", args=(mean, std)
+            )
 
             html_table = f"""
 <table>
@@ -332,7 +422,7 @@ class DataManager:
 
             if p_value > sig:
                 message = "Une distribution normale"
-                filename = f"{ASSETS_DIR_NAME}/hist_{dict.name["format"]}.png"
+                filename = f"{ASSETS_DIR_NAME}/hist_{dict.name['format']}.png"
 
                 x_ticks = [
                     mean - 3 * std,
@@ -345,30 +435,42 @@ class DataManager:
                 ]
 
                 plt.figure(figsize=(8, 5))
-                plt.hist(dict.data, bins=10, density=True, alpha=0.7, color="blue", edgecolor="black")
+                plt.hist(
+                    dict.data,
+                    bins=10,
+                    density=True,
+                    alpha=0.7,
+                    color="blue",
+                    edgecolor="black",
+                )
 
                 x = np.linspace(min, max, 100)
                 p = norm.pdf(x, mean, std)
 
-                plt.xticks(x_ticks, labels=[
-                    r"$\mu - 3\sigma$",
-                    r"$\mu - 2\sigma$",
-                    r"$\mu - \sigma$",
-                    r"$\mu$",
-                    r"$\mu + \sigma$",
-                    r"$\mu + 2\sigma$",
-                    r"$\mu + 3\sigma$"
-                ])
+                plt.xticks(
+                    x_ticks,
+                    labels=[
+                        r"$\mu - 3\sigma$",
+                        r"$\mu - 2\sigma$",
+                        r"$\mu - \sigma$",
+                        r"$\mu$",
+                        r"$\mu + \sigma$",
+                        r"$\mu + 2\sigma$",
+                        r"$\mu + 3\sigma$",
+                    ],
+                )
 
                 plt.plot(x, p, "r-", linewidth=2)
                 plt.axvline(float(np.mean(dict.data)), ls="--", color="lightgray")
-                plt.title(f"Histogramme avec une courbe de distribution normale")
+                plt.title("Histogramme avec une courbe de distribution normale")
                 plt.xlabel(dict.name["default"])
                 plt.ylabel("Probabilité de densité")
-                plt.savefig(filename, dpi=120, bbox_inches='tight')
+                plt.savefig(filename, dpi=120, bbox_inches="tight")
 
                 stats.add_block(mkdn.Quote(message))
-                stats.add_block(mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")]))
+                stats.add_block(
+                    mkdn.Paragraph([mkdn.Inline("", image=f"../{filename}")])
+                )
             else:
                 stats.add_block(mkdn.Quote(message))
                 message = "Une distribution non normale"
@@ -381,11 +483,59 @@ class DataManager:
             import time
 
             AFRICAN_COUNTRIES = [
-                'AO', 'BJ', 'BW', 'BF', 'BI', 'CM', 'CV', 'CF', 'TD', 'KM', 'CG',
-                'CD', 'DJ', 'EG', 'GQ', 'ER', 'SZ', 'ET', 'GA', 'GM', 'GH', 'GN', 'GW',
-                'CI', 'KE', 'LS', 'LR', 'LY', 'MG', 'MW', 'ML', 'MR', 'MU', 'MA', 'MZ',
-                'NA', 'NE', 'NG', 'RW', 'ST', 'SN', 'SC', 'SL', 'SO', 'ZA', 'SS', 'SD',
-                'TZ', 'TG', 'TN', 'UG', 'ZM', 'ZW'
+                "AO",
+                "BJ",
+                "BW",
+                "BF",
+                "BI",
+                "CM",
+                "CV",
+                "CF",
+                "TD",
+                "KM",
+                "CG",
+                "CD",
+                "DJ",
+                "EG",
+                "GQ",
+                "ER",
+                "SZ",
+                "ET",
+                "GA",
+                "GM",
+                "GH",
+                "GN",
+                "GW",
+                "CI",
+                "KE",
+                "LS",
+                "LR",
+                "LY",
+                "MG",
+                "MW",
+                "ML",
+                "MR",
+                "MU",
+                "MA",
+                "MZ",
+                "NA",
+                "NE",
+                "NG",
+                "RW",
+                "ST",
+                "SN",
+                "SC",
+                "SL",
+                "SO",
+                "ZA",
+                "SS",
+                "SD",
+                "TZ",
+                "TG",
+                "TN",
+                "UG",
+                "ZM",
+                "ZW",
             ]
 
             from geopy.geocoders import Nominatim
@@ -395,7 +545,9 @@ class DataManager:
                 geolocator = Nominatim(user_agent="geoapi")
                 for attempt in range(retries):
                     try:
-                        if location := geolocator.geocode(city_name, country_codes=AFRICAN_COUNTRIES, namedetails=True):
+                        if location := geolocator.geocode(
+                            city_name, country_codes=AFRICAN_COUNTRIES, namedetails=True
+                        ):
                             query = location.address.split(",")[0].strip()
                             residence = re.sub(r"[^a-zA-ZÀ-ÿ\s'-]", "", query).strip()
                             return location.latitude, location.longitude, residence
@@ -403,7 +555,9 @@ class DataManager:
                         if attempt < retries - 1:
                             time.sleep(delay)
                         else:
-                            print(f"Erreur de géolocalisation en raison de : {e}. City: {city_name}. Trop de tentatives.")
+                            print(
+                                f"Erreur de géolocalisation en raison de : {e}. City: {city_name}. Trop de tentatives."
+                            )
                 return None, None, None
 
             city_lats, city_lons, areas, intensities = [], [], [], []
@@ -423,25 +577,30 @@ class DataManager:
                 scope="africa",
             )
 
-            fig.add_trace(go.Scattergeo(
-                name='Cities',
-                mode='markers+text',
-                textposition='top center',
-                lon=city_lons,
-                lat=city_lats,
-                text=[f"{city} ({count}) {'👥' if count > 1 else '👤'}" for city, count in zip(areas, intensities)],
-                marker=dict(
-                    size=[i * 6 for i in intensities],
-                    color=intensities,
-                    colorscale="YlOrRd",
-                    colorbar=dict(title="City Intensity"),
-                    cmin=min(intensities),
-                    cmax=max(intensities),
-                    showscale=True,
-                    opacity=0.8,
-                    line=dict(width=0.5, color='black')
+            fig.add_trace(
+                go.Scattergeo(
+                    name="Cities",
+                    mode="markers+text",
+                    textposition="top center",
+                    lon=city_lons,
+                    lat=city_lats,
+                    text=[
+                        f"{city} ({count}) {'👥' if count > 1 else '👤'}"
+                        for city, count in zip(areas, intensities)
+                    ],
+                    marker=dict(
+                        size=[i * 6 for i in intensities],
+                        color=intensities,
+                        colorscale="YlOrRd",
+                        colorbar=dict(title="City Intensity"),
+                        cmin=min(intensities),
+                        cmax=max(intensities),
+                        showscale=True,
+                        opacity=0.8,
+                        line=dict(width=0.5, color="black"),
+                    ),
                 )
-            ))
+            )
 
             fig.update_layout(
                 margin=dict(l=0, r=0, t=0, b=0),
@@ -462,12 +621,35 @@ class DataManager:
                 ),
             )
 
-            filename = f"./{ASSETS_DIR_NAME}/choropleth_{store.name["format"]}"
+            filename = f"./{ASSETS_DIR_NAME}/choropleth_{store.name['format']}"
 
-            fig.write_image(f"{filename}.png", scale=3, height=2600, width=2200)  # Image simple
+            fig.write_image(
+                f"{filename}.png", scale=3, height=2600, width=2200
+            )  # Image simple
             fig.write_html(f"{filename}.html")  # Page interactive
 
-        elif store.name["format"] in ["UD", "MDL", "TDLPU", "FDDRSPJ", "NDPSYNPS", "MB", "TPSLEPJ", "MDVU", "SPDR", "TDL", "PDMLDE", "NDLLPA", "TEPDE", "FD", "PADPA", "MS1", "MS2", "MS3", "MS4", "MS5"]:
+        elif store.name["format"] in [
+            "UD",
+            "MDL",
+            "TDLPU",
+            "FDDRSPJ",
+            "NDPSYNPS",
+            "MB",
+            "TPSLEPJ",
+            "MDVU",
+            "SPDR",
+            "TDL",
+            "PDMLDE",
+            "NDLLPA",
+            "TEPDE",
+            "FD",
+            "PADPA",
+            "MS1",
+            "MS2",
+            "MS3",
+            "MS4",
+            "MS5",
+        ]:
             fig = plt.figure(figsize=(10, 7))
 
             labels = [item["name"] for item in store.data.values()]
@@ -477,12 +659,18 @@ class DataManager:
             explode = [0] * len(data)
             explode[max_index] = 0.1
 
-            wedges, _, autotexts = plt.pie(data, labels=labels, explode=explode, autopct='%1.1f%%')
+            wedges, _, autotexts = plt.pie(
+                data, labels=labels, explode=explode, autopct="%1.1f%%"
+            )
 
             fig.legend(wedges, labels, loc="upper right")
             plt.setp(autotexts, size=12, weight="bold")
             plt.title(store.name["default"])
-            plt.savefig(f"{ASSETS_DIR_NAME}/pie_{store.name["format"]}.png", dpi=120, bbox_inches='tight')
+            plt.savefig(
+                f"{ASSETS_DIR_NAME}/pie_{store.name['format']}.png",
+                dpi=120,
+                bbox_inches="tight",
+            )
 
         elif store.name["format"] == "QDS":
             from matplotlib.colors import LinearSegmentedColormap, BoundaryNorm
@@ -492,36 +680,41 @@ class DataManager:
             import cairosvg
 
             def load_svg(svg_path, size=(30, 30)):
-                png_data = cairosvg.svg2png(url=svg_path, output_width=size[0], output_height=size[1])
+                png_data = cairosvg.svg2png(
+                    url=svg_path, output_width=size[0], output_height=size[1]
+                )
                 return plt.imread(BytesIO(png_data))
 
             categories = {
-                'BAD': (1, 2),
-                'POOR': (3, 4),
-                'AVERAGE': (5, 6),
-                'GOOD': (7, 8),
-                'HAPPY': (9, 10)
+                "BAD": (1, 2),
+                "POOR": (3, 4),
+                "AVERAGE": (5, 6),
+                "GOOD": (7, 8),
+                "HAPPY": (9, 10),
             }
 
             scores = list(range(1, 11))
-            frequencies = [collections.Counter(store.data).get(score, 0) for score in scores]
+            frequencies = [
+                collections.Counter(store.data).get(score, 0) for score in scores
+            ]
             total_responses = sum(frequencies)
             percentages = [freq / total_responses * 100 for freq in frequencies]
             max_freq = max(frequencies)
 
-            category_colors = ['#ff0000', '#ff6600', '#ffcc00', '#66cc00', '#009900']
-            cmap = LinearSegmentedColormap.from_list('sleep_quality', category_colors, N=len(categories))
+            category_colors = ["#ff0000", "#ff6600", "#ffcc00", "#66cc00", "#009900"]
+            cmap = LinearSegmentedColormap.from_list(
+                "sleep_quality", category_colors, N=len(categories)
+            )
 
             bounds = [1, 3, 5, 7, 9, 11]
             norm = BoundaryNorm(bounds, len(categories))
 
             # Plot setup
             fig, ax = plt.subplots(figsize=(12, 6))
-            bars = ax.bar(scores, frequencies, color=[cmap(norm(score)) for score in scores])
 
             # Add percentage labels
             for score, freq, percent in zip(scores, frequencies, percentages):
-                ax.text(score, freq + 0.5, f'{percent:.1f}%', ha='center', va='bottom')
+                ax.text(score, freq + 0.5, f"{percent:.1f}%", ha="center", va="bottom")
 
             # Add category icons
             y_pos = max_freq * 1.1
@@ -532,25 +725,40 @@ class DataManager:
                 ax.add_artist(AnnotationBbox(imagebox, (center, y_pos), frameon=False))
 
             # Axes and titles
-            ax.set_title(f'Distribution: {store.name["default"]} (Scale 1-10)', fontsize=14, pad=20)
-            ax.set_xlabel('Sleep Quality Score', fontsize=12)
-            ax.set_ylabel('Frequency', fontsize=12)
+            ax.set_title(
+                f"Distribution: {store.name['default']} (Scale 1-10)",
+                fontsize=14,
+                pad=20,
+            )
+            ax.set_xlabel("Sleep Quality Score", fontsize=12)
+            ax.set_ylabel("Frequency", fontsize=12)
             ax.set_xticks(scores)
             ax.set_ylim(0, max_freq * 1.25)
 
             # Color bar (legend)
             sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
             sm.set_array([])
-            cbar = plt.colorbar(sm, ax=ax, orientation='horizontal', pad=0.05,
-                                ticks=[2, 4, 6, 8, 10])
-            cbar.set_label('Sleep Quality Categories')
-            cbar.ax.set_xticklabels(['BAD', 'POOR', 'AVERAGE', 'GOOD', 'HAPPY'])
+            cbar = plt.colorbar(
+                sm, ax=ax, orientation="horizontal", pad=0.05, ticks=[2, 4, 6, 8, 10]
+            )
+            cbar.set_label("Sleep Quality Categories")
+            cbar.ax.set_xticklabels(["BAD", "POOR", "AVERAGE", "GOOD", "HAPPY"])
 
-            plt.savefig(f"{ASSETS_DIR_NAME}/scale_{store.name['format']}.png", dpi=120, bbox_inches='tight')
+            plt.savefig(
+                f"{ASSETS_DIR_NAME}/scale_{store.name['format']}.png",
+                dpi=120,
+                bbox_inches="tight",
+            )
 
 
 class StoreCollection(DataManager):
-    def __init__(self, pos, method: typing.Literal["exact", "approx"] = "exact", recursive=False, nullish=False):
+    def __init__(
+        self,
+        pos,
+        method: typing.Literal["exact", "approx"] = "exact",
+        recursive=False,
+        nullish=False,
+    ):
         self.pos = pos
         self.data = {}
         self.method = method
@@ -586,11 +794,9 @@ class StoreCollection(DataManager):
 
         def unresolved(type, v):
             self.data[len(self.data)] = None
-            self.invalid_subsets.append({
-                "pos": len(self.data),
-                "type": type,
-                "value": v
-            })
+            self.invalid_subsets.append(
+                {"pos": len(self.data) - 1, "type": type, "value": v}
+            )
 
         def resolve(key):
             self.raw.append(key)
@@ -598,7 +804,11 @@ class StoreCollection(DataManager):
 
         if not value or self.is_unknown(value):
             return unresolved(UnwantedDataType.MISSING, value)
-        elif value and not re.search(r"[a-zA-Z]", value.strip()) and not re.fullmatch(r"\d+(?:\s*-\s*\d+)?", value.strip()):
+        elif (
+            value
+            and not re.search(r"[a-zA-Z]", value.strip())
+            and not re.fullmatch(r"\d+(?:\s*-\s*\d+)?", value.strip())
+        ):
             return unresolved(UnwantedDataType.INVALID_FORMAT, value)
 
         if self.recursive and len(possible_values := self.in_depth(value)) > 1:
@@ -613,7 +823,9 @@ class StoreCollection(DataManager):
                 return resolve(key)
             elif self.method == "exact" and info["name"] == value:
                 return resolve(key)
-            elif self.method != "exact" and (info["name"] in value or value in info["name"]):
+            elif self.method != "exact" and (
+                info["name"] in value or value in info["name"]
+            ):
                 return resolve(key)
         self.data[len(self.data)] = {"name": value, "count": 1}
         self.raw.append(0)
@@ -644,11 +856,9 @@ class StoreSet(DataManager):
 
         def unresolved(type, v):
             self.data.append(None)
-            self.invalid_subsets.append({
-                "pos": len(self.data),
-                "type": type,
-                "value": v
-            })
+            self.invalid_subsets.append(
+                {"pos": len(self.data) - 1, "type": type, "value": v}
+            )
 
         if self.is_unknown(value):
             return unresolved(UnwantedDataType.MISSING, value)
@@ -666,14 +876,17 @@ class StoreSet(DataManager):
         return len([item for item in self.data if item is not None])
 
 
-class Khi2Test():
+class Khi2Test:
     def __init__(self, dep_var: StoreCollection, indep_var: StoreCollection):
         self.dep_var = dep_var
         self.indep_var = indep_var
         self.table_rows = []
 
     def gen_contingency_table(self):
-        stats.add_heading(f"{self.dep_var.name["default"]} [{self.dep_var.name["format"]}] -> {self.indep_var.name["default"]} [{self.indep_var.name["format"]}]", level=3)
+        stats.add_heading(
+            f"{self.dep_var.name['default']} [{self.dep_var.name['format']}] -> {self.indep_var.name['default']} [{self.indep_var.name['format']}]",
+            level=3,
+        )
         stats.add_heading("Tableau de contingence (croisé)", level=4)
 
         indep_var_labels = [v["name"] for v in self.indep_var.data.values()]
@@ -687,7 +900,11 @@ class Khi2Test():
             count_dep_var = 0
 
             for i, (field_key, _) in enumerate(self.indep_var.data.items()):
-                count = sum(1 for k in range(min_len) if self.dep_var.raw[k] == key and self.indep_var.raw[k] == field_key)
+                count = sum(
+                    1
+                    for k in range(min_len)
+                    if self.dep_var.raw[k] == key and self.indep_var.raw[k] == field_key
+                )
 
                 row.append(str(count))
                 count_dep_var += count
@@ -697,7 +914,9 @@ class Khi2Test():
             cumul_dep_var_values += count_dep_var
             self.table_rows.append(row)
 
-        self.table_rows.append(["TOTAL", *map(str, cumul_indep_var_values), str(cumul_dep_var_values)])
+        self.table_rows.append(
+            ["TOTAL", *map(str, cumul_indep_var_values), str(cumul_dep_var_values)]
+        )
         stats.add_table(["Éléments", *indep_var_labels, "TOTAL"], self.table_rows)
 
     def gen_khi_square_table(self):
@@ -714,7 +933,9 @@ class Khi2Test():
         non_zero_col_mask = np.any(observed != 0, axis=0)
         filtered_observed = observed[non_zero_row_mask][:, non_zero_col_mask]
 
-        chi2, p_value, dof, expected = chi2_contingency(filtered_observed, lambda_="log-likelihood")  # fonction de vraisemblance
+        chi2, p_value, dof, expected = chi2_contingency(
+            filtered_observed, lambda_="log-likelihood"
+        )  # fonction de vraisemblance
 
         rows = [
             ["Khi-Carré de Pearson", f"{chi2:.3f}", dof, f"{p_value:.3f}"],
@@ -727,7 +948,7 @@ class Khi2Test():
         interpretation = (
             f"Le test du Khi-deux de Pearson indique une association "
             f"__{'statistiquement significative' if p_value < 0.05 else 'non significative'}__ "
-            f"entre {self.dep_var.name["default"].lower()} et {self.indep_var.name["default"].lower()}"
+            f"entre {self.dep_var.name['default'].lower()} et {self.indep_var.name['default'].lower()}"
         )
 
         percent_under_5 = (np.sum(expected < 5) / observed.size) * 100
@@ -763,14 +984,18 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
             formatted_header = normalized_header.upper()
 
         if formatted_header in headers:
-            formatted_header = f"{formatted_header}_{headers.count(formatted_header) + 1}"
+            formatted_header = (
+                f"{formatted_header}_{headers.count(formatted_header) + 1}"
+            )
 
         doc_headers.append({"format": formatted_header, "default": header})
         headers[i] = formatted_header
 
     useless_dicts = ["ND", "AD", "HORODATEUR"]
     unreliable_dicts = ["MDL", "MS5"]
-    removed_headers = [header["default"] for header in doc_headers if header["format"] in useless_dicts]
+    removed_headers = [
+        header["default"] for header in doc_headers if header["format"] in useless_dicts
+    ]
 
     # Suppression des données sensibles et/ou inutiles
     for i in useless_dicts:
@@ -796,7 +1021,9 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     tdl_dict = StoreCollection(headers.index("TDL"), method="approx")
     mp_dict = StoreCollection(headers.index("MP"), method="approx", recursive=True)
     tpslepj_dict = StoreCollection(headers.index("TPSLEPJ"))
-    mdvu_dict = StoreCollection(headers.index("MDVU"), method="approx", recursive=True, nullish=True)
+    mdvu_dict = StoreCollection(
+        headers.index("MDVU"), method="approx", recursive=True, nullish=True
+    )
     cdfvvpa_dict = StoreSet(headers.index("CDFVVPA"), nullish=True)
     caepm_dict = StoreSet(headers.index("CAEPM"), nullish=True)
     nddtps_dict = StoreSet(headers.index("NDDTPS"), nullish=True)
@@ -806,7 +1033,9 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     dmm_dict = StoreSet(headers.index("DMM"), nullish=True)
     lp_dict = StoreCollection(headers.index("LP"), recursive=True)
     ndllpa_dict = StoreCollection(headers.index("NDLLPA"))
-    tdsp_dict = StoreCollection(headers.index("TDSP"), method="approx", recursive=True, nullish=True)
+    tdsp_dict = StoreCollection(
+        headers.index("TDSP"), method="approx", recursive=True, nullish=True
+    )
     ap_dict = StoreSet(headers.index("AP"))
     nmddspn_dict = StoreSet(headers.index("NMDDSPN"))
     ndpsynps_dict = StoreCollection(headers.index("NDPSYNPS"))
@@ -876,7 +1105,9 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
         i += 1
 
-    doc.add_paragraph(f"Total variables traitées : `{str(sum(1 for dict in dicts if not dict.removable()))}`, dont :")
+    doc.add_paragraph(
+        f"Total variables traitées : `{str(sum(1 for dict in dicts if not dict.removable()))}`, dont :"
+    )
     doc.add_unordered_list(
         [
             f"`{sum(1 for d in dicts if isinstance(d, StoreSet) and not d.removable())}` variables de type numérique",
@@ -888,14 +1119,22 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     for store in dicts:
         if store.removable():
             removable_dicts.append(store.name["default"])
-    doc.add_paragraph(f"Variables supprimées par identification des données manquantes :")
+    doc.add_paragraph(
+        "Variables supprimées par identification des données manquantes :"
+    )
     doc.add_unordered_list(removable_dicts)
 
-    doc.add_paragraph(f"Variables non-pertinentes dans notre analyse :")
+    doc.add_paragraph("Variables non-pertinentes dans notre analyse :")
     doc.add_unordered_list(removed_headers)
 
-    doc.add_paragraph(f"Variables biaisées :")
-    doc.add_unordered_list([header["default"] for header in doc_headers if header["format"] in unreliable_dicts])
+    doc.add_paragraph("Variables biaisées :")
+    doc.add_unordered_list(
+        [
+            header["default"]
+            for header in doc_headers
+            if header["format"] in unreliable_dicts
+        ]
+    )
 
     doc.add_heading("Vue d'ensemble des variables", level=2)
     doc.add_table(
@@ -919,7 +1158,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     for store in dicts:
         if not store.removable():
-            store.handle_missing_data(store)
+            store.impute_data(store)
 
     data.add_heading("Identification des données manquantes", level=3)
     table_rows = [["N", "VALIDE"], *[["", name] for name in UnwantedDataType.get()]]
@@ -928,7 +1167,11 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         if not store.removable():
             table_rows[0].append(str(store.length()))
             for i, type in enumerate(UnwantedDataType.get()):
-                subset = [v for v in store.invalid_subsets if v["type"] == UnwantedDataType[type]]
+                subset = [
+                    v
+                    for v in store.invalid_subsets
+                    if v["type"] == UnwantedDataType[type]
+                ]
                 table_rows[i + 1].append(str(len(subset)) if len(subset) != 0 else "")
     data.add_table(["", "", *headers], table_rows)
 
@@ -968,8 +1211,16 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     theorical_value = 300
     t_stat, p_value = ttest_1samp(caepm_dict.data, theorical_value)
 
-    stats.add_heading(f"Est-ce que la capacité moyenne à économiser par mois est différente de {theorical_value} DH (Valeur théorique) ?", level=3)
-    stats.add_unordered_list(["H0 : Moyenne observée = valeur théorique (u = u0)", "H1 : Moyenne observée ≠ Valeur théorique (u != u0)"])
+    stats.add_heading(
+        f"Est-ce que la capacité moyenne à économiser par mois est différente de {theorical_value} DH (Valeur théorique) ?",
+        level=3,
+    )
+    stats.add_unordered_list(
+        [
+            "H0 : Moyenne observée = valeur théorique (u = u0)",
+            "H1 : Moyenne observée ≠ Valeur théorique (u != u0)",
+        ]
+    )
     stats.add_heading("Statistiques sur échantillon uniques", level=4)
 
     mean = np.mean(caepm_dict.data)
@@ -978,23 +1229,49 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     std_error = std / math.sqrt(n_length)
 
     headers = ["", "N", "Moyenne", "Écart-type", "Moyenne erreur standard"]
-    row = [caepm_dict.name["format"], n_length, f"{mean:.3f}", f"{std:.3f}", f"{std_error:.3f}"]
+    row = [
+        caepm_dict.name["format"],
+        n_length,
+        f"{mean:.3f}",
+        f"{std:.3f}",
+        f"{std_error:.3f}",
+    ]
     stats.add_table(headers, [row])
 
     stats.add_heading(f"Test sur échantillon unique ({theorical_value})", level=4)
 
     mean_diff = mean - theorical_value
     confidence_level = 0.95
-    t_critical = t.ppf(1 - (1 - confidence_level) / 2, n_length - 1)  # ddof (sample) = n - 1
+    t_critical = t.ppf(
+        1 - (1 - confidence_level) / 2, n_length - 1
+    )  # ddof (sample) = n - 1
     margin_error = t_critical * std_error
     lower_bound = mean_diff - margin_error
     upper_bound = mean_diff + margin_error
 
-    headers = ["", "t", "dll", "Sig. (bilatéral)", "Différence moyenne", "IDCD Inférieur", "IDCD Supérieur"]
-    row = [caepm_dict.name["format"], f"{t_stat:.3f}", n_length, f"{p_value:.3f}", f"{mean_diff:.3f}", f"{lower_bound:.3f}", f"{upper_bound:.3f}"]
+    headers = [
+        "",
+        "t",
+        "dll",
+        "Sig. (bilatéral)",
+        "Différence moyenne",
+        "IDCD Inférieur",
+        "IDCD Supérieur",
+    ]
+    row = [
+        caepm_dict.name["format"],
+        f"{t_stat:.3f}",
+        n_length,
+        f"{p_value:.3f}",
+        f"{mean_diff:.3f}",
+        f"{lower_bound:.3f}",
+        f"{upper_bound:.3f}",
+    ]
     stats.add_table(headers, [row])
 
-    stats.add_paragraph(f"(*) IDCD : Intervalle de confiance de la différence à {confidence_level * 100}%")
+    stats.add_paragraph(
+        f"(*) IDCD : Intervalle de confiance de la différence à {confidence_level * 100}%"
+    )
 
     interpretation = (
         f"{'La moyenne __diffère significativement__ de' if p_value < 0.05 else '__Aucune différence significative__ avec'} "
@@ -1005,12 +1282,27 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     # Hypothèse 7 : Test t pour échantillon indépendant (Si la moyenne de DMM est différente entre deux groupes sur la base du GENRE)
 
-    stats.add_heading("Y a-t'il une différence entre les dépenses mensuelles moyennes des garçons et filles ?", level=3)
-    stats.add_unordered_list(["H0 : Aucune différence/relation entre les deux groupes", "H1 : Une différence/relation existe entre les deux groupes"])
+    stats.add_heading(
+        "Y a-t'il une différence entre les dépenses mensuelles moyennes des garçons et filles ?",
+        level=3,
+    )
+    stats.add_unordered_list(
+        [
+            "H0 : Aucune différence/relation entre les deux groupes",
+            "H1 : Une différence/relation existe entre les deux groupes",
+        ]
+    )
 
     stats.add_heading("Statistiques de groupe", level=4)
 
-    headers = ["", sex_dict.name["format"], "N", "Moyenne", "Écart-type", "Moyenne erreur standard"]
+    headers = [
+        "",
+        sex_dict.name["format"],
+        "N",
+        "Moyenne",
+        "Écart-type",
+        "Moyenne erreur standard",
+    ]
     rows = []
 
     for k, value in sex_dict.data.items():
@@ -1021,7 +1313,16 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         std = np.std(group_data, ddof=1)
         std_error = std / math.sqrt(n)
 
-        rows.append(["" if k != 0 else dmm_dict.name["format"], value["name"], n, f"{mean:.3f}", f"{std:.3f}", f"{std_error:.3f}"])
+        rows.append(
+            [
+                "" if k != 0 else dmm_dict.name["format"],
+                value["name"],
+                n,
+                f"{mean:.3f}",
+                f"{std:.3f}",
+                f"{std_error:.3f}",
+            ]
+        )
 
     stats.add_table(headers, rows)
 
@@ -1046,7 +1347,9 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     std_err_uneq = np.sqrt(var1 / n1 + var2 / n2)
 
     ddl_eq = n1 + n2 - 2
-    ddl_uneq = (var1 / n1 + var2 / n2) ** 2 / ((var1 / n1) ** 2 / (n1 - 1) + (var2 / n2) ** 2 / (n2 - 1))
+    ddl_uneq = (var1 / n1 + var2 / n2) ** 2 / (
+        (var1 / n1) ** 2 / (n1 - 1) + (var2 / n2) ** 2 / (n2 - 1)
+    )
 
     t_critical_eq = t.ppf(0.975, ddl_eq)
     t_critical_uneq = t.ppf(0.975, ddl_uneq)
@@ -1057,19 +1360,46 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     conf_int_eq = (mean_diff - margin_of_error_eq, mean_diff + margin_of_error_eq)
     conf_int_uneq = (mean_diff - margin_of_error_uneq, mean_diff + margin_of_error_uneq)
 
-    headers = ["", "", "F", "Sig.", "t", "dll", "Sig. (bilatéral)", "Différence moyenne", "Différence erreur standard", "IDCD Inférieur", "IDCD Supérieur"]
+    headers = [
+        "",
+        "",
+        "F",
+        "Sig.",
+        "t",
+        "dll",
+        "Sig. (bilatéral)",
+        "Différence moyenne",
+        "Différence erreur standard",
+        "IDCD Inférieur",
+        "IDCD Supérieur",
+    ]
     rows = [
-        [dmm_dict.name["format"], "Hypothèse de variances égales",
-         f"{levene_stat:.3f}", f"{levene_p:.3f}",
-         f"{ttest_eq.statistic:.3f}", f"{ddl_eq:.1f}",
-         f"{ttest_eq.pvalue:.3f}", f"{mean_diff:.3f}",
-         f"{std_err_eq:.3f}", f"{conf_int_eq[0]:.3f}",
-         f"{conf_int_eq[1]:.3f}"],
-        ["", "Hypothèse de variances inégales", "", "",
-         f"{ttest_uneq.statistic:.3f}", f"{ddl_uneq:.1f}",
-         f"{ttest_uneq.pvalue:.3f}", f"{mean_diff:.3f}",
-         f"{std_err_uneq:.3f}", f"{conf_int_uneq[0]:.3f}",
-         f"{conf_int_uneq[1]:.3f}"]
+        [
+            dmm_dict.name["format"],
+            "Hypothèse de variances égales",
+            f"{levene_stat:.3f}",
+            f"{levene_p:.3f}",
+            f"{ttest_eq.statistic:.3f}",
+            f"{ddl_eq:.1f}",
+            f"{ttest_eq.pvalue:.3f}",
+            f"{mean_diff:.3f}",
+            f"{std_err_eq:.3f}",
+            f"{conf_int_eq[0]:.3f}",
+            f"{conf_int_eq[1]:.3f}",
+        ],
+        [
+            "",
+            "Hypothèse de variances inégales",
+            "",
+            "",
+            f"{ttest_uneq.statistic:.3f}",
+            f"{ddl_uneq:.1f}",
+            f"{ttest_uneq.pvalue:.3f}",
+            f"{mean_diff:.3f}",
+            f"{std_err_uneq:.3f}",
+            f"{conf_int_uneq[0]:.3f}",
+            f"{conf_int_uneq[1]:.3f}",
+        ],
     ]
 
     stats.add_table(headers, rows)
@@ -1077,7 +1407,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     ttest = ttest_eq if levene_p < 0.05 else ttest_uneq
 
     interpretation = (
-        f"Il {"existe une différence statistiquement" if ttest.pvalue < 0.05 else "n'y a pas de différence"} "
+        f"Il {'existe une différence statistiquement' if ttest.pvalue < 0.05 else "n'y a pas de différence"} "
         "significative entre les dépenses mensuelles moyennes des garçons et filles"
     )
 
@@ -1085,8 +1415,16 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     # Hypothèse 8 : ANOVA - Comparaison de plus de 2 groupes (2 moyennes)
 
-    stats.add_heading("Est-ce que le travail en parallèle des études influence le nombre d'heures d'étude par semaine ?", level=3)
-    stats.add_unordered_list(["H0 : Aucune différence/relation entre les deux groupes", "H1 : Une différence/relation existe entre les deux groupes"])
+    stats.add_heading(
+        "Est-ce que le travail en parallèle des études influence le nombre d'heures d'étude par semaine ?",
+        level=3,
+    )
+    stats.add_unordered_list(
+        [
+            "H0 : Aucune différence/relation entre les deux groupes",
+            "H1 : Une différence/relation existe entre les deux groupes",
+        ]
+    )
 
     stats.add_heading("ANOVA à 1 facteur", level=4)
 
@@ -1096,8 +1434,11 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     f_value, p_value = f_oneway(group1, group2)
 
     mean_all = np.mean(group1 + group2)
-    ss_total = np.sum((np.concatenate([group1, group2]) - mean_all)**2)
-    ss_between = (len(group1) * (np.mean(group1) - mean_all) ** 2 + (len(group2)) * (np.mean(group2) - mean_all) ** 2)
+    ss_total = np.sum((np.concatenate([group1, group2]) - mean_all) ** 2)
+    ss_between = (
+        len(group1) * (np.mean(group1) - mean_all) ** 2
+        + (len(group2)) * (np.mean(group2) - mean_all) ** 2
+    )
     ss_within = ss_total - ss_between
 
     df_between = 1
@@ -1109,35 +1450,58 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     headers = ["", "Somme des carrés", "dll", "Carré moyen", "F", "Sig."]
     rows = [
-        ["Intergroupes", f"{ss_between:.3f}", df_between, f"{ms_between:.3f}", f"{f_value:.3f}", f"{p_value:.3f}"],
+        [
+            "Intergroupes",
+            f"{ss_between:.3f}",
+            df_between,
+            f"{ms_between:.3f}",
+            f"{f_value:.3f}",
+            f"{p_value:.3f}",
+        ],
         ["Intragroupes", f"{ss_within:.3f}", df_within, f"{ms_within:.3f}", "", ""],
-        ["Total", f"{ss_total:.3f}", df_total, "", "", ""]
+        ["Total", f"{ss_total:.3f}", df_total, "", "", ""],
     ]
 
     stats.add_table(headers, rows)
 
-    stats.add_paragraph(f"Résultat ANOVA: F({df_between},{df_within}) = {f_value:.3f}, p = {p_value:.3f}")
+    stats.add_paragraph(
+        f"Résultat ANOVA: F({df_between},{df_within}) = {f_value:.3f}, p = {p_value:.3f}"
+    )
 
     if p_value < 0.05:
         mean1 = np.mean(group1)
         mean2 = np.mean(group2)
-        stats.add_paragraph("Conclusion: Nous rejetons H0 (p < 0.05). Il existe une différence significative entre les groupes.")
-        stats.add_paragraph(f"Les étudiants qui ne travaillent pas étudient en moyenne {mean1:.1f} heures/semaine "
-                        f"contre {mean2:.1f} heures/semaine pour ceux qui travaillent.")
+        stats.add_paragraph(
+            "Conclusion: Nous rejetons H0 (p < 0.05). Il existe une différence significative entre les groupes."
+        )
+        stats.add_paragraph(
+            f"Les étudiants qui ne travaillent pas étudient en moyenne {mean1:.1f} heures/semaine "
+            f"contre {mean2:.1f} heures/semaine pour ceux qui travaillent."
+        )
     else:
-        stats.add_paragraph("Conclusion: Nous ne pouvons pas rejeter H0 (p ≥ 0.05). Aucune différence significative n'a été détectée.")
+        stats.add_paragraph(
+            "Conclusion: Nous ne pouvons pas rejeter H0 (p ≥ 0.05). Aucune différence significative n'a été détectée."
+        )
 
     # Hypothèse 9 : Test du Chi-Deux (Association entre variables qualitatives)
 
-    stats.add_heading("Est-ce que le genre a une association avec la participation aux projets académiques/professionnels ?", level=3)
-    stats.add_unordered_list(["H0 : Aucune association entre les deux variables", "H1 : Une association significative existe entre les deux variables catégorielles"])
+    stats.add_heading(
+        "Est-ce que le genre a une association avec la participation aux projets académiques/professionnels ?",
+        level=3,
+    )
+    stats.add_unordered_list(
+        [
+            "H0 : Aucune association entre les deux variables",
+            "H1 : Une association significative existe entre les deux variables catégorielles",
+        ]
+    )
 
     hypothesis = Khi2Test(sex_dict, padpa_dict)
     hypothesis.gen_contingency_table()
     hypothesis.gen_khi_square_table()
 
     for store in dicts:
-        if not store.removable() and args.skip_visualization:
+        if not store.removable() and not args.skip_visualization:
             store.visualize(store)
 
     if args.write:

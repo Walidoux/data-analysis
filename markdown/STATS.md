@@ -1,4 +1,4 @@
-# Analyse des données - Généré le 26/04/2025 à 21:17
+# Analyse des données - Généré le 27/04/2025 à 16:27
 
 ## Statistiques descriptives
 
@@ -10,7 +10,7 @@
 | ---------------- | --- | ------- | ------- | ------- | ---------- |
 | N Valide (liste) | 116 | 1       | 10      | 5.931   | 2.3096     |
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 #### Distribution des données et test de normalité
 
@@ -43,7 +43,7 @@
 
 |                  | N   | Minimum | Maximum | Moyenne | Écart type |
 | ---------------- | --- | ------- | ------- | ------- | ---------- |
-| N Valide (liste) | 116 | 5.0     | 10.0    | 5.6552  | 1.1876     |
+| N Valide (liste) | 116 | 5.0     | 10.0    | 5.6121  | 1.1172     |
 
 > L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
 
@@ -58,10 +58,10 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.4335</td>
+        <td>0.4409</td>
         <td>116</td>
         <td>0.0</td>
-        <td>0.5768</td>
+        <td>0.5693</td>
         <td>116</td>
         <td>0.0</td>
     </tr>
@@ -78,7 +78,7 @@
 | ---------------- | --- | ------- | ------- | ------- | ---------- |
 | N Valide (liste) | 116 | 0       | 20      | 7.2414  | 5.6854     |
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 #### Distribution des données et test de normalité
 
@@ -101,7 +101,7 @@
 </table>
 
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 ### •Combien de fois vous voyager ( entre Dakhla et votre Ville ) par ans [CDFVVPA]
 
@@ -109,9 +109,9 @@
 
 |                  | N   | Minimum | Maximum | Moyenne | Écart type |
 | ---------------- | --- | ------- | ------- | ------- | ---------- |
-| N Valide (liste) | 116 | 0.0     | 6.0     | 3.0706  | 1.6977     |
+| N Valide (liste) | 116 | 0       | 6       | 3.069   | 1.6977     |
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 #### Distribution des données et test de normalité
 
@@ -124,17 +124,17 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.279</td>
+        <td>0.2786</td>
         <td>116</td>
         <td>0.0</td>
-        <td>0.8626</td>
+        <td>0.8623</td>
         <td>116</td>
         <td>0.0</td>
     </tr>
 </table>
 
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 ### capacité à économiser par moins ( MAD) [CAEPM]
 
@@ -144,7 +144,7 @@
 | ---------------- | --- | ------- | ------- | -------- | ---------- |
 | N Valide (liste) | 116 | 0       | 1000    | 362.6724 | 274.6582   |
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 #### Distribution des données et test de normalité
 
@@ -167,17 +167,17 @@
 </table>
 
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 ### Dépenses mensuelles moyennes (en MAD) [DMM]
 
 #### Dispersion des données
 
-|                  | N   | Minimum | Maximum | Moyenne  | Écart type |
-| ---------------- | --- | ------- | ------- | -------- | ---------- |
-| N Valide (liste) | 116 | 0.0     | 40000.0 | 2287.069 | 3683.6072  |
+|                  | N   | Minimum | Maximum | Moyenne   | Écart type |
+| ---------------- | --- | ------- | ------- | --------- | ---------- |
+| N Valide (liste) | 116 | 0.0     | 5000.0  | 1876.7241 | 891.9308   |
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 #### Distribution des données et test de normalité
 
@@ -190,17 +190,19 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.3543</td>
+        <td>0.1217</td>
         <td>116</td>
-        <td>0.0</td>
-        <td>0.254</td>
+        <td>0.0592</td>
+        <td>0.9494</td>
         <td>116</td>
-        <td>0.0</td>
+        <td>0.0003</td>
     </tr>
 </table>
 
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> Une distribution normale
+
+![](../assets/hist_DMM.png)
 
 ### Nombre de formations en ligne suivies cette année [NDFELSCA]
 
@@ -210,7 +212,7 @@
 | ---------------- | --- | ------- | ------- | ------- | ---------- |
 | N Valide (liste) | 116 | 0       | 10      | 0.8534  | 1.5784     |
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 #### Distribution des données et test de normalité
 
@@ -233,7 +235,7 @@
 </table>
 
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 ### Nombre d'heures d'étude par semaine  [NDDPS]
 
@@ -241,9 +243,9 @@
 
 |                  | N   | Minimum | Maximum | Moyenne | Écart type |
 | ---------------- | --- | ------- | ------- | ------- | ---------- |
-| N Valide (liste) | 116 | 2.0     | 32.0    | 16.5102 | 6.8353     |
+| N Valide (liste) | 116 | 2       | 32      | 16.5431 | 6.8365     |
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 #### Distribution des données et test de normalité
 
@@ -256,17 +258,17 @@
         <th>Statistiques</th><th>ddl</th><th>Sig.</th><th>Statistiques</th><th>ddl</th><th>Sig.</th>
     </tr>
     <tr>
-        <td>0.221</td>
+        <td>0.2193</td>
         <td>116</td>
         <td>0.0</td>
-        <td>0.9086</td>
+        <td>0.9069</td>
         <td>116</td>
         <td>0.0</td>
     </tr>
 </table>
 
 
-> L'écart-type est relativement faible, ce qui veut dire que les valeurs sont proches de la moyenne
+> L'écart-type est relativement élevé, ce qui veut dire qu'il y a une grande dispersion des données
 
 ### Âge [AGE]
 
@@ -476,15 +478,15 @@ La moyenne __diffère significativement__ de la valeur théorique (p < 0.05)
 
 |     | GENRE  | N  | Moyenne  | Écart-type | Moyenne erreur standard |
 | --- | ------ | -- | -------- | ---------- | ----------------------- |
-| DMM | FEMALE | 81 | 2390.741 | 4363.213   | 484.801                 |
-|     | MALE   | 35 | 2047.143 | 1007.833   | 170.355                 |
+| DMM | FEMALE | 81 | 1840.123 | 905.311    | 100.590                 |
+|     | MALE   | 35 | 1961.429 | 867.051    | 146.558                 |
 
 #### Test des échantillons indépendants
 
-|     |                                 | F     | Sig.  | t     | dll   | Sig. (bilatéral) | Différence moyenne | Différence erreur standard | IDCD Inférieur | IDCD Supérieur |
-| --- | ------------------------------- | ----- | ----- | ----- | ----- | ---------------- | ------------------ | -------------------------- | -------------- | -------------- |
-| DMM | Hypothèse de variances égales   | 0.653 | 0.421 | 0.460 | 114.0 | 0.647            | 343.598            | 747.688                    | -1137.566      | 1824.762       |
-|     | Hypothèse de variances inégales |       |       | 0.669 | 97.5  | 0.505            | 343.598            | 513.861                    | -676.211       | 1363.407       |
+|     |                                 | F     | Sig.  | t      | dll   | Sig. (bilatéral) | Différence moyenne | Différence erreur standard | IDCD Inférieur | IDCD Supérieur |
+| --- | ------------------------------- | ----- | ----- | ------ | ----- | ---------------- | ------------------ | -------------------------- | -------------- | -------------- |
+| DMM | Hypothèse de variances égales   | 1.555 | 0.215 | -0.671 | 114.0 | 0.504            | -121.305           | 180.853                    | -479.573       | 236.963        |
+|     | Hypothèse de variances inégales |       |       | -0.682 | 67.2  | 0.497            | -121.305           | 177.758                    | -476.088       | 233.477        |
 
 Il n'y a pas de différence significative entre les dépenses mensuelles moyennes des garçons et filles
 
@@ -495,13 +497,13 @@ Il n'y a pas de différence significative entre les dépenses mensuelles moyenne
 
 #### ANOVA à 1 facteur
 
-|              | Somme des carrés | dll | Carré moyen  | F     | Sig.  |
-| ------------ | ---------------- | --- | ------------ | ----- | ----- |
-| Intergroupes | 3694365.537      | 1   | 3694365.537  | 0.271 | 0.604 |
-| Intragroupes | 1556736237.911   | 114 | 13655581.034 |       |       |
-| Total        | 1560430603.448   | 115 |              |       |       |
+|              | Somme des carrés | dll | Carré moyen | F     | Sig.  |
+| ------------ | ---------------- | --- | ----------- | ----- | ----- |
+| Intergroupes | 433.702          | 1   | 433.702     | 0.001 | 0.981 |
+| Intragroupes | 91486721.470     | 114 | 802515.101  |       |       |
+| Total        | 91487155.172     | 115 |             |       |       |
 
-Résultat ANOVA: F(1,114) = 0.271, p = 0.604
+Résultat ANOVA: F(1,114) = 0.001, p = 0.981
 
 Conclusion: Nous ne pouvons pas rejeter H0 (p ≥ 0.05). Aucune différence significative n'a été détectée.
 
