@@ -5,14 +5,10 @@ Un rapport final de ce projet est consultable via [ce lien](https://walid-projec
 
 - [Spécificités](#spécificités)
   - [Méthodes utilisées](#méthodes-utilisées)
+  - [Détails](#détails)
 - [Usage](#usage)
   - [Installation](#installation)
-    - [Debian/Ubuntu](#debianubuntu)
-    - [Fedora](#fedora)
-    - [Arch Linux](#arch-linux)
-  - [Post installation](#post-installation)
-    - [Windows](#windows)
-    - [Linux/MacOS](#linuxmacos)
+  - [Post-installation](#post-installation)
   - [Exécution](#exécution)
   - [Arguments (paramètres)](#arguments-paramètres)
 
@@ -24,6 +20,11 @@ Un rapport final de ce projet est consultable via [ce lien](https://walid-projec
 - Tests statistiques : Test de Khi-Deux, test t pour échantillon unique/indépendant, ANOVA à 1 facteur
 - Représentations graphiques : Histogrammes, diagrammes, choroplèthe, boxplots, matrice de corrélation.
 
+### Détails
+
+- Début officiel du projet : 05 Mars 2025
+- Temps moyennement investi : +200h
+
 ## Usage
 
 Toutes contributions sont la bienvenues, vous devez en premier lieu :
@@ -32,40 +33,28 @@ Toutes contributions sont la bienvenues, vous devez en premier lieu :
 
 Installer Python 3.13.x sur votre machine, si vous êtes sur Windows ou MacOS, redirigez-vous sur [le site officiel](https://www.python.org/downloads), téléchargez le directement et exécuter le fichier `.exe` si Windows, sinon `.pkg` pour MacOS. Si vous êtes sous Linux, vous pouvez suivre la même étape mais il est préférable d'utiliser le gestionnaire de packets (packet manager) selon votre distribution :
 
-#### Debian/Ubuntu
-
 ```bash
+# Debian/Ubuntu
 sudo apt update
 sudo apt install python3 python3-pip
-```
 
-#### Fedora
-
-```bash
+# Fedora
 sudo dnf install python3 python3-pip
-```
 
-#### Arch Linux
-
-```bash
+# Arch Linux
 sudo pacman -S python python-pip
 ```
 
-### Post installation
+### Post-installation
 
 Ce projet utilise des librairies externes que vous devez télécharger en exécutant la ligne de commande suivante selon votre système d'exploitation :
 
-#### Windows
 
 ```bash
+# Windows
 pip install -r requirements.txt
-```
 
-#### Linux/MacOS
-
-Vous devez d'abord créer un environement virtuel d'exécution pour Python sur la racine de ce dossier. Pour ce faire, il faudra exécuter les lignes de commandes suivantes :
-
-```bash
+# Linux
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
