@@ -1,33 +1,28 @@
-from scipy.stats import (
-    chi2_contingency,
-    f_oneway,
-    levene,
-    linregress,
-    shapiro,
-    kstest,
-    norm,
-    pearsonr,
-    t,
-    ttest_1samp,
-    ttest_ind,
-)
-import matplotlib.pyplot as plt
+# External libs
 import numpy as np
 import snakemd as mkdn
-import argparse
+import scipy.stats as scipy
+import matplotlib.pyplot as plt
 
+# Standard libs
 import re
-import typing
-import collections
-import datetime
-import enum
-import math
-import csv
 import os
+import csv
+import math
+import enum
 import shutil
+import typing
+import shutil
+import zipfile
+import tarfile
+import argparse
+import platform
+import collections
+from datetime import datetime
+from unicodedata import normalize as normalize_unicode
 
-import utils
 
+OS_TYPE = platform.system().lower()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--write", type=str, help="Spécifier sur quel fichier écrire")
@@ -46,18 +41,52 @@ args = parser.parse_args()
 doc = mkdn.Document()
 data = mkdn.Document()
 stats = mkdn.Document()
+
 MD_DIR = "markdown"
 ASSETS_DIR_NAME = "assets"
 RESOURCES_DIR_NAME = "resources"
-time_generated = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
+
+time_generated = datetime.now().strftime("%d/%m/%Y à %H:%M")
 for markdown in [doc, data, stats]:
     markdown.add_heading(f"Analyse des données - Généré le {time_generated}")
 
-if not args.skip_visualization:
-    for item in os.listdir(ASSETS_DIR_NAME):
-        item_path = os.path.join(ASSETS_DIR_NAME, item)
-        shutil.rmtree(item_path) if os.path.isdir(item_path) else os.unlink(item_path)
+def normalize(value: str) -> str:
+    return (
+        normalize_unicode("NFKD", value)
+        .encode("ascii", "ignore")
+        .decode("ascii")
+        .strip()
+    )
 
+
+# Référence: https://fr.wikipedia.org/wiki/Distance_de_Levenshtein
+def levenshtein_distance(v1: str, v2: str):
+    rows, cols = len(v1) + 1, len(v2) + 1
+    dist = [[0 for _ in range(cols)] for _ in range(rows)]
+
+    for i in range(1, rows):
+        dist[i][0] = i
+    for j in range(1, cols):
+        dist[0][j] = j
+
+    for i in range(1, rows):
+        for j in range(1, cols):
+            if v1[i - 1] == v2[j - 1]:
+                cost = 0
+            else:
+                cost = 1
+            dist[i][j] = min(
+                dist[i - 1][j] + 1,
+                dist[i][j - 1] + 1,
+                dist[i - 1][j - 1] + cost,
+            )
+
+    return dist[-1][-1]
+
+
+def matches_approx(s1: str, s2: str, threshold=2):
+    distance = levenshtein_distance(s1, s2)
+    return distance <= threshold
 
 class Listable(enum.Enum):
     @classmethod
@@ -103,7 +132,7 @@ class MDL(Listable):
     @classmethod
     def classify(cls, logiciel: str):
         for software in cls.get():
-            if utils.matches_approx(software, logiciel):
+            if matches_approx(software, logiciel):
                 return cls[software].name
         return cls.AUTRE.name
 
@@ -116,6 +145,58 @@ class Nullable:
         else:
             return value
 
+
+class FileSystemManager:
+    def __init__(self):
+        for folder in [MD_DIR, ASSETS_DIR_NAME]:
+            os.makedirs(folder, exist_ok=True)
+
+    def flush(self):
+        if not args.skip_visualization:
+            for item in os.listdir(ASSETS_DIR_NAME):
+                item_path = os.path.join(ASSETS_DIR_NAME, item)
+                shutil.rmtree(item_path) if os.path.isdir(item_path) else os.unlink(item_path)
+
+        for filename in os.listdir():
+            if filename.endswith(".zip") or filename.endswith(".tar.gz"):
+                os.remove(os.path.join(os.getcwd(), filename))
+
+    def compress(self, file_ext: str):
+        filename = datetime.now().strftime("%Y_%m_%d")
+        folders_to_compress = [MD_DIR, ASSETS_DIR_NAME]
+
+        if OS_TYPE == 'windows':
+            archive_name = f"{filename}.{file_ext}"
+            with zipfile.ZipFile(archive_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for folder in folders_to_compress:
+                    if os.path.exists(folder):
+                        for root, dirs, files in os.walk(folder):
+                            for file in files:
+                                file_path = os.path.join(root, file)
+                                arcname = os.path.relpath(file_path, os.path.dirname(folder))
+                                zipf.write(file_path, arcname)
+        else:
+            archive_name = f"{filename}.{file_ext}"
+            with tarfile.open(archive_name, "w:gz") as tar:
+                for folder in folders_to_compress:
+                    if os.path.exists(folder):
+                        tar.add(folder, arcname=os.path.basename(folder))
+
+    def write(self):
+        for arg in args.write.split(","):
+            match arg:
+                case "DOCS":
+                    doc.dump(arg, directory=MD_DIR)
+                case "DATA":
+                    data.dump(arg, directory=MD_DIR)
+                case "STATS":
+                    stats.dump(arg, directory=MD_DIR)
+                case _:
+                    pass
+        else:
+            doc.dump("DOCS", directory=MD_DIR)
+            data.dump("DATA", directory=MD_DIR)
+            stats.dump("STATS", directory=MD_DIR)
 
 class DataManager:
     def __init__(self):
@@ -202,7 +283,7 @@ class DataManager:
                         ]
 
                         if len(d_data_filtered) == len(X):
-                            corr, p_value = pearsonr(X, d_data_filtered)
+                            corr, p_value = scipy.pearsonr(X, d_data_filtered)
                             if (
                                 p_value < 0.05
                                 and abs(corr) > 0.3
@@ -217,7 +298,7 @@ class DataManager:
                     )  # Independent variable (predictor)
                     y_train = np.array(X)  # Dependent variable (target)
 
-                    slope, intercept, _, p_value, _ = linregress(X_train, y_train)
+                    slope, intercept, _, p_value, _ = scipy.linregress(X_train, y_train)
                     predictor_value = best_predictor_data[subset_pos]
                     value = round(intercept + slope * predictor_value)
 
@@ -391,8 +472,8 @@ class DataManager:
             sub_header = ["Statistiques", "ddl", "Sig."]
             header_styles = "style='text-align: center;' colspan='3'"
 
-            shapiro_dn, shapiro_pvalue = shapiro(dict.data)
-            kolmogrov_dn, kolmogorov_pvalue = kstest(
+            shapiro_dn, shapiro_pvalue = scipy.shapiro(dict.data)
+            kolmogrov_dn, kolmogorov_pvalue = scipy.kstest(
                 dict.data, "norm", args=(mean, std)
             )
 
@@ -445,7 +526,7 @@ class DataManager:
                 )
 
                 x = np.linspace(min, max, 100)
-                p = norm.pdf(x, mean, std)
+                p = scipy.norm.pdf(x, mean, std)
 
                 plt.xticks(
                     x_ticks,
@@ -773,7 +854,7 @@ class StoreCollection(DataManager):
             if self.nullish:
                 return str(Nullable.classify(value.upper()))
             else:
-                return utils.normalize(value).upper()
+                return normalize(value).upper()
         else:
             return 0
 
@@ -819,7 +900,7 @@ class StoreCollection(DataManager):
         for key, info in self.data.items():
             if info is None:
                 continue
-            if self.method == "approx" and utils.matches_approx(value, info["name"]):
+            if self.method == "approx" and matches_approx(value, info["name"]):
                 return resolve(key)
             elif self.method == "exact" and info["name"] == value:
                 return resolve(key)
@@ -933,7 +1014,7 @@ class Khi2Test:
         non_zero_col_mask = np.any(observed != 0, axis=0)
         filtered_observed = observed[non_zero_row_mask][:, non_zero_col_mask]
 
-        chi2, p_value, dof, expected = chi2_contingency(
+        chi2, p_value, dof, expected = scipy.chi2_contingency(
             filtered_observed, lambda_="log-likelihood"
         )  # fonction de vraisemblance
 
@@ -968,9 +1049,11 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     file = csv.reader(file)
     headers, doc_headers = next(file), []
 
+    fs_manager = FileSystemManager()
+
     # Création des variables
     for i, header in enumerate(headers):
-        normalized_header = re.sub(r"\(.*?\)", "", utils.normalize(header)).strip()
+        normalized_header = re.sub(r"\(.*?\)", "", normalize(header)).strip()
         words = normalized_header.split()
 
         if len(words) > 1:
@@ -1094,16 +1177,18 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         year = match.group(2) if match and match.group(2) else match and match.group(1)
         anneebac_set.collect(year)
 
-        branche = Option.classify(utils.normalize(rows[i][optionbac_dict.pos]).upper())
+        branche = Option.classify(normalize(rows[i][optionbac_dict.pos]).upper())
         optionbac_dict.subscribe(branche)
 
-        logiciel = utils.normalize(rows[i][logiciels_dict.pos]).upper()
+        logiciel = normalize(rows[i][logiciels_dict.pos]).upper()
         unknown_logiciel = logiciels_dict.is_unknown(logiciel)
         for value in logiciels_dict.in_depth(logiciel):
             software = MDL.classify(value) if not unknown_logiciel else None
             logiciels_dict.subscribe(software)
 
         i += 1
+
+    fs_manager.flush()
 
     doc.add_paragraph(
         f"Total variables traitées : `{str(sum(1 for dict in dicts if not dict.removable()))}`, dont :"
@@ -1209,7 +1294,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     # Hypothèse 6 : Test t pour un échantillon (Si la moyenne de CAEPM est différente ou pas d'une valeur théorique)
     theorical_value = 300
-    t_stat, p_value = ttest_1samp(caepm_dict.data, theorical_value)
+    t_stat, p_value = scipy.ttest_1samp(caepm_dict.data, theorical_value)
 
     stats.add_heading(
         f"Est-ce que la capacité moyenne à économiser par mois est différente de {theorical_value} DH (Valeur théorique) ?",
@@ -1242,7 +1327,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
 
     mean_diff = mean - theorical_value
     confidence_level = 0.95
-    t_critical = t.ppf(
+    t_critical = scipy.t.ppf(
         1 - (1 - confidence_level) / 2, n_length - 1
     )  # ddof (sample) = n - 1
     margin_error = t_critical * std_error
@@ -1331,10 +1416,10 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     group1 = [val for val, sex in zip(dmm_dict.data, sex_dict.raw) if sex == 0]
     group2 = [val for val, sex in zip(dmm_dict.data, sex_dict.raw) if sex == 1]
 
-    levene_stat, levene_p = levene(group1, group2)
+    levene_stat, levene_p = scipy.levene(group1, group2)
 
-    ttest_eq = ttest_ind(group1, group2, equal_var=True)
-    ttest_uneq = ttest_ind(group1, group2, equal_var=False)
+    ttest_eq = scipy.ttest_ind(group1, group2, equal_var=True)
+    ttest_uneq = scipy.ttest_ind(group1, group2, equal_var=False)
 
     mean_diff = np.mean(group1) - np.mean(group2)
 
@@ -1351,8 +1436,8 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         (var1 / n1) ** 2 / (n1 - 1) + (var2 / n2) ** 2 / (n2 - 1)
     )
 
-    t_critical_eq = t.ppf(0.975, ddl_eq)
-    t_critical_uneq = t.ppf(0.975, ddl_uneq)
+    t_critical_eq = scipy.t.ppf(0.975, ddl_eq)
+    t_critical_uneq = scipy.t.ppf(0.975, ddl_uneq)
 
     margin_of_error_eq = t_critical_eq * std_err_eq
     margin_of_error_uneq = t_critical_uneq * std_err_uneq
@@ -1431,7 +1516,7 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
     group1 = [val for val, typ in zip(dmm_dict.data, tepde_dict.raw) if typ == 0]
     group2 = [val for val, typ in zip(dmm_dict.data, tepde_dict.raw) if typ == 1]
 
-    f_value, p_value = f_oneway(group1, group2)
+    f_value, p_value = scipy.f_oneway(group1, group2)
 
     mean_all = np.mean(group1 + group2)
     ss_total = np.sum((np.concatenate([group1, group2]) - mean_all) ** 2)
@@ -1505,17 +1590,10 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
             store.visualize(store)
 
     if args.write:
-        for arg in args.write.split(","):
-            match arg:
-                case "DOCS":
-                    doc.dump(arg, directory=MD_DIR)
-                case "DATA":
-                    data.dump(arg, directory=MD_DIR)
-                case "STATS":
-                    stats.dump(arg, directory=MD_DIR)
-                case _:
-                    pass
-    else:
-        doc.dump("DOCS", directory=MD_DIR)
-        data.dump("DATA", directory=MD_DIR)
-        stats.dump("STATS", directory=MD_DIR)
+        fs_manager.write()
+
+file_ext = "zip" if OS_TYPE == "windows" else "tar.gz"
+confirm = input(f"Voulez-vous compresser les résultats en un seul fichier ({file_ext}) ? (o/n) : ")
+
+if confirm == "o":
+    fs_manager.compress(file_ext)

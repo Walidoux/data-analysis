@@ -1,23 +1,20 @@
 > [!NOTE]
 > Ce projet tente de traiter, nettoyer, structurer et analyser statistiquement une base de données issue d'un questionnaire rempli par des étudiants en troisième année pré-master de l'[ENCGD](https://encgd.uiz.ac.ma/).
 
-Un rapport final de ce projet est consultable via [ce lien.](https://walid-projects.notion.site/Projet-ADD-1a529a68f59c805a9e5fcb06292dff3e)
+Un rapport final de ce projet est consultable via [ce lien.](https://walid-projects.notion.site/Projet-ADD-1a529a68f59c805a9e5fcb06292dff3e). Vous trouverez tout les détails et explications à la réalisation de ce projet.
 
-# Table des matières
-
-- [Table des matières](#table-des-matières)
-  - [Spécificités](#spécificités)
-    - [Méthodes utilisées](#méthodes-utilisées)
-  - [Usage](#usage)
-    - [Installation](#installation)
-      - [Debian/Ubuntu](#debianubuntu)
-      - [Fedora](#fedora)
-      - [Arch Linux](#arch-linux)
-    - [Post installation](#post-installation)
-      - [Windows](#windows)
-      - [Linux/MacOS](#linuxmacos)
-    - [Exécution](#exécution)
-    - [Arguments (paramètres)](#arguments-paramètres)
+- [Spécificités](#spécificités)
+  - [Méthodes utilisées](#méthodes-utilisées)
+- [Usage](#usage)
+  - [Installation](#installation)
+    - [Debian/Ubuntu](#debianubuntu)
+    - [Fedora](#fedora)
+    - [Arch Linux](#arch-linux)
+  - [Post installation](#post-installation)
+    - [Windows](#windows)
+    - [Linux/MacOS](#linuxmacos)
+  - [Exécution](#exécution)
+  - [Arguments (paramètres)](#arguments-paramètres)
 
 ## Spécificités
 
