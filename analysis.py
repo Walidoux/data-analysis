@@ -1589,6 +1589,32 @@ with open(file="data.csv", mode="r", encoding="utf-8") as file:
         if not store.removable() and not args.skip_visualization:
             store.visualize(store)
 
+    stores = np.array([store for store in dicts if isinstance(store, StoreSet) and not store.removable()])
+    corr_matrix = np.corrcoef([store.data for store in stores])
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    im = ax.imshow(corr_matrix, cmap='coolwarm', vmin=-1, vmax=1)
+
+    cbar = ax.figure.colorbar(im, ax=ax)
+    cbar.ax.set_ylabel("Coefficient de corrélation", rotation=-90, va="bottom")
+
+    ax.set_xticks(np.arange(len(stores)))
+    ax.set_yticks(np.arange(len(stores)))
+    names = [store.name["format"] for store in stores]
+    ax.set_xticklabels(names)
+    ax.set_yticklabels(names)
+
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
+
+    for i in range(len(stores)):
+        for j in range(len(stores)):
+            text = ax.text(j, i, f"{corr_matrix[i, j]:.2f}",
+                        ha="center", va="center", color="w")
+    
+    ax.set_title("Matrice de corrélation")
+    fig.tight_layout()
+    plt.savefig(f"{ASSETS_DIR_NAME}/matrice_correlation.png", dpi=120, bbox_inches="tight")
+
     if args.write:
         fs_manager.write()
 

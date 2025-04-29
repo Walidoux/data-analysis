@@ -20,7 +20,9 @@ Un rapport final de ce projet est consultable via [ce lien](https://walid-projec
 
 ### Méthodes utilisées
 
-- Régression linéaire : Utilisé pour prédire et substituer les valeurs inconnues 
+- Régression linéaire : Utilisé pour prédire et substituer les valeurs inconnues/invalides par des approximaions équivalentes
+- Tests statistiques : Test de Khi-Deux, test t pour échantillon unique/indépendant, ANOVA à 1 facteur
+- Représentations graphiques : Histogrammes, diagrammes, choroplèthe, boxplots, matrice de corrélation.
 
 ## Usage
 
